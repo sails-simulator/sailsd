@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <cairo.h>
 #include <gtk/gtk.h>
 
@@ -44,6 +45,11 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data
     return FALSE;
 }
 
+static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev) {
+    puts("scrolled");
+    return FALSE;
+}
+
 int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
@@ -59,6 +65,9 @@ int main(int argc, char *argv[]) {
                      G_CALLBACK(on_draw_event), NULL);
     g_signal_connect(window, "destroy",
                      G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(window, "scroll-event",
+                     G_CALLBACK(on_scroll_event), NULL);
+    gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window), 854, 480);
