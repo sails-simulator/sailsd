@@ -12,6 +12,13 @@ static void draw_x_gridline(cairo_t *cr, int n) {
     cairo_stroke(cr);
 }
 
+static void draw_y_gridline(cairo_t *cr, int n) {
+    int y = n * GRID_SPACING;
+    cairo_move_to(cr, -GRID_WIDTH, y + 0.5);
+    cairo_line_to(cr, GRID_WIDTH, y + 0.5);
+    cairo_stroke(cr);
+}
+
 static void do_draw(cairo_t *cr) {
     cairo_set_source_rgb(cr, 0.7, 0.7, 1);
     cairo_paint(cr);
@@ -19,8 +26,9 @@ static void do_draw(cairo_t *cr) {
 
     cairo_set_source_rgb(cr, 0.3, 0.3, 0.3);
     int n;
-    for (n=0; n<GRID_N; n++){
+    for (n = 0; n < GRID_N; n++) {
         draw_x_gridline(cr, n);
+        draw_y_gridline(cr, n);
     }
 
     cairo_move_to(cr, 240, 40);
