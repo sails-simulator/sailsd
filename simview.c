@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <cairo.h>
 #include <gtk/gtk.h>
 
@@ -46,7 +47,11 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data
 }
 
 static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev) {
-    puts("scrolled");
+    GdkScrollDirection scroll = 0;
+    gdk_event_get_scroll_direction(ev, &scroll);
+    if (scroll == GDK_SCROLL_UP) {
+        g_message("up");
+    }
     return FALSE;
 }
 
