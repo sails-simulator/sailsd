@@ -7,6 +7,12 @@
 #define GRID_WIDTH 10000
 #define GRID_N GRID_WIDTH / GRID_SPACING
 
+typedef struct _sim {
+    double translation_x;
+    double translation_y;
+    double scale;
+} ViewState;
+
 static void draw_x_gridline(cairo_t *cr, int n) {
     int x = n * GRID_SPACING;
     cairo_move_to(cr, x + 0.5, -GRID_WIDTH);
