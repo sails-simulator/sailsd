@@ -13,6 +13,16 @@ typedef struct _sim {
     double scale;
 } ViewState;
 
+ViewState *state;
+
+static ViewState* viewstate_new() {
+    ViewState *new_state = malloc(sizeof(ViewState));
+    new_state->translation_x = 0;
+    new_state->translation_y = 0;
+    new_state->scale = 1;
+    return new_state;
+}
+
 static void draw_x_gridline(cairo_t *cr, int n) {
     int x = n * GRID_SPACING;
     cairo_move_to(cr, x + 0.5, -GRID_WIDTH);
@@ -83,6 +93,8 @@ int main(int argc, char *argv[]) {
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window), 854, 480);
     gtk_window_set_title(GTK_WINDOW(window), "sailsim");
+
+    state = viewstate_new();
 
     gtk_widget_show_all(window);
 
