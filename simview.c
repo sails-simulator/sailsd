@@ -38,6 +38,7 @@ static void draw_y_gridline(cairo_t *cr, int n) {
 }
 
 static void do_draw(cairo_t *cr) {
+    cairo_translate(cr, state->translation_x, state->translation_y);
     cairo_set_source_rgb(cr, 0.7, 0.7, 1);
     cairo_paint(cr);
     cairo_set_line_width(cr, 1);
@@ -64,10 +65,27 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data
 
 static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev) {
     GdkScrollDirection scroll = 0;
-    gdk_event_get_scroll_direction(ev, &scroll);
-    if (scroll == GDK_SCROLL_UP) {
-        g_message("up");
+
+    if (gdk_event_get_scroll_deltas(ev, 0, 0) == FALSE) {
+        gdk_event_get_scroll_direction(ev, &scroll);
+        switch (scroll) {
+        case GDK_SCROLL_UP:
+            state->translation_y += 1 / state->scale;
+            break;
+        case GDK_SCROLL_DOWN:
+            state->translation_y -= 1 / state->scale;
+            break;
+        case GDK_SCROLL_LEFT:
+            state->translation_x += 1 / state->scale;
+            break;
+        case GDK_SCROLL_RIGHT:
+            state->translation_x -= 1 / state->scale;
+            break;
+        case GDK_SCROLL_SMOOTH:
+            break;
+        }
     }
+    gtk_widget_queue_draw(widget);
     return FALSE;
 }
 
