@@ -7,6 +7,11 @@
 #define GRID_WIDTH 10000
 #define GRID_N GRID_WIDTH / GRID_SPACING
 
+#define SIM_MIN_WIDTH 640
+#define SIM_MIN_HEIGHT 360
+#define SIM_DEFAULT_WIDTH 854
+#define SIM_DEFAULT_HEIGHT 480
+
 typedef struct _sim {
     double translation_x;
     double translation_y;
@@ -143,8 +148,8 @@ int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
     GdkGeometry hints;
-    hints.min_width = 640;
-    hints.min_height = 360;
+    hints.min_width = SIM_MIN_WIDTH;
+    hints.min_height = SIM_MIN_HEIGHT;
 
     ViewState* sim = viewstate_new();
 
@@ -171,7 +176,8 @@ int main(int argc, char *argv[]) {
     gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-    gtk_window_set_default_size(GTK_WINDOW(window), 854, 480);
+    gtk_window_set_default_size(GTK_WINDOW(window),
+                                SIM_DEFAULT_WIDTH, SIM_DEFAULT_HEIGHT);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
                                   &hints, GDK_HINT_MIN_SIZE);
     gtk_window_set_title(GTK_WINDOW(window), "sailsim");
