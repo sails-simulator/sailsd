@@ -11,6 +11,8 @@ typedef struct _sim {
     double translation_x;
     double translation_y;
     double scale;
+    gint width;
+    gint hight;
 
     // keys held down
     gboolean ctrl_held;
@@ -21,6 +23,9 @@ static ViewState* viewstate_new() {
     new_state->translation_x = 0;
     new_state->translation_y = 0;
     new_state->scale = 1;
+
+    new_state->width = 1;
+    new_state->hight = 1;
 
     new_state->ctrl_held = FALSE;
     return new_state;
@@ -41,7 +46,10 @@ static void draw_y_gridline(cairo_t *cr, int n) {
 }
 
 static void do_draw(cairo_t *cr, ViewState* self) {
-    cairo_translate(cr, self->translation_x, self->translation_y);
+    cairo_translate(cr,
+        (self->width / 2) + self->translation_x * self->scale,
+        (self->hight / 2) + self->translation_y * self->scale);
+
     cairo_scale(cr, self->scale, self->scale);
     cairo_set_source_rgb(cr, 0.7, 0.7, 1);
     cairo_paint(cr);
@@ -80,18 +88,19 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, ViewState* self
             }
         } else {
 
+            double scroll_distance = 2 / self->scale;
             switch (scroll) {
                 case GDK_SCROLL_UP:
-                    self->translation_y += 1 / self->scale;
+                    self->translation_y += scroll_distance;
                     break;
                 case GDK_SCROLL_DOWN:
-                    self->translation_y -= 1 / self->scale;
+                    self->translation_y -= scroll_distance;
                     break;
                 case GDK_SCROLL_LEFT:
-                    self->translation_x += 1 / self->scale;
+                    self->translation_x += scroll_distance;
                     break;
                 case GDK_SCROLL_RIGHT:
-                    self->translation_x -= 1 / self->scale;
+                    self->translation_x -= scroll_distance;
                     break;
                 case GDK_SCROLL_SMOOTH:
                     break;
@@ -128,6 +137,12 @@ static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, ViewState*
     return FALSE;
 }
 
+static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, ViewState* self) {
+    g_message("resize");
+    gtk_window_get_size(GTK_WINDOW(widget), &self->width, &self->hight);
+    printf("%i, %i\n", self->width, self->hight);
+    return FALSE;
+}
 
 int main(int argc, char *argv[]) {
     GtkWidget *window;
@@ -152,6 +167,8 @@ int main(int argc, char *argv[]) {
                      G_CALLBACK(on_key_press_event), self);
     g_signal_connect(window, "key-release-event",
                      G_CALLBACK(on_key_release_event), self);
+    g_signal_connect(window, "configure-event",
+                     G_CALLBACK(on_configure_event), self);
     gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
