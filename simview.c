@@ -57,7 +57,7 @@ static void do_draw(cairo_t *cr, ViewState* self) {
 
     cairo_set_source_rgb(cr, 0.3, 0.3, 0.3);
     int n;
-    for (n = 0; n < GRID_N; n++) {
+    for (n = -GRID_N; n < GRID_N; n++) {
         draw_x_gridline(cr, n);
         draw_y_gridline(cr, n);
     }
