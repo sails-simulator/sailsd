@@ -142,6 +142,9 @@ static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, ViewState* s
 int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
+    GdkGeometry hints;
+    hints.min_width = 640;
+    hints.min_height = 360;
 
     ViewState* sim = viewstate_new();
 
@@ -169,6 +172,8 @@ int main(int argc, char *argv[]) {
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window), 854, 480);
+    gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
+                                  &hints, GDK_HINT_MIN_SIZE);
     gtk_window_set_title(GTK_WINDOW(window), "sailsim");
 
     gtk_widget_show_all(window);
