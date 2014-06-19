@@ -11,6 +11,9 @@ typedef struct _sim {
     double translation_x;
     double translation_y;
     double scale;
+
+    // keys held down
+    gboolean ctrl_held;
 } ViewState;
 
 ViewState *state;
@@ -20,6 +23,8 @@ static ViewState* viewstate_new() {
     new_state->translation_x = 0;
     new_state->translation_y = 0;
     new_state->scale = 1;
+
+    new_state->ctrl_held = FALSE;
     return new_state;
 }
 
@@ -39,6 +44,7 @@ static void draw_y_gridline(cairo_t *cr, int n) {
 
 static void do_draw(cairo_t *cr) {
     cairo_translate(cr, state->translation_x, state->translation_y);
+    cairo_scale(cr, state->scale, state->scale);
     cairo_set_source_rgb(cr, 0.7, 0.7, 1);
     cairo_paint(cr);
     cairo_set_line_width(cr, 1);
@@ -49,7 +55,6 @@ static void do_draw(cairo_t *cr) {
         draw_x_gridline(cr, n);
         draw_y_gridline(cr, n);
     }
-
     cairo_move_to(cr, 240, 40);
     cairo_line_to(cr, 240, 160);
     cairo_line_to(cr, 350, 160);
@@ -68,26 +73,64 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev) {
 
     if (gdk_event_get_scroll_deltas(ev, 0, 0) == FALSE) {
         gdk_event_get_scroll_direction(ev, &scroll);
-        switch (scroll) {
-        case GDK_SCROLL_UP:
-            state->translation_y += 1 / state->scale;
-            break;
-        case GDK_SCROLL_DOWN:
-            state->translation_y -= 1 / state->scale;
-            break;
-        case GDK_SCROLL_LEFT:
-            state->translation_x += 1 / state->scale;
-            break;
-        case GDK_SCROLL_RIGHT:
-            state->translation_x -= 1 / state->scale;
-            break;
-        case GDK_SCROLL_SMOOTH:
-            break;
+
+
+        if (state->ctrl_held) {
+            if (scroll == GDK_SCROLL_UP) {
+                state->scale += state->scale * 0.5;
+            } else if (scroll == GDK_SCROLL_DOWN) {
+                state->scale -= state->scale * 0.5;
+            }
+        } else {
+
+            switch (scroll) {
+                case GDK_SCROLL_UP:
+                    state->translation_y += 1 / state->scale;
+                    break;
+                case GDK_SCROLL_DOWN:
+                    state->translation_y -= 1 / state->scale;
+                    break;
+                case GDK_SCROLL_LEFT:
+                    state->translation_x += 1 / state->scale;
+                    break;
+                case GDK_SCROLL_RIGHT:
+                    state->translation_x -= 1 / state->scale;
+                    break;
+                case GDK_SCROLL_SMOOTH:
+                    break;
+            }
         }
+        gtk_widget_queue_draw(widget);
     }
-    gtk_widget_queue_draw(widget);
     return FALSE;
 }
+
+static void sim_quit() {
+    g_message("Qutting...");
+    gtk_main_quit();
+}
+
+static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev) {
+    guint val = 0;
+    gdk_event_get_keyval(ev, &val);
+    if (val == GDK_KEY_Escape) {
+        g_message("esc pressed");
+        sim_quit();
+    } else if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
+        state->ctrl_held = TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev) {
+    guint val = 0;
+    gdk_event_get_keyval(ev, &val);
+    if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
+        state->ctrl_held = FALSE;
+    }
+    return FALSE;
+}
+
 
 int main(int argc, char *argv[]) {
     GtkWidget *window;
@@ -106,6 +149,10 @@ int main(int argc, char *argv[]) {
                      G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(window, "scroll-event",
                      G_CALLBACK(on_scroll_event), NULL);
+    g_signal_connect(window, "key-press-event",
+                     G_CALLBACK(on_key_press_event), NULL);
+    g_signal_connect(window, "key-release-event",
+                     G_CALLBACK(on_key_release_event), NULL);
     gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
