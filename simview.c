@@ -138,9 +138,7 @@ static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, ViewState*
 }
 
 static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, ViewState* self) {
-    g_message("resize");
     gtk_window_get_size(GTK_WINDOW(widget), &self->width, &self->hight);
-    printf("%i, %i\n", self->width, self->hight);
     return FALSE;
 }
 
