@@ -109,7 +109,7 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim)
     return FALSE;
 }
 
-static void sim_quit() {
+static void on_quit() {
     g_message("Qutting...");
     gtk_main_quit();
 }
@@ -118,7 +118,7 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, ViewState* s
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
-        sim_quit();
+        on_quit();
     } else if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
         sim->ctrl_held = TRUE;
     }
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
     g_signal_connect(G_OBJECT(draw), "draw",
                      G_CALLBACK(on_draw_event), sim);
     g_signal_connect(window, "destroy",
-                     G_CALLBACK(sim_quit), NULL);
+                     G_CALLBACK(on_quit), NULL);
     g_signal_connect(window, "scroll-event",
                      G_CALLBACK(on_scroll_event), sim);
     g_signal_connect(window, "key-press-event",
