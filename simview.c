@@ -45,14 +45,7 @@ static void draw_y_gridline(cairo_t *cr, int n) {
     cairo_stroke(cr);
 }
 
-static void do_draw(cairo_t *cr, ViewState* self) {
-    cairo_translate(cr,
-        (self->width / 2) + self->translation_x * self->scale,
-        (self->hight / 2) + self->translation_y * self->scale);
-
-    cairo_scale(cr, self->scale, self->scale);
-    cairo_set_source_rgb(cr, 0.7, 0.7, 1);
-    cairo_paint(cr);
+static void draw_grid(cairo_t *cr) {
     cairo_set_line_width(cr, 1);
 
     cairo_set_source_rgb(cr, 0.3, 0.3, 0.3);
@@ -61,12 +54,18 @@ static void do_draw(cairo_t *cr, ViewState* self) {
         draw_x_gridline(cr, n);
         draw_y_gridline(cr, n);
     }
-    cairo_move_to(cr, 240, 40);
-    cairo_line_to(cr, 240, 160);
-    cairo_line_to(cr, 350, 160);
-    cairo_close_path(cr);
+}
 
-    cairo_stroke_preserve(cr);
+static void do_draw(cairo_t *cr, ViewState* self) {
+    cairo_translate(cr,
+        (self->width / 2) + self->translation_x * self->scale,
+        (self->hight / 2) + self->translation_y * self->scale);
+
+    cairo_scale(cr, self->scale, self->scale);
+    cairo_set_source_rgb(cr, 0.7, 0.7, 1);
+    cairo_paint(cr);
+
+    draw_grid(cr);
 }
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, ViewState* self) {
