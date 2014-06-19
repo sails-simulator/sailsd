@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
     g_signal_connect(G_OBJECT(draw), "draw",
                      G_CALLBACK(on_draw_event), sim);
     g_signal_connect(window, "destroy",
-                     G_CALLBACK(gtk_main_quit), NULL);
+                     G_CALLBACK(sim_quit), NULL);
     g_signal_connect(window, "scroll-event",
                      G_CALLBACK(on_scroll_event), sim);
     g_signal_connect(window, "key-press-event",
