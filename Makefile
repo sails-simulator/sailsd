@@ -8,3 +8,6 @@ OBJ = sim_application.o sim_view.o sim_viewstate.o
 
 sail: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
+
+clean:
+	rm sail *o
