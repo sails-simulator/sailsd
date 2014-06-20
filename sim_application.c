@@ -3,74 +3,13 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 
-#define GRID_SPACING 100
-#define GRID_WIDTH 10000
-#define GRID_N GRID_WIDTH / GRID_SPACING
+#include "sim_view.h"
+#include "sim_viewstate.h"
 
 #define SIM_MIN_WIDTH 640
 #define SIM_MIN_HEIGHT 360
 #define SIM_DEFAULT_WIDTH 854
 #define SIM_DEFAULT_HEIGHT 480
-
-typedef struct _sim {
-    double translation_x;
-    double translation_y;
-    double scale;
-    gint width;
-    gint hight;
-
-    // keys held down
-    gboolean ctrl_held;
-} ViewState;
-
-static ViewState* viewstate_new() {
-    ViewState *new_state = malloc(sizeof(ViewState));
-    new_state->translation_x = 0;
-    new_state->translation_y = 0;
-    new_state->scale = 1;
-
-    new_state->width = 1;
-    new_state->hight = 1;
-
-    new_state->ctrl_held = FALSE;
-    return new_state;
-}
-
-static void draw_x_gridline(cairo_t *cr, int n) {
-    int x = n * GRID_SPACING;
-    cairo_move_to(cr, x + 0.5, -GRID_WIDTH);
-    cairo_line_to(cr, x + 0.5, GRID_WIDTH);
-    cairo_stroke(cr);
-}
-
-static void draw_y_gridline(cairo_t *cr, int n) {
-    int y = n * GRID_SPACING;
-    cairo_move_to(cr, -GRID_WIDTH, y + 0.5);
-    cairo_line_to(cr, GRID_WIDTH, y + 0.5);
-    cairo_stroke(cr);
-}
-
-static void draw_grid(cairo_t *cr) {
-    cairo_set_line_width(cr, 1);
-
-    cairo_set_source_rgb(cr, 0.3, 0.3, 0.3);
-    int n;
-    for (n = -GRID_N; n < GRID_N; n++) {
-        draw_x_gridline(cr, n);
-        draw_y_gridline(cr, n);
-    }
-}
-
-static void do_draw(cairo_t *cr, ViewState* sim) {
-    cairo_translate(cr, (sim->width / 2) + sim->translation_x * sim->scale,
-                        (sim->hight / 2) + sim->translation_y * sim->scale);
-
-    cairo_scale(cr, sim->scale, sim->scale);
-    cairo_set_source_rgb(cr, 0.7, 0.7, 1);
-    cairo_paint(cr);
-
-    draw_grid(cr);
-}
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, ViewState* sim) {
     do_draw(cr, sim);
