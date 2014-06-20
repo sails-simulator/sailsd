@@ -1,0 +1,5 @@
+*.o
+*.swp
+sail
+tags
+todo.md
