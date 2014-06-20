@@ -32,7 +32,7 @@ static void draw_grid(cairo_t *cr) {
     }
 }
 
-void do_draw(cairo_t *cr, ViewState* sim) {
+void sim_view_do_draw(cairo_t *cr, ViewState* sim) {
     cairo_translate(cr, (sim->width / 2) + sim->translation_x * sim->scale,
                         (sim->hight / 2) + sim->translation_y * sim->scale);
 

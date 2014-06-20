@@ -3,6 +3,6 @@
 
 #include "sim_viewstate.h"
 
-void do_draw(cairo_t *cr, ViewState* sim);
+void sim_view_do_draw(cairo_t *cr, ViewState* sim);
 
 #endif

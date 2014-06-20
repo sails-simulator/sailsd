@@ -12,7 +12,7 @@
 #define SIM_DEFAULT_HEIGHT 480
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, ViewState* sim) {
-    do_draw(cr, sim);
+    sim_view_do_draw(cr, sim);
     return FALSE;
 }
 
