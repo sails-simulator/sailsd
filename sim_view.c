@@ -49,11 +49,14 @@ static void draw_axis(cairo_t *cr) {
     }
 }
 
-void sim_view_do_draw(cairo_t *cr, ViewState* sim) {
-    cairo_translate(cr, (sim->width / 2) + sim->translation_x * sim->scale,
-                        (sim->hight / 2) + sim->translation_y * sim->scale);
+void sim_view_do_draw(cairo_t *cr,
+                      int width, int hight,
+                      double tx, double ty,
+                      double scale) {
+    cairo_translate(cr, (width / 2) + tx * scale,
+                        (hight / 2) + ty * scale);
 
-    cairo_scale(cr, sim->scale, sim->scale);
+    cairo_scale(cr, scale, scale);
     cairo_set_source_rgb(cr, 0.7, 0.7, 1);
     cairo_paint(cr);
 
