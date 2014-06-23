@@ -5,6 +5,7 @@
 
 #include "sim_view.h"
 #include "sim_viewstate.h"
+#include "sim_boat.h"
 
 #define SIM_MIN_WIDTH 640
 #define SIM_MIN_HEIGHT 360
