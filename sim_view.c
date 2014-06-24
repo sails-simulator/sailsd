@@ -29,7 +29,7 @@ static void draw_grid(cairo_t *cr) {
 
     cairo_set_source_rgb(cr, 0.3, 0.3, 0.3);
     int n;
-    for (n = -GRID_N; n < GRID_N; n++) {
+    for (n = -GRID_N; n <= GRID_N; n++) {
         draw_x_gridline(cr, n);
         draw_y_gridline(cr, n);
     }
@@ -38,11 +38,11 @@ static void draw_grid(cairo_t *cr) {
 static void draw_axis(cairo_t *cr) {
     cairo_set_source_rgb(cr, 0.3, 0.3, 0.3);
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size(cr, 15);
+    cairo_set_font_size(cr, 11);
 
     char number_text[GRID_NUMBER_STRING_LEN];
     int n;
-    for (n = -GRID_WIDTH; n < GRID_WIDTH; n+=GRID_SPACING) {
+    for (n = -GRID_WIDTH; n <= GRID_WIDTH; n += GRID_SPACING) {
         cairo_move_to(cr, n + 10, -10);
         snprintf(number_text, GRID_NUMBER_STRING_LEN, "%d", n/GRID_SPACING);
         cairo_show_text(cr, number_text);
