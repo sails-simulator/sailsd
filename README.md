@@ -12,7 +12,7 @@ Install the dependencies:
 
 Fedora: `sudo yum install make gcc gtk3-devel`
 
-Debian: `sudo apt-get install make gcc libgtk-3-dev`
+Debian/Ubuntu: `sudo apt-get install make gcc libgtk-3-dev`
 
 Get source:
 
