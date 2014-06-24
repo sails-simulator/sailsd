@@ -1,6 +1,11 @@
 #include <stdlib.h>
+#include <cairo.h>
 
 #include "sim_boat.h"
+
+void sim_boat_draw(cairo_t *cr, Boat *boat) {
+
+}
 
 Boat* sim_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));

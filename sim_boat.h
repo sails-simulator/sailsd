@@ -11,4 +11,8 @@ typedef struct _boat {
     double rudder_angle;
 } Boat;
 
+void sim_boat_draw(cairo_t *cr, Boat *boat);
+
+Boat* sim_boat_new();
+
 #endif
