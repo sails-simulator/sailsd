@@ -53,6 +53,7 @@ Compile using make:
 ```bash
 $ cd sail
 $ make
+```
 
 Run with:
 
