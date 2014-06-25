@@ -1,5 +1,6 @@
 *.o
 *.swp
 sail
+sail.exe
 tags
 todo.md
