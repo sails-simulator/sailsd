@@ -24,6 +24,10 @@ static SailState* sail_state_new() {
     return states;
 }
 
+static void sail_state_free(SailState *state) {
+    sim_boat_free(state->boat);
+}
+
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
     sim_view_do_draw(cr,
                      state->view->width, state->view->hight,
@@ -72,7 +76,7 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *stat
 
 static void on_quit(SailState *state) {
     g_message("Qutting...");
-    sim_boat_free(state->boat);
+    sail_state_free(state);
     gtk_main_quit();
 }
 
