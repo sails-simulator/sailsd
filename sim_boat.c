@@ -7,6 +7,7 @@
 
 static Boat* load_boat_images(Boat *boat) {
     GError *err = NULL;
+    boat->images = malloc(sizeof(SVGImages));
     boat->images->hull = rsvg_handle_new_from_file("resources/hull.svg", &err);
     return boat;
 }

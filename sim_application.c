@@ -12,16 +12,29 @@
 #define SIM_DEFAULT_WIDTH 854
 #define SIM_DEFAULT_HEIGHT 480
 
-static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, ViewState* sim) {
+typedef struct _sail_states {
+    Boat *boat;
+    ViewState *view;
+} SailState;
+
+static SailState* sail_state_new() {
+    SailState *states = malloc(sizeof(SailState));
+    states->view = viewstate_new();
+    states->boat = sim_boat_new();
+    return states;
+}
+
+static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
     sim_view_do_draw(cr,
-                     sim->width, sim->hight,
-                     sim->translation_x, sim->translation_y,
-                     sim->scale);
+                     state->view->width, state->view->hight,
+                     state->view->translation_x, state->view->translation_y,
+                     state->view->scale);
     return FALSE;
 }
 
-static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
+static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     GdkScrollDirection scroll = 0;
+    ViewState *sim = state->view;
 
     if (gdk_event_get_scroll_deltas(ev, 0, 0) == FALSE) {
         gdk_event_get_scroll_direction(ev, &scroll);
@@ -62,28 +75,28 @@ static void on_quit() {
     gtk_main_quit();
 }
 
-static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
+static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
         on_quit();
     } else if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
-        sim->ctrl_held = TRUE;
+        state->view->ctrl_held = TRUE;
     }
     return FALSE;
 }
 
-static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
+static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
-        sim->ctrl_held = FALSE;
+        state->view->ctrl_held = FALSE;
     }
     return FALSE;
 }
 
-static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
-    gtk_window_get_size(GTK_WINDOW(widget), &sim->width, &sim->hight);
+static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
+    gtk_window_get_size(GTK_WINDOW(widget), &state->view->width, &state->view->hight);
     return FALSE;
 }
 
@@ -94,7 +107,7 @@ int main(int argc, char *argv[]) {
     hints.min_width = SIM_MIN_WIDTH;
     hints.min_height = SIM_MIN_HEIGHT;
 
-    ViewState* sim = viewstate_new();
+    SailState *states = sail_state_new();
 
     gtk_init(&argc, &argv);
 
@@ -104,17 +117,17 @@ int main(int argc, char *argv[]) {
     gtk_container_add(GTK_CONTAINER(window), draw);
 
     g_signal_connect(G_OBJECT(draw), "draw",
-                     G_CALLBACK(on_draw_event), sim);
+                     G_CALLBACK(on_draw_event), states);
     g_signal_connect(window, "destroy",
                      G_CALLBACK(on_quit), NULL);
     g_signal_connect(window, "scroll-event",
-                     G_CALLBACK(on_scroll_event), sim);
+                     G_CALLBACK(on_scroll_event), states);
     g_signal_connect(window, "key-press-event",
-                     G_CALLBACK(on_key_press_event), sim);
+                     G_CALLBACK(on_key_press_event), states);
     g_signal_connect(window, "key-release-event",
-                     G_CALLBACK(on_key_release_event), sim);
+                     G_CALLBACK(on_key_release_event), states);
     g_signal_connect(window, "configure-event",
-                     G_CALLBACK(on_configure_event), sim);
+                     G_CALLBACK(on_configure_event), states);
 
     gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
