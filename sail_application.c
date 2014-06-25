@@ -3,25 +3,44 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 
-#include "sim_view.h"
-#include "sim_viewstate.h"
-#include "sim_boat.h"
+#include "sail_view.h"
+#include "sail_viewstate.h"
+#include "sail_boat.h"
 
-#define SIM_MIN_WIDTH 640
-#define SIM_MIN_HEIGHT 360
-#define SIM_DEFAULT_WIDTH 854
-#define SIM_DEFAULT_HEIGHT 480
+#define SAIL_MIN_WIDTH 640
+#define SAIL_MIN_HEIGHT 360
+#define SAIL_DEFAULT_WIDTH 854
+#define SAIL_DEFAULT_HEIGHT 480
 
-static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, ViewState* sim) {
-    sim_view_do_draw(cr,
-                     sim->width, sim->hight,
-                     sim->translation_x, sim->translation_y,
-                     sim->scale);
+typedef struct _sail_states {
+    Boat *boat;
+    ViewState *view;
+} SailState;
+
+static SailState* sail_state_new() {
+    SailState *states = malloc(sizeof(SailState));
+    states->view = sail_viewstate_new();
+    states->boat = sail_boat_new();
+    return states;
+}
+
+static void sail_state_free(SailState *state) {
+    sail_boat_free(state->boat);
+    sail_viewstate_free(state->view);
+    free(state);
+}
+
+static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
+    sail_view_do_draw(cr,
+                     state->view->width, state->view->hight,
+                     state->view->translation_x, state->view->translation_y,
+                     state->view->scale);
     return FALSE;
 }
 
-static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
+static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     GdkScrollDirection scroll = 0;
+    ViewState *sim = state->view;
 
     if (gdk_event_get_scroll_deltas(ev, 0, 0) == FALSE) {
         gdk_event_get_scroll_direction(ev, &scroll);
@@ -57,33 +76,34 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim)
     return FALSE;
 }
 
-static void on_quit() {
+static void on_quit(SailState *state) {
     g_message("Qutting...");
+    sail_state_free(state);
     gtk_main_quit();
 }
 
-static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
+static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
-        on_quit();
+        on_quit(state);
     } else if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
-        sim->ctrl_held = TRUE;
+        state->view->ctrl_held = TRUE;
     }
     return FALSE;
 }
 
-static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
+static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
-        sim->ctrl_held = FALSE;
+        state->view->ctrl_held = FALSE;
     }
     return FALSE;
 }
 
-static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, ViewState* sim) {
-    gtk_window_get_size(GTK_WINDOW(widget), &sim->width, &sim->hight);
+static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
+    gtk_window_get_size(GTK_WINDOW(widget), &state->view->width, &state->view->hight);
     return FALSE;
 }
 
@@ -91,10 +111,10 @@ int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
     GdkGeometry hints;
-    hints.min_width = SIM_MIN_WIDTH;
-    hints.min_height = SIM_MIN_HEIGHT;
+    hints.min_width = SAIL_MIN_WIDTH;
+    hints.min_height = SAIL_MIN_HEIGHT;
 
-    ViewState* sim = viewstate_new();
+    SailState *states = sail_state_new();
 
     gtk_init(&argc, &argv);
 
@@ -104,23 +124,23 @@ int main(int argc, char *argv[]) {
     gtk_container_add(GTK_CONTAINER(window), draw);
 
     g_signal_connect(G_OBJECT(draw), "draw",
-                     G_CALLBACK(on_draw_event), sim);
+                     G_CALLBACK(on_draw_event), states);
     g_signal_connect(window, "destroy",
-                     G_CALLBACK(on_quit), NULL);
+                     G_CALLBACK(on_quit), states);
     g_signal_connect(window, "scroll-event",
-                     G_CALLBACK(on_scroll_event), sim);
+                     G_CALLBACK(on_scroll_event), states);
     g_signal_connect(window, "key-press-event",
-                     G_CALLBACK(on_key_press_event), sim);
+                     G_CALLBACK(on_key_press_event), states);
     g_signal_connect(window, "key-release-event",
-                     G_CALLBACK(on_key_release_event), sim);
+                     G_CALLBACK(on_key_release_event), states);
     g_signal_connect(window, "configure-event",
-                     G_CALLBACK(on_configure_event), sim);
+                     G_CALLBACK(on_configure_event), states);
 
     gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),
-                                SIM_DEFAULT_WIDTH, SIM_DEFAULT_HEIGHT);
+                                SAIL_DEFAULT_WIDTH, SAIL_DEFAULT_HEIGHT);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
                                   &hints, GDK_HINT_MIN_SIZE);
     gtk_window_set_title(GTK_WINDOW(window), "sailsim");

@@ -1,5 +1,5 @@
-#ifndef SIM_VIEWSTATE_H_
-#define SIM_VIEWSTATE_H_
+#ifndef SAIL_VIEWSTATE_H_
+#define SAIL_VIEWSTATE_H_
 
 struct _sim;
 
@@ -14,6 +14,7 @@ typedef struct _sim {
     gboolean ctrl_held;
 } ViewState;
 
-ViewState* viewstate_new();
+ViewState* sail_viewstate_new();
+void sail_viewstate_free(ViewState *view);
 
 #endif

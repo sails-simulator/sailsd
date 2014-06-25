@@ -2,7 +2,7 @@
 #include <cairo.h>
 #include <glib.h>
 
-#include "sim_view.h"
+#include "sail_view.h"
 
 #define GRID_SPACING 100
 #define GRID_WIDTH 10000
@@ -49,7 +49,7 @@ static void draw_axis(cairo_t *cr) {
     }
 }
 
-void sim_view_do_draw(cairo_t *cr,
+void sail_view_do_draw(cairo_t *cr,
                       int width, int hight,
                       double tx, double ty,
                       double scale) {
