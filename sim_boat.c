@@ -29,3 +29,9 @@ Boat* sim_boat_new() {
 
     return new_boat;
 }
+
+void sim_boat_free(Boat *boat) {
+    g_object_unref(boat->images->hull);
+    free(boat->images);
+    free(boat);
+}

@@ -22,5 +22,6 @@ typedef struct _boat {
 void sim_boat_draw(cairo_t *cr, Boat *boat);
 
 Boat* sim_boat_new();
+void sim_boat_free(Boat *boat);
 
 #endif

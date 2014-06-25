@@ -70,8 +70,9 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *stat
     return FALSE;
 }
 
-static void on_quit() {
+static void on_quit(SailState *state) {
     g_message("Qutting...");
+    sim_boat_free(state->boat);
     gtk_main_quit();
 }
 
@@ -79,7 +80,7 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
-        on_quit();
+        on_quit(state);
     } else if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
         state->view->ctrl_held = TRUE;
     }
@@ -119,7 +120,7 @@ int main(int argc, char *argv[]) {
     g_signal_connect(G_OBJECT(draw), "draw",
                      G_CALLBACK(on_draw_event), states);
     g_signal_connect(window, "destroy",
-                     G_CALLBACK(on_quit), NULL);
+                     G_CALLBACK(on_quit), states);
     g_signal_connect(window, "scroll-event",
                      G_CALLBACK(on_scroll_event), states);
     g_signal_connect(window, "key-press-event",
