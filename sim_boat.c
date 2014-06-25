@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <cairo.h>
+#include <librsvg/rsvg.h>
 
 #include "sim_boat.h"
 
