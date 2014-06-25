@@ -8,6 +8,11 @@
 static Boat* load_boat_images(Boat *boat) {
     GError *err = NULL;
     boat->images = malloc(sizeof(SVGImages));
+
+    #if !GLIB_CHECK_VERSION(2,35,0)
+        g_type_init();
+    #endif
+
     boat->images->hull = rsvg_handle_new_from_file("resources/hull.svg", &err);
     if (err != NULL) {
         g_log("sail", G_LOG_LEVEL_CRITICAL, "can't open file: %s", err->message);
