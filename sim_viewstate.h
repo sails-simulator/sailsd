@@ -14,6 +14,6 @@ typedef struct _sim {
     gboolean ctrl_held;
 } ViewState;
 
-ViewState* viewstate_new();
+ViewState* sim_viewstate_new();
 
 #endif

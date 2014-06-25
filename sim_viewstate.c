@@ -3,7 +3,7 @@
 
 #include "sim_viewstate.h"
 
-ViewState* viewstate_new() {
+ViewState* sim_viewstate_new() {
     ViewState *new_state = malloc(sizeof(ViewState));
     new_state->translation_x = 0;
     new_state->translation_y = 0;

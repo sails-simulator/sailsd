@@ -19,7 +19,7 @@ typedef struct _sail_states {
 
 static SailState* sail_state_new() {
     SailState *states = malloc(sizeof(SailState));
-    states->view = viewstate_new();
+    states->view = sim_viewstate_new();
     states->boat = sim_boat_new();
     return states;
 }
