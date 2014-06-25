@@ -3,7 +3,7 @@
 #include <cairo.h>
 #include <librsvg/rsvg.h>
 
-#include "sim_boat.h"
+#include "sail_boat.h"
 
 static Boat* load_boat_images(Boat *boat) {
     GError *err = NULL;

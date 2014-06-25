@@ -2,7 +2,7 @@
 #include <cairo.h>
 #include <glib.h>
 
-#include "sim_view.h"
+#include "sail_view.h"
 
 #define GRID_SPACING 100
 #define GRID_WIDTH 10000

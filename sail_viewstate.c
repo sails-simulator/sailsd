@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <glib.h>
 
-#include "sim_viewstate.h"
+#include "sail_viewstate.h"
 
 ViewState* sim_viewstate_new() {
     ViewState *new_state = malloc(sizeof(ViewState));

@@ -3,9 +3,9 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 
-#include "sim_view.h"
-#include "sim_viewstate.h"
-#include "sim_boat.h"
+#include "sail_view.h"
+#include "sail_viewstate.h"
+#include "sail_boat.h"
 
 #define SIM_MIN_WIDTH 640
 #define SIM_MIN_HEIGHT 360
