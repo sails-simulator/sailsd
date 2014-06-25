@@ -12,7 +12,7 @@ Install the dependencies:
 
 Fedora: `sudo yum install make gcc gtk3-devel librsvg2-devel`
 
-Debian/Ubuntu: `sudo apt-get install make gcc libgtk-3-dev`
+Debian/Ubuntu: `sudo apt-get install make gcc libgtk-3-dev librsvg2-dev`
 
 Get source:
 
