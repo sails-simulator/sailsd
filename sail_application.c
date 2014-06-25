@@ -7,10 +7,10 @@
 #include "sail_viewstate.h"
 #include "sail_boat.h"
 
-#define SIM_MIN_WIDTH 640
-#define SIM_MIN_HEIGHT 360
-#define SIM_DEFAULT_WIDTH 854
-#define SIM_DEFAULT_HEIGHT 480
+#define SAIL_MIN_WIDTH 640
+#define SAIL_MIN_HEIGHT 360
+#define SAIL_DEFAULT_WIDTH 854
+#define SAIL_DEFAULT_HEIGHT 480
 
 typedef struct _sail_states {
     Boat *boat;
@@ -19,19 +19,19 @@ typedef struct _sail_states {
 
 static SailState* sail_state_new() {
     SailState *states = malloc(sizeof(SailState));
-    states->view = sim_viewstate_new();
-    states->boat = sim_boat_new();
+    states->view = sail_viewstate_new();
+    states->boat = sail_boat_new();
     return states;
 }
 
 static void sail_state_free(SailState *state) {
-    sim_boat_free(state->boat);
-    sim_viewstate_free(state->view);
+    sail_boat_free(state->boat);
+    sail_viewstate_free(state->view);
     free(state);
 }
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
-    sim_view_do_draw(cr,
+    sail_view_do_draw(cr,
                      state->view->width, state->view->hight,
                      state->view->translation_x, state->view->translation_y,
                      state->view->scale);
@@ -111,8 +111,8 @@ int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
     GdkGeometry hints;
-    hints.min_width = SIM_MIN_WIDTH;
-    hints.min_height = SIM_MIN_HEIGHT;
+    hints.min_width = SAIL_MIN_WIDTH;
+    hints.min_height = SAIL_MIN_HEIGHT;
 
     SailState *states = sail_state_new();
 
@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),
-                                SIM_DEFAULT_WIDTH, SIM_DEFAULT_HEIGHT);
+                                SAIL_DEFAULT_WIDTH, SAIL_DEFAULT_HEIGHT);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
                                   &hints, GDK_HINT_MIN_SIZE);
     gtk_window_set_title(GTK_WINDOW(window), "sailsim");

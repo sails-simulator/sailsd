@@ -12,11 +12,11 @@ static Boat* load_boat_images(Boat *boat) {
     return boat;
 }
 
-void sim_boat_draw(cairo_t *cr, Boat *boat) {
+void sail_boat_draw(cairo_t *cr, Boat *boat) {
 
 }
 
-Boat* sim_boat_new() {
+Boat* sail_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));
 
     new_boat->x = 0;
@@ -30,7 +30,7 @@ Boat* sim_boat_new() {
     return new_boat;
 }
 
-void sim_boat_free(Boat *boat) {
+void sail_boat_free(Boat *boat) {
     g_object_unref(boat->images->hull);
     free(boat->images);
     free(boat);

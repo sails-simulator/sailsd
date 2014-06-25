@@ -3,7 +3,7 @@
 
 #include "sail_viewstate.h"
 
-ViewState* sim_viewstate_new() {
+ViewState* sail_viewstate_new() {
     ViewState *new_state = malloc(sizeof(ViewState));
     new_state->translation_x = 0;
     new_state->translation_y = 0;
@@ -16,6 +16,6 @@ ViewState* sim_viewstate_new() {
     return new_state;
 }
 
-void sim_viewstate_free(ViewState *view){
+void sail_viewstate_free(ViewState *view){
     free(view);
 }

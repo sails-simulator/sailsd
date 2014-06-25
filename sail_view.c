@@ -49,7 +49,7 @@ static void draw_axis(cairo_t *cr) {
     }
 }
 
-void sim_view_do_draw(cairo_t *cr,
+void sail_view_do_draw(cairo_t *cr,
                       int width, int hight,
                       double tx, double ty,
                       double scale) {

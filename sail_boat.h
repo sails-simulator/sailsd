@@ -1,5 +1,5 @@
-#ifndef SIM_BOAT_H_
-#define SIM_BOAT_H_
+#ifndef SAIL_BOAT_H_
+#define SAIL_BOAT_H_
 
 #include <librsvg/rsvg.h>
 
@@ -19,9 +19,9 @@ typedef struct _boat {
     SVGImages* images;
 } Boat;
 
-void sim_boat_draw(cairo_t *cr, Boat *boat);
+void sail_boat_draw(cairo_t *cr, Boat *boat);
 
-Boat* sim_boat_new();
-void sim_boat_free(Boat *boat);
+Boat* sail_boat_new();
+void sail_boat_free(Boat *boat);
 
 #endif
