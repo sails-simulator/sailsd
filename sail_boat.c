@@ -9,11 +9,14 @@ static Boat* load_boat_images(Boat *boat) {
     GError *err = NULL;
     boat->images = malloc(sizeof(SVGImages));
     boat->images->hull = rsvg_handle_new_from_file("resources/hull.svg", &err);
+    if (err != NULL) {
+        g_log("sail", G_LOG_LEVEL_CRITICAL, "can't open file: %s", err->message);
+    }
     return boat;
 }
 
-void sail_boat_draw(cairo_t *cr, Boat *boat) {
-
+void sail_boat_draw(Boat *boat, cairo_t *cr) {
+    rsvg_handle_render_cairo(boat->images->hull, cr);
 }
 
 Boat* sail_boat_new() {

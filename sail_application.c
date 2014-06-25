@@ -35,6 +35,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
                      state->view->width, state->view->hight,
                      state->view->translation_x, state->view->translation_y,
                      state->view->scale);
+    sail_boat_draw(state->boat, cr);
     return FALSE;
 }
 
