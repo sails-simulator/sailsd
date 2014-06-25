@@ -15,3 +15,7 @@ ViewState* sim_viewstate_new() {
     new_state->ctrl_held = FALSE;
     return new_state;
 }
+
+void sim_viewstate_free(ViewState *view){
+    free(view);
+}

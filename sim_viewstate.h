@@ -15,5 +15,6 @@ typedef struct _sim {
 } ViewState;
 
 ViewState* sim_viewstate_new();
+void sim_viewstate_free(ViewState *view);
 
 #endif

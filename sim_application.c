@@ -26,6 +26,8 @@ static SailState* sail_state_new() {
 
 static void sail_state_free(SailState *state) {
     sim_boat_free(state->boat);
+    sim_viewstate_free(state->view);
+    free(state);
 }
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
