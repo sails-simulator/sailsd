@@ -5,6 +5,7 @@
 
 typedef struct _images {
     RsvgHandle *hull;
+    RsvgDimensionData *hull_dimensions;
 } SVGImages;
 
 struct _boat;

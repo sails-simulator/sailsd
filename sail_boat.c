@@ -24,11 +24,18 @@ static Boat* load_boat_images(Boat *boat) {
     #endif
 
     boat->images->hull = load_svg("resources/hull.svg");
+    boat->images->hull_dimensions = malloc(sizeof(RsvgDimensionData));
+    rsvg_handle_get_dimensions(boat->images->hull,
+                               boat->images->hull_dimensions);
     return boat;
 }
 
 void sail_boat_draw(Boat *boat, cairo_t *cr) {
+    cairo_save(cr);
+    cairo_translate(cr, -boat->images->hull_dimensions->width/2,
+                        -boat->images->hull_dimensions->height/2);
     rsvg_handle_render_cairo(boat->images->hull, cr);
+    cairo_restore(cr);
 }
 
 Boat* sail_boat_new() {
