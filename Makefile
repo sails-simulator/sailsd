@@ -10,4 +10,4 @@ sail: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm sail *o
+	rm -vf sail sail.exe *o
