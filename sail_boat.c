@@ -5,18 +5,25 @@
 
 #include "sail_boat.h"
 
-static Boat* load_boat_images(Boat *boat) {
+static RsvgHandle* load_svg(char *path) {
     GError *err = NULL;
+    RsvgHandle *image = rsvg_handle_new_from_file(path, &err);
+    if (err != NULL) {
+        g_log("sail", G_LOG_LEVEL_ERROR, "can't open file \"%s\": %s", path, err->message);
+    } else {
+        g_log("sail", G_LOG_LEVEL_MESSAGE, "loaded image \"%s\"", path);
+    }
+    return image;
+}
+
+static Boat* load_boat_images(Boat *boat) {
     boat->images = malloc(sizeof(SVGImages));
 
     #if !GLIB_CHECK_VERSION(2,35,0)
         g_type_init();
     #endif
 
-    boat->images->hull = rsvg_handle_new_from_file("resources/hull.svg", &err);
-    if (err != NULL) {
-        g_log("sail", G_LOG_LEVEL_CRITICAL, "can't open file: %s", err->message);
-    }
+    boat->images->hull = load_svg("resources/hull.svg");
     return boat;
 }
 
