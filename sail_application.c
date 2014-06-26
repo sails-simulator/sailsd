@@ -32,9 +32,9 @@ static void sail_state_free(SailState *state) {
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
     sail_view_do_draw(cr,
-                     state->view->width, state->view->hight,
-                     state->view->translation_x, state->view->translation_y,
-                     state->view->scale);
+                      state->view->width, state->view->hight,
+                      state->view->translation_x, state->view->translation_y,
+                      state->view->scale);
     sail_boat_draw(state->boat, cr);
     return FALSE;
 }
