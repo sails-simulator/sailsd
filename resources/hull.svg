@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="202.93558"
-   height="104.28751"
+   width="104.28125"
+   height="202.93982"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="boat.svg">
+   sodipodi:docname="hull.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,31 +25,22 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="106.50055"
-     inkscape:cy="-2.066461"
+     inkscape:cx="57.18799"
+     inkscape:cy="47.246025"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1366"
-     inkscape:window-height="746"
+     inkscape:window-height="741"
      inkscape:window-x="0"
-     inkscape:window-y="22"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0">
-    <sodipodi:guide
-       orientation="0,1"
-       position="148.6072,-44.313078"
-       id="guide3002" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="54.321491,331.4012"
-       id="guide3004" />
-  </sodipodi:namedview>
+     fit-margin-bottom="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -65,10 +56,10 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-274.24994,-546.61875)">
+     transform="translate(-323.5625,-497.27893)">
     <path
        style="color:#000000;fill:#f06a6a;fill-opacity:1;fill-rule:nonzero;stroke:#650303;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 420.67841,551.61205 51.50036,47.14285 -51.50036,47.14283 -141.42862,0 0,-94.28568 z"
+       d="m 328.57144,553.79076 47.14285,-51.50036 47.14283,51.50036 0,141.42862 -94.28568,0 z"
        id="rect3071"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
