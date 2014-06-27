@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <math.h>
+
 #include <glib.h>
 #include <cairo.h>
 #include <librsvg/rsvg.h>
@@ -32,6 +34,7 @@ static Boat* load_boat_images(Boat *boat) {
 
 void sail_boat_draw(Boat *boat, cairo_t *cr) {
     cairo_save(cr);
+    cairo_rotate(cr, boat->angle);
     cairo_translate(cr, -boat->images->hull_dimensions->width/2,
                         -boat->images->hull_dimensions->height/2);
     rsvg_handle_render_cairo(boat->images->hull, cr);
@@ -43,7 +46,7 @@ Boat* sail_boat_new() {
 
     new_boat->x = 0;
     new_boat->y = 0;
-    new_boat->angle = 0;
+    new_boat->angle = M_PI_4;
     new_boat->sail_angle = 0;
     new_boat->rudder_angle = 0;
 
