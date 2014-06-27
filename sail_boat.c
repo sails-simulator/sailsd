@@ -6,6 +6,7 @@
 #include <librsvg/rsvg.h>
 
 #include "sail_boat.h"
+#include "sail_view.h"
 
 static RsvgHandle* load_svg(char *path) {
     GError *err = NULL;
@@ -34,6 +35,8 @@ static Boat* load_boat_images(Boat *boat) {
 
 void sail_boat_draw(Boat *boat, cairo_t *cr) {
     cairo_save(cr);
+    cairo_translate(cr, boat->x * SAIL_GRID_SPACING,
+                       -boat->y * SAIL_GRID_SPACING);
     cairo_rotate(cr, boat->angle);
     cairo_translate(cr, -boat->images->hull_dimensions->width/2,
                         -boat->images->hull_dimensions->height/2);
@@ -44,8 +47,8 @@ void sail_boat_draw(Boat *boat, cairo_t *cr) {
 Boat* sail_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));
 
-    new_boat->x = 0;
-    new_boat->y = 0;
+    new_boat->x = -2;
+    new_boat->y = 2;
     new_boat->angle = M_PI_4;
     new_boat->sail_angle = 0;
     new_boat->rudder_angle = 0;
