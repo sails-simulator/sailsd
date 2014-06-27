@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
                                 SAIL_DEFAULT_WIDTH, SAIL_DEFAULT_HEIGHT);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
                                   &hints, GDK_HINT_MIN_SIZE);
-    gtk_window_set_title(GTK_WINDOW(window), "sailsim");
+    gtk_window_set_title(GTK_WINDOW(window), "Sail");
 
     gtk_widget_show_all(window);
 
