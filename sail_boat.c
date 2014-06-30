@@ -83,6 +83,7 @@ Boat* sail_boat_new() {
 
 void sail_boat_free(Boat *boat) {
     g_object_unref(boat->images->hull);
+    g_object_unref(boat->images->sail);
     free(boat->images);
     free(boat);
 }
