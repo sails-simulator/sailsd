@@ -93,6 +93,9 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
         on_quit(state);
+    } else if (val == GDK_KEY_r) {
+        state->boat->sail_angle += 0.03;
+        gtk_widget_queue_draw(widget);
     } else if (val == GDK_KEY_F11) {
         state->view->is_fullscreen = !state->view->is_fullscreen;
         if (state->view->is_fullscreen) {
