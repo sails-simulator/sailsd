@@ -78,9 +78,14 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *stat
 }
 
 static void on_quit(SailState *state) {
-    g_message("Qutting...");
+    g_message("qutting...");
     sail_state_free(state);
     gtk_main_quit();
+}
+
+static gboolean on_destroy_event(GtkWidget *widget, SailState *state) {
+    on_quit(state);
+    return FALSE;
 }
 
 static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
@@ -127,7 +132,7 @@ int main(int argc, char *argv[]) {
     g_signal_connect(G_OBJECT(draw), "draw",
                      G_CALLBACK(on_draw_event), states);
     g_signal_connect(window, "destroy",
-                     G_CALLBACK(on_quit), states);
+                     G_CALLBACK(on_destroy_event), states);
     g_signal_connect(window, "scroll-event",
                      G_CALLBACK(on_scroll_event), states);
     g_signal_connect(window, "key-press-event",
