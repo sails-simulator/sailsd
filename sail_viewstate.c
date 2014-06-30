@@ -13,6 +13,7 @@ ViewState* sail_viewstate_new() {
     new_state->hight = 1;
 
     new_state->ctrl_held = FALSE;
+    new_state->is_fullscreen = FALSE;
     return new_state;
 }
 

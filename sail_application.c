@@ -93,6 +93,13 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
         on_quit(state);
+    } else if (val == GDK_KEY_F11) {
+        state->view->is_fullscreen = !state->view->is_fullscreen;
+        if (state->view->is_fullscreen) {
+            gtk_window_fullscreen(GTK_WINDOW(widget));
+        } else {
+            gtk_window_unfullscreen(GTK_WINDOW(widget));
+        }
     } else if (val == GDK_KEY_Control_L || val == GDK_KEY_Control_R) {
         state->view->ctrl_held = TRUE;
     }
