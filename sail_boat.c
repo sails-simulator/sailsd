@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <cairo.h>
 #include <librsvg/rsvg.h>
+#include <librsvg/rsvg-cairo.h>
 
 #include "sail_boat.h"
 #include "sail_view.h"
