@@ -49,9 +49,13 @@ void draw_hull(Boat *boat, cairo_t *cr) {
 
 void draw_sail(Boat *boat, cairo_t *cr) {
     cairo_save(cr);
-    cairo_translate(cr, -boat->images->sail_dimensions->width/2,
-                        -boat->images->sail_dimensions->height/2);
+
+    cairo_translate(cr, 0, -boat->images->hull_dimensions->height/5);
+    cairo_rotate(cr, boat->sail_angle);
+    cairo_translate(cr, -boat->images->sail_dimensions->width/2, -boat->images->sail_dimensions->height/10);
+
     rsvg_handle_render_cairo(boat->images->sail, cr);
+
     cairo_restore(cr);
 }
 
@@ -70,9 +74,9 @@ void sail_boat_draw(Boat *boat, cairo_t *cr) {
 Boat* sail_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));
 
-    new_boat->x = -2;
-    new_boat->y = 2;
-    new_boat->angle = M_PI_4;
+    new_boat->x = 0;
+    new_boat->y = 0;
+    new_boat->angle = 0;
     new_boat->sail_angle = 0;
     new_boat->rudder_angle = 0;
 
