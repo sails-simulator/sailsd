@@ -1,7 +1,7 @@
-sail
+Sails
 ====
 
-Simple simulator for small sailing boats.
+Simulator for autonomous sailing aquatic vehicles.
 
 Compiling
 ---------
