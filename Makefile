@@ -6,8 +6,8 @@ OBJ = sail_application.o sail_view.o sail_viewstate.o sail_boat.o
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-sail: $(OBJ)
+sails: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -vf sail sail.exe *o
+	rm -vf sails sails.exe *o

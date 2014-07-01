@@ -96,6 +96,9 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     } else if (val == GDK_KEY_r) {
         state->boat->sail_angle += 0.03;
         gtk_widget_queue_draw(widget);
+    } else if (val == GDK_KEY_e) {
+        state->boat->angle += 0.03;
+        gtk_widget_queue_draw(widget);
     } else if (val == GDK_KEY_F11) {
         state->view->is_fullscreen = !state->view->is_fullscreen;
         if (state->view->is_fullscreen) {
@@ -159,7 +162,7 @@ int main(int argc, char *argv[]) {
                                 SAIL_DEFAULT_WIDTH, SAIL_DEFAULT_HEIGHT);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
                                   &hints, GDK_HINT_MIN_SIZE);
-    gtk_window_set_title(GTK_WINDOW(window), "Sail");
+    gtk_window_set_title(GTK_WINDOW(window), "Sails");
 
     gtk_widget_show_all(window);
 

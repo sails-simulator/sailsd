@@ -16,7 +16,7 @@ static RsvgHandle* load_svg(char *path) {
     GError *err = NULL;
     RsvgHandle *image = rsvg_handle_new_from_file(path, &err);
     if (err != NULL) {
-        g_log("sail", G_LOG_LEVEL_ERROR, "can't open file \"%s\": %s", path, err->message);
+        g_log("sails", G_LOG_LEVEL_ERROR, "can't open file \"%s\": %s", path, err->message);
     } else {
         g_message("loaded image \"%s\"", path);
     }

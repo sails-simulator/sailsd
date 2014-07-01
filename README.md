@@ -17,20 +17,20 @@ Debian/Ubuntu: `sudo apt-get install make gcc libgtk-3-dev librsvg2-dev`
 Get source:
 
 ```bash
-$ git clone https://github.com/kragniz/sail.git
+$ git clone https://github.com/kragniz/sails.git
 ```
 
 Compile:
 
 ```bash
-$ cd sail
+$ cd sails
 $ make
 ```
 
 Run with:
 
 ```bash
-$ ./sail
+$ ./sails
 ```
 
 ### Windows
@@ -45,20 +45,20 @@ Install [git](http://git-scm.com/download/win).
 Get a copy of the source (using git bash):
 
 ```bash
-$ git clone https://github.com/kragniz/sail.git
+$ git clone https://github.com/kragniz/sails.git
 ```
 
 Compile using make:
 
 ```bash
-$ cd sail
+$ cd sails
 $ make
 ```
 
 Run with:
 
 ```bash
-$ ./sail.exe
+$ ./sails.exe
 ```
 
 Licence
