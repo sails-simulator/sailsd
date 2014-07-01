@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="57.18799"
-     inkscape:cy="47.246025"
+     inkscape:cx="-109.04815"
+     inkscape:cy="21.869522"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -58,10 +58,15 @@
      id="layer1"
      transform="translate(-323.5625,-497.27893)">
     <path
-       style="color:#000000;fill:#f06a6a;fill-opacity:1;fill-rule:nonzero;stroke:#650303;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#f06a6a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        d="m 328.57144,553.79076 47.14285,-51.50036 47.14283,51.50036 0,141.42862 -94.28568,0 z"
        id="rect3071"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
+    <path
+       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#650303;fill-opacity:1;stroke:#000000;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 375.875,497.28125 a 5.0005,5.0005 0 0 0 -3.84375,1.625 l -47.15625,51.5 a 5.0005,5.0005 0 0 0 -1.3125,3.375 l 0,141.4375 a 5.0005,5.0005 0 0 0 5,5 l 94.28125,0 a 5.0005,5.0005 0 0 0 5,-5 l 0,-141.4375 a 5.0005,5.0005 0 0 0 -1.3125,-3.375 l -47.125,-51.5 a 5.0005,5.0005 0 0 0 -3.53125,-1.625 z m -0.15625,12.40625 42.125,46.03125 0,134.5 -84.28125,0 0,-134.5 42.15625,-46.03125 z"
+       id="rect3071-5"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
