@@ -5,7 +5,7 @@
 #include <cairo.h>
 #include <librsvg/rsvg.h>
 
-#if !defined(LIBRSVG_CHECK_VERSION) || !LIBRSVG_CHECK_VERSION(2, 36, 2)
+#ifndef LIBRSVG_CHECK_VERSION
     #include <librsvg/rsvg-cairo.h>
 #endif
 
