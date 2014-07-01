@@ -4,7 +4,10 @@
 #include <glib.h>
 #include <cairo.h>
 #include <librsvg/rsvg.h>
-#include <librsvg/rsvg-cairo.h>
+
+#if !LIBRSVG_CHECK_VERSION(2, 36, 2)
+    #include <librsvg/rsvg-cairo.h>
+#endif
 
 #include "sail_boat.h"
 #include "sail_view.h"
@@ -23,7 +26,7 @@ static RsvgHandle* load_svg(char *path) {
 static Boat* load_boat_images(Boat *boat) {
     boat->images = malloc(sizeof(SVGImages));
 
-    #if !GLIB_CHECK_VERSION(2,35,0)
+    #if !GLIB_CHECK_VERSION(2, 35, 0)
         g_type_init();
     #endif
 
