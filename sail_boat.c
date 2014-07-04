@@ -68,6 +68,19 @@ void draw_sail(Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
+void draw_rudder(Boat *boat, cairo_t *cr) {
+    cairo_save(cr);
+
+    cairo_translate(cr, 0, boat->images->hull_dimensions->height/2);
+    cairo_rotate(cr, boat->rudder_angle);
+    cairo_translate(cr, -boat->images->rudder_dimensions->width/2,
+                        -boat->images->rudder_dimensions->height/10);
+
+    rsvg_handle_render_cairo(boat->images->rudder, cr);
+
+    cairo_restore(cr);
+}
+
 void sail_boat_draw(Boat *boat, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, boat->x * SAIL_GRID_SPACING,
@@ -75,6 +88,7 @@ void sail_boat_draw(Boat *boat, cairo_t *cr) {
     cairo_rotate(cr, boat->angle);
 
     draw_hull(boat, cr);
+    draw_rudder(boat, cr);
     draw_sail(boat, cr);
 
     cairo_restore(cr);
