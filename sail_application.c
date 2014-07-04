@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <cairo.h>
 #include <gtk/gtk.h>
 
@@ -15,12 +16,14 @@
 typedef struct _sail_states {
     Boat *boat;
     ViewState *view;
+    GtkWidget *draw;
 } SailState;
 
-static SailState* sail_state_new() {
+static SailState* sail_state_new(GtkWidget *draw) {
     SailState *states = malloc(sizeof(SailState));
     states->view = sail_viewstate_new();
     states->boat = sail_boat_new();
+    states->draw = draw;
     return states;
 }
 
@@ -28,15 +31,6 @@ static void sail_state_free(SailState *state) {
     sail_boat_free(state->boat);
     sail_viewstate_free(state->view);
     free(state);
-}
-
-static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
-    sail_view_do_draw(cr,
-                      state->view->width, state->view->hight,
-                      state->view->translation_x, state->view->translation_y,
-                      state->view->scale);
-    sail_boat_draw(state->boat, cr);
-    return FALSE;
 }
 
 static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
@@ -72,7 +66,6 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *stat
                     break;
             }
         }
-        gtk_widget_queue_draw(widget);
     }
     return FALSE;
 }
@@ -95,10 +88,8 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
         on_quit(state);
     } else if (val == GDK_KEY_r) {
         state->boat->sail_angle += 0.03;
-        gtk_widget_queue_draw(widget);
     } else if (val == GDK_KEY_e) {
         state->boat->angle += 0.03;
-        gtk_widget_queue_draw(widget);
     } else if (val == GDK_KEY_F11) {
         state->view->is_fullscreen = !state->view->is_fullscreen;
         if (state->view->is_fullscreen) {
@@ -126,10 +117,20 @@ static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     return FALSE;
 }
 
+static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
+    sail_view_do_draw(cr,
+                      state->view->width, state->view->hight,
+                      state->view->translation_x, state->view->translation_y,
+                      state->view->scale);
+    sail_boat_draw(state->boat, cr);
+    return FALSE;
+}
+
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
 
     state->boat->angle += 0.01;
+    gtk_widget_queue_draw(state->draw);
     return TRUE;
 }
 
@@ -140,13 +141,13 @@ int main(int argc, char *argv[]) {
     hints.min_width = SAIL_MIN_WIDTH;
     hints.min_height = SAIL_MIN_HEIGHT;
 
-    SailState *states = sail_state_new();
-
     gtk_init(&argc, &argv);
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
     draw = gtk_drawing_area_new();
+
+    SailState *states = sail_state_new(draw);
+
     gtk_container_add(GTK_CONTAINER(window), draw);
 
     g_signal_connect(G_OBJECT(draw), "draw",
