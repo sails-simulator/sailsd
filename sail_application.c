@@ -126,6 +126,13 @@ static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     return FALSE;
 }
 
+static gboolean event_loop(gpointer state_p) {
+    SailState *state = (SailState*) state_p;
+
+    state->boat->angle += 0.01;
+    return TRUE;
+}
+
 int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
@@ -165,6 +172,11 @@ int main(int argc, char *argv[]) {
     gtk_window_set_title(GTK_WINDOW(window), "Sails");
 
     gtk_widget_show_all(window);
+
+    gtk_widget_set_app_paintable(window, TRUE);
+    gtk_widget_set_double_buffered(window, FALSE);
+
+    gdk_threads_add_timeout(33, event_loop, (gpointer) states);
 
     gtk_main();
 
