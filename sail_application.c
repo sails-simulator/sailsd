@@ -4,9 +4,10 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 
+#include "sail_boat.h"
+#include "sail_physics.h"
 #include "sail_view.h"
 #include "sail_viewstate.h"
-#include "sail_boat.h"
 
 #define SAIL_MIN_WIDTH 640
 #define SAIL_MIN_HEIGHT 360
@@ -129,7 +130,8 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
 
-    state->boat->angle += 0.01;
+    sail_physics_update(state->boat, 0.3);
+
     gtk_widget_queue_draw(state->draw);
     return TRUE;
 }
