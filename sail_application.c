@@ -14,6 +14,9 @@
 #define SAIL_DEFAULT_WIDTH 854
 #define SAIL_DEFAULT_HEIGHT 480
 
+#define SAIL_FRAMERATE 40
+#define SAIL_EVENT_TIMEOUT 1000 / SAIL_FRAMERATE
+
 typedef struct _sail_states {
     Boat *boat;
     ViewState *view;
@@ -119,11 +122,20 @@ static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *s
 }
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
-    sail_view_do_draw(cr,
+    cairo_surface_t *buffer_surface = cairo_surface_create_similar(
+                                          cairo_get_target(cr),
+                                          CAIRO_CONTENT_COLOR_ALPHA,
+                                          state->view->width,
+                                          state->view->hight);
+    cairo_t *buffer = cairo_create(buffer_surface);
+    sail_view_do_draw(buffer,
                       state->view->width, state->view->hight,
                       state->view->translation_x, state->view->translation_y,
                       state->view->scale);
-    sail_boat_draw(state->boat, cr);
+    sail_boat_draw(state->boat, buffer);
+    cairo_set_source_surface(cr, buffer_surface, 0, 0);
+    cairo_paint(cr);
+
     return FALSE;
 }
 
@@ -179,7 +191,7 @@ int main(int argc, char *argv[]) {
     gtk_widget_set_app_paintable(window, TRUE);
     gtk_widget_set_double_buffered(window, FALSE);
 
-    gdk_threads_add_timeout(33, event_loop, (gpointer) states);
+    gdk_threads_add_timeout(SAIL_EVENT_TIMEOUT, event_loop, (gpointer) states);
 
     gtk_main();
 
