@@ -91,9 +91,11 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     if (val == GDK_KEY_Escape) {
         on_quit(state);
     } else if (val == GDK_KEY_r) {
-        state->boat->sail_angle += 0.03;
+        state->boat->rudder_angle += 0.01;
     } else if (val == GDK_KEY_e) {
-        state->boat->angle += 0.03;
+        state->boat->rudder_angle -= 0.01;
+    } else if (val == GDK_KEY_space) {
+        state->view->tracking_boat = !state->view->tracking_boat;
     } else if (val == GDK_KEY_F11) {
         state->view->is_fullscreen = !state->view->is_fullscreen;
         if (state->view->is_fullscreen) {
@@ -128,9 +130,20 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
                                           state->view->width,
                                           state->view->hight);
     cairo_t *buffer = cairo_create(buffer_surface);
+
+    double translation_x;
+    double translation_y;
+
+    if (state->view->tracking_boat) {
+        translation_x = -state->boat->x * SAIL_GRID_SPACING;
+        translation_y = state->boat->y * SAIL_GRID_SPACING;
+    } else {
+        translation_x = state->view->translation_x;
+        translation_y = state->view->translation_y;
+    }
     sail_view_do_draw(buffer,
                       state->view->width, state->view->hight,
-                      state->view->translation_x, state->view->translation_y,
+                      translation_x, translation_y,
                       state->view->scale);
     sail_boat_draw(state->boat, buffer);
     cairo_set_source_surface(cr, buffer_surface, 0, 0);
@@ -145,7 +158,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
 
-    sail_physics_update(state->boat, 0.3);
+    sail_physics_update(state->boat, 0.005);
 
     gtk_widget_queue_draw(state->draw);
     return TRUE;

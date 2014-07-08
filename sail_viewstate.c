@@ -14,6 +14,8 @@ ViewState* sail_viewstate_new() {
 
     new_state->ctrl_held = FALSE;
     new_state->is_fullscreen = FALSE;
+    new_state->tracking_boat = TRUE;
+
     return new_state;
 }
 
