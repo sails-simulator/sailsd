@@ -136,6 +136,9 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
     cairo_set_source_surface(cr, buffer_surface, 0, 0);
     cairo_paint(cr);
 
+    cairo_destroy(buffer);
+    cairo_surface_destroy(buffer_surface);
+
     return FALSE;
 }
 
