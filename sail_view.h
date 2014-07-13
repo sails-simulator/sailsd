@@ -7,9 +7,9 @@
 
 #define SAIL_GRID_NUMBER_STRING_LEN 8
 
-void sail_view_do_draw(cairo_t *cr,
-                      int width, int hight,
-                      double tx, double ty,
-                      double scale);
+void sail_view_draw(cairo_t *cr,
+                    int width, int hight,
+                    double tx, double ty,
+                    double scale);
 
 #endif

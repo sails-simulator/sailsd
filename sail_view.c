@@ -43,10 +43,10 @@ static void draw_axis(cairo_t *cr) {
     }
 }
 
-void sail_view_do_draw(cairo_t *cr,
-                      int width, int hight,
-                      double tx, double ty,
-                      double scale) {
+void sail_view_draw(cairo_t *cr,
+                    int width, int hight,
+                    double tx, double ty,
+                    double scale) {
     cairo_translate(cr, (width / 2) + tx * scale,
                         (hight / 2) + ty * scale);
 

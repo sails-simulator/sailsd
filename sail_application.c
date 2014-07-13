@@ -141,11 +141,13 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
         translation_x = state->view->translation_x;
         translation_y = state->view->translation_y;
     }
-    sail_view_do_draw(buffer,
-                      state->view->width, state->view->hight,
-                      translation_x, translation_y,
-                      state->view->scale);
+
+    sail_view_draw(buffer,
+            state->view->width, state->view->hight,
+            translation_x, translation_y,
+            state->view->scale);
     sail_boat_draw(state->boat, buffer);
+
     cairo_set_source_surface(cr, buffer_surface, 0, 0);
     cairo_paint(cr);
 
