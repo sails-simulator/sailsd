@@ -125,10 +125,10 @@ static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *s
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) {
     cairo_surface_t *buffer_surface = cairo_surface_create_similar(
-                                          cairo_get_target(cr),
-                                          CAIRO_CONTENT_COLOR_ALPHA,
-                                          state->view->width,
-                                          state->view->hight);
+            cairo_get_target(cr),
+            CAIRO_CONTENT_COLOR_ALPHA,
+            state->view->width,
+            state->view->hight);
     cairo_t *buffer = cairo_create(buffer_surface);
 
     double translation_x;
@@ -146,7 +146,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
             state->view->width, state->view->hight,
             translation_x, translation_y,
             state->view->scale);
-    sail_boat_draw(state->boat, buffer);
+    sail_boat_draw(buffer, state->boat);
 
     cairo_set_source_surface(cr, buffer_surface, 0, 0);
     cairo_paint(cr);

@@ -81,7 +81,7 @@ void draw_rudder(Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
-void sail_boat_draw(Boat *boat, cairo_t *cr) {
+void sail_boat_draw(cairo_t *cr, Boat *boat) {
     cairo_save(cr);
     cairo_translate(cr, boat->x * SAIL_GRID_SPACING,
                         -boat->y * SAIL_GRID_SPACING);
