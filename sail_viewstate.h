@@ -8,7 +8,7 @@ typedef struct _sim {
     double translation_y;
     double scale;
     gint width;
-    gint hight;
+    gint height;
 
     // keys held down
     gboolean ctrl_held;

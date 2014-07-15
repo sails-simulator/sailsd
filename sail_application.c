@@ -119,7 +119,7 @@ static gboolean on_key_release_event(GtkWidget *widget, GdkEvent *ev, SailState 
 }
 
 static gboolean on_configure_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
-    gtk_window_get_size(GTK_WINDOW(widget), &state->view->width, &state->view->hight);
+    gtk_window_get_size(GTK_WINDOW(widget), &state->view->width, &state->view->height);
     return FALSE;
 }
 
@@ -128,7 +128,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
             cairo_get_target(cr),
             CAIRO_CONTENT_COLOR_ALPHA,
             state->view->width,
-            state->view->hight);
+            state->view->height);
     cairo_t *buffer = cairo_create(buffer_surface);
 
     double translation_x;
@@ -143,7 +143,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
     }
 
     sail_view_draw(buffer,
-            state->view->width, state->view->hight,
+            state->view->width, state->view->height,
             translation_x, translation_y,
             state->view->scale);
     sail_boat_draw(buffer, state->boat);
