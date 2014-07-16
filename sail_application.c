@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 
 #include "sail_boat.h"
+#include "sail_overlay.h"
 #include "sail_physics.h"
 #include "sail_view.h"
 #include "sail_viewstate.h"
@@ -147,6 +148,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
             translation_x, translation_y,
             state->view->scale);
     sail_boat_draw(buffer, state->boat);
+    sail_overlay_draw(buffer, state->boat, state->view);
 
     cairo_set_source_surface(cr, buffer_surface, 0, 0);
     cairo_paint(cr);
