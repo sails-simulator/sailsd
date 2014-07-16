@@ -186,17 +186,17 @@ int main(int argc, char *argv[]) {
     gtk_container_add(GTK_CONTAINER(window), draw);
 
     g_signal_connect(G_OBJECT(draw), "draw",
-                     G_CALLBACK(on_draw_event), states);
+            G_CALLBACK(on_draw_event), states);
     g_signal_connect(window, "destroy",
-                     G_CALLBACK(on_destroy_event), states);
+            G_CALLBACK(on_destroy_event), states);
     g_signal_connect(window, "scroll-event",
-                     G_CALLBACK(on_scroll_event), states);
+            G_CALLBACK(on_scroll_event), states);
     g_signal_connect(window, "key-press-event",
-                     G_CALLBACK(on_key_press_event), states);
+            G_CALLBACK(on_key_press_event), states);
     g_signal_connect(window, "key-release-event",
-                     G_CALLBACK(on_key_release_event), states);
+            G_CALLBACK(on_key_release_event), states);
     g_signal_connect(window, "configure-event",
-                     G_CALLBACK(on_configure_event), states);
+            G_CALLBACK(on_configure_event), states);
 
     gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
 
