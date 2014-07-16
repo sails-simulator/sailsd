@@ -160,7 +160,10 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
 
-    sail_physics_update(state->boat, 0.005);
+    int i;
+    for (i=0; i<10000; i++) {
+        sail_physics_update(state->boat, 0.000001);
+    }
 
     gtk_widget_queue_draw(state->draw);
     return TRUE;

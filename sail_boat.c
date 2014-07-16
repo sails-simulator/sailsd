@@ -60,7 +60,7 @@ void draw_sail(Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, -boat->images->hull_dimensions->height/5);
-    cairo_rotate(cr, boat->sail_angle);
+    cairo_rotate(cr, boat->ell);
     cairo_translate(cr, -boat->images->sail_dimensions->width/2, -boat->images->sail_dimensions->height/10);
 
     rsvg_handle_render_cairo(boat->images->sail, cr);
@@ -101,7 +101,25 @@ Boat* sail_boat_new() {
     new_boat->y = 0;
     new_boat->angle = 0;
     new_boat->sail_angle = 0;
-    new_boat->rudder_angle = 0;
+    new_boat->rudder_angle = 0.2;
+
+    new_boat->theta=M_PI_4;
+    new_boat->v=5;
+    new_boat->deltav=0;
+    new_boat->ell=1;
+    new_boat->omega = 0.0;
+    new_boat->Jz = 10000.0;
+    new_boat->beta=0.05;
+    new_boat->rg=4.0;
+    new_boat->alphatheta=6000;
+    new_boat->m=300.0;
+    new_boat->alphaf=0.2;
+    new_boat->rv=1;
+    new_boat->alphag=2000.0;
+    new_boat->l=1.0;
+    new_boat->alphav=1000.0;
+    new_boat->a=4;
+    new_boat->psi=M_PI_2;
 
     load_boat_images(new_boat);
 

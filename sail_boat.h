@@ -15,11 +15,15 @@ typedef struct _images {
 struct _boat;
 
 typedef struct _boat {
-    double x; // x coordinate of the boat
-    double y; // y coordinate of the boat
-    double angle; // orientation of the boat
+    double x, y; // coordinates of boat
+    double angle; // orientation of boat
     double sail_angle;
     double rudder_angle;
+
+    double theta,v,omega,ell; // state variables
+    double beta, Jz, rg, rv, alphag, alphav, alphaf, alphatheta, l, m; // parameters
+    double a,psi,psi_ap,a_ap;  // wind
+    double fg,fv,gamma,deltav;  // link variables
 
     SVGImages* images;
 } Boat;
