@@ -1,6 +1,7 @@
 #ifndef SAIL_BOAT_H_
 #define SAIL_BOAT_H_
 
+#include <cairo.h>
 #include <librsvg/rsvg.h>
 
 typedef struct _images {
