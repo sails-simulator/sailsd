@@ -29,7 +29,7 @@ typedef struct _boat {
     SVGImages* images;
 } Boat;
 
-void sail_boat_draw(cairo_t *cr, Boat *boat);
+void sail_boat_draw(cairo_t *cr, const Boat *boat);
 
 Boat* sail_boat_new();
 void sail_boat_free(Boat *boat);

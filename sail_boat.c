@@ -12,7 +12,7 @@
 #include "sail_boat.h"
 #include "sail_view.h"
 
-static RsvgHandle* load_svg(char *path) {
+static RsvgHandle* load_svg(const char *path) {
     GError *err = NULL;
     RsvgHandle *image = rsvg_handle_new_from_file(path, &err);
     if (err != NULL) {
@@ -48,7 +48,7 @@ static Boat* load_boat_images(Boat *boat) {
     return boat;
 }
 
-void draw_hull(Boat *boat, cairo_t *cr) {
+void draw_hull(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, -boat->images->hull_dimensions->width/2,
                         -boat->images->hull_dimensions->height/2);
@@ -56,7 +56,7 @@ void draw_hull(Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
-void draw_sail(Boat *boat, cairo_t *cr) {
+void draw_sail(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, -boat->images->hull_dimensions->height/5);
@@ -68,7 +68,7 @@ void draw_sail(Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
-void draw_rudder(Boat *boat, cairo_t *cr) {
+void draw_rudder(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, boat->images->hull_dimensions->height/2);
@@ -81,7 +81,7 @@ void draw_rudder(Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
-void sail_boat_draw(cairo_t *cr, Boat *boat) {
+void sail_boat_draw(cairo_t *cr, const Boat *boat) {
     cairo_save(cr);
     cairo_translate(cr, boat->x * SAIL_GRID_SPACING,
                         -boat->y * SAIL_GRID_SPACING);
