@@ -20,7 +20,7 @@ void draw_wind(cairo_t *cr) {
     cairo_fill(cr);
 }
 
-void sail_overlay_draw(cairo_t *cr, Boat *boat, ViewState *view) {
+void sail_overlay_draw(cairo_t *cr, const Boat *boat, const ViewState *view) {
     cairo_save(cr);
     cairo_identity_matrix(cr);
 
