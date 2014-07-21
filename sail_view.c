@@ -4,14 +4,14 @@
 
 #include "sail_view.h"
 
-static void draw_x_gridline(cairo_t *cr, int n) {
+static void draw_x_gridline(cairo_t *cr, const int n) {
     int x = n * SAIL_GRID_SPACING;
     cairo_move_to(cr, x + 0.5, -SAIL_GRID_WIDTH);
     cairo_line_to(cr, x + 0.5, SAIL_GRID_WIDTH);
     cairo_stroke(cr);
 }
 
-static void draw_y_gridline(cairo_t *cr, int n) {
+static void draw_y_gridline(cairo_t *cr, const int n) {
     int y = n * SAIL_GRID_SPACING;
     cairo_move_to(cr, -SAIL_GRID_WIDTH, y + 0.5);
     cairo_line_to(cr, SAIL_GRID_WIDTH, y + 0.5);
