@@ -3,6 +3,6 @@
 
 #include "sail_boat.h"
 
-void sail_physics_update(Boat *boat, double dt);
+void sail_physics_update(Boat *boat, const double dt);
 
 #endif

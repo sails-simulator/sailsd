@@ -11,8 +11,7 @@ double sign(double a) {
     }
 }
 
-void sail_physics_update(Boat *boat, double dt) {
-    boat->angle = boat->angle + 0.1 * dt;
+void sail_physics_update(Boat *boat, const double dt) {
     double dell = 0;
     double deltag = boat->rudder_angle;
     boat->ell=boat->ell+dt*dell;

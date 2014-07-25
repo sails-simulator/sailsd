@@ -3,6 +3,8 @@ Sails
 
 Simulator for autonomous sailing aquatic vehicles.
 
+Build status: [![BuildStatus](https://travis-ci.org/kragniz/sails.png?branch=master)](https://travis-ci.org/kragniz/sails)
+
 Compiling
 ---------
 
