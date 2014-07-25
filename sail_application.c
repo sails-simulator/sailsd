@@ -180,6 +180,10 @@ int main(int argc, char *argv[]) {
 
     gtk_init(&argc, &argv);
 
+    g_object_set(gtk_settings_get_default(),
+                 "gtk-application-prefer-dark-theme", TRUE,
+                 NULL);
+
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     draw = gtk_drawing_area_new();
 
