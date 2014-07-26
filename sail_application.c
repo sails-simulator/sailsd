@@ -15,6 +15,8 @@
 #define SAIL_DEFAULT_WIDTH 854
 #define SAIL_DEFAULT_HEIGHT 480
 
+#define SAILS_SHOW_OVERLAY FALSE
+
 #define SAIL_FRAMERATE 40
 #define SAIL_EVENT_TIMEOUT 1000 / SAIL_FRAMERATE
 
@@ -148,7 +150,10 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
             translation_x, translation_y,
             state->view->scale);
     sail_boat_draw(buffer, state->boat);
-    sail_overlay_draw(buffer, state->boat, state->view);
+
+    if (SAILS_SHOW_OVERLAY) {
+        sail_overlay_draw(buffer, state->boat, state->view);
+    }
 
     cairo_set_source_surface(cr, buffer_surface, 0, 0);
     cairo_paint(cr);
