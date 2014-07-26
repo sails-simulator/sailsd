@@ -10,15 +10,15 @@
 #include "sail_view.h"
 #include "sail_viewstate.h"
 
-#define SAIL_MIN_WIDTH 640
-#define SAIL_MIN_HEIGHT 360
-#define SAIL_DEFAULT_WIDTH 854
-#define SAIL_DEFAULT_HEIGHT 480
+#define SAILS_MIN_WIDTH 640
+#define SAILS_MIN_HEIGHT 360
+#define SAILS_DEFAULT_WIDTH 854
+#define SAILS_DEFAULT_HEIGHT 480
 
 #define SAILS_SHOW_OVERLAY FALSE
 
-#define SAIL_FRAMERATE 40
-#define SAIL_EVENT_TIMEOUT 1000 / SAIL_FRAMERATE
+#define SAILS_FRAMERATE 40
+#define SAILS_EVENT_TIMEOUT 1000 / SAILS_FRAMERATE
 
 typedef struct _sail_states {
     Boat *boat;
@@ -138,8 +138,8 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
     double translation_y;
 
     if (state->view->tracking_boat) {
-        translation_x = -state->boat->x * SAIL_GRID_SPACING;
-        translation_y = state->boat->y * SAIL_GRID_SPACING;
+        translation_x = -state->boat->x * SAILS_GRID_SPACING;
+        translation_y = state->boat->y * SAILS_GRID_SPACING;
     } else {
         translation_x = state->view->translation_x;
         translation_y = state->view->translation_y;
@@ -180,8 +180,8 @@ int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *draw;
     GdkGeometry hints;
-    hints.min_width = SAIL_MIN_WIDTH;
-    hints.min_height = SAIL_MIN_HEIGHT;
+    hints.min_width = SAILS_MIN_WIDTH;
+    hints.min_height = SAILS_MIN_HEIGHT;
 
     gtk_init(&argc, &argv);
 
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),
-                                SAIL_DEFAULT_WIDTH, SAIL_DEFAULT_HEIGHT);
+                                SAILS_DEFAULT_WIDTH, SAILS_DEFAULT_HEIGHT);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL,
                                   &hints, GDK_HINT_MIN_SIZE);
     gtk_window_set_title(GTK_WINDOW(window), "Sails");
@@ -223,7 +223,7 @@ int main(int argc, char *argv[]) {
     gtk_widget_set_app_paintable(window, TRUE);
     gtk_widget_set_double_buffered(window, FALSE);
 
-    gdk_threads_add_timeout(SAIL_EVENT_TIMEOUT, event_loop, (gpointer) states);
+    gdk_threads_add_timeout(SAILS_EVENT_TIMEOUT, event_loop, (gpointer) states);
 
     gtk_main();
 

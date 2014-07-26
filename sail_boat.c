@@ -83,8 +83,8 @@ void draw_rudder(const Boat *boat, cairo_t *cr) {
 
 void sail_boat_draw(cairo_t *cr, const Boat *boat) {
     cairo_save(cr);
-    cairo_translate(cr, boat->x * SAIL_GRID_SPACING,
-                        -boat->y * SAIL_GRID_SPACING);
+    cairo_translate(cr, boat->x * SAILS_GRID_SPACING,
+                        -boat->y * SAILS_GRID_SPACING);
     cairo_rotate(cr, -boat->angle + M_PI_2);
 
     draw_hull(boat, cr);
