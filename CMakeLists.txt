@@ -15,11 +15,12 @@ PKG_CHECK_MODULES(CAIRO REQUIRED cairo)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${GTK3_INCLUDE_DIRS}")
-include_directories("${CAIRO_INCLUDE_DIR}")
+include_directories("${CAIRO_INCLUDE_DIRS}")
 include_directories("${RSVG_INCLUDE_DIRS}")
 
 add_definitions("${GTK3_CFLAGS_OTHER}")
 
 target_link_libraries(sails m)
-target_link_libraries(sails ${GTK3_LIBRARIES})
-target_link_libraries(sails ${RSVG_LIBRARIES})
+target_link_libraries(sails "${GTK3_LIBRARIES}")
+target_link_libraries(sails "${RSVG_LIBRARIES}")
+target_link_libraries(sails "${CAIRO_LIBRARIES}")
