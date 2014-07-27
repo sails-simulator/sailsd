@@ -16,6 +16,7 @@
 #define SAILS_DEFAULT_HEIGHT 480
 
 #define SAILS_SHOW_OVERLAY FALSE
+#define SAILS_PHYSICS_PAUSED TRUE
 
 #define SAILS_FRAMERATE 40
 #define SAILS_EVENT_TIMEOUT 1000 / SAILS_FRAMERATE
@@ -167,9 +168,11 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
 
-    int i;
-    for (i=0; i<10000; i++) {
-        sail_physics_update(state->boat, 0.000001);
+    if (!SAILS_PHYSICS_PAUSED) {
+        int i;
+        for (i=0; i<10000; i++) {
+            sail_physics_update(state->boat, 0.000001);
+        }
     }
 
     gtk_widget_queue_draw(state->draw);
