@@ -16,15 +16,15 @@ find_package(GTK3 REQUIRED)
 pkg_check_modules(RSVG REQUIRED librsvg-2.0)
 pkg_check_modules(CAIRO REQUIRED cairo)
 
-include_directories("${PROJECT_BINARY_DIR}")
-include_directories("${GTK3_INCLUDE_DIRS}")
-include_directories("${CAIRO_INCLUDE_DIR}")
-include_directories("${RSVG_INCLUDE_DIRS}")
+include_directories(${PROJECT_BINARY_DIR})
+include_directories(${GTK3_INCLUDE_DIRS})
+include_directories(${CAIRO_INCLUDE_DIR})
+include_directories(${RSVG_INCLUDE_DIRS})
 
-add_definitions("${GTK3_CFLAGS_OTHER}")
+add_definitions(${GTK3_CFLAGS_OTHER})
 
 target_link_libraries(sails m)
-target_link_libraries(sails "${GTK3_LIBRARIES}"
-                            "${RSVG_LIBRARIES}"
-                            "${CAIRO_LIBRARIES}"
+target_link_libraries(sails ${GTK3_LIBRARIES}
+                            ${RSVG_LIBRARIES}
+                            ${CAIRO_LIBRARIES}
     )
