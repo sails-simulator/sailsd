@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 find_package(PkgConfig REQUIRED)
 find_package(Cairo REQUIRED)
-pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+find_package(GTK3 REQUIRED)
 pkg_check_modules(RSVG REQUIRED librsvg-2.0)
 pkg_check_modules(CAIRO REQUIRED cairo)
 
