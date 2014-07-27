@@ -8,7 +8,7 @@ matrix:
     allow_failures:
         - compiler: clang
 
-install: sudo apt-get install cmake libgtk-3-dev librsvg2-dev
+install: sudo apt-get install cmake libgtk-3-dev librsvg2-dev libcairo2-dev
 
 script:
     - mkdir build
