@@ -15,6 +15,7 @@ PKG_CHECK_MODULES(CAIRO REQUIRED cairo)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${GTK3_INCLUDE_DIRS}")
+include_directories("${CAIRO_INCLUDE_DIR}")
 include_directories("${RSVG_INCLUDE_DIRS}")
 
 add_definitions("${GTK3_CFLAGS_OTHER}")
