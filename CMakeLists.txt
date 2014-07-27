@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(sails C)
+project(Sails C)
 add_executable(sails sail_application.c
                      sail_boat.c
                      sail_overlay.c
@@ -20,7 +20,7 @@ include_directories(${GTK3_INCLUDE_DIRS})
 include_directories(${CAIRO_INCLUDE_DIR})
 include_directories(${RSVG_INCLUDE_DIRS})
 
-add_definitions(${GTK3_CFLAGS_OTHER})
+add_definitions(${GTK3_CFLAGS_OTHER} "-Wall -Werror -O2 -g")
 
 target_link_libraries(sails m)
 target_link_libraries(sails ${GTK3_LIBRARIES}
