@@ -171,6 +171,7 @@ static gboolean event_loop(gpointer state_p) {
     if (!SAILS_PHYSICS_PAUSED) {
         int i;
         for (i=0; i<10000; i++) {
+            // make Euler integration a bit more accurate
             sail_physics_update(state->boat, 0.000001);
         }
     }
