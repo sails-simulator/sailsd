@@ -14,6 +14,7 @@ typedef struct _sim {
     gboolean ctrl_held;
     gboolean is_fullscreen;
     gboolean tracking_boat;
+    gboolean simulator_running;
 } ViewState;
 
 ViewState* sail_viewstate_new();

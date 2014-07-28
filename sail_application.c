@@ -16,7 +16,6 @@
 #define SAILS_DEFAULT_HEIGHT 480
 
 #define SAILS_SHOW_OVERLAY FALSE
-#define SAILS_PHYSICS_PAUSED TRUE
 
 #define SAILS_FRAMERATE 40
 #define SAILS_EVENT_TIMEOUT 1000 / SAILS_FRAMERATE
@@ -100,6 +99,8 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
         state->boat->rudder_angle -= 0.01;
     } else if (val == GDK_KEY_space) {
         state->view->tracking_boat = !state->view->tracking_boat;
+    } else if (val == GDK_KEY_p) {
+        state->view->simulator_running = !state->view->simulator_running;
     } else if (val == GDK_KEY_F11) {
         state->view->is_fullscreen = !state->view->is_fullscreen;
         if (state->view->is_fullscreen) {
@@ -168,7 +169,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
 
-    if (!SAILS_PHYSICS_PAUSED) {
+    if (state->view->simulator_running) {
         int i;
         for (i=0; i<10000; i++) {
             // make Euler integration a bit more accurate
