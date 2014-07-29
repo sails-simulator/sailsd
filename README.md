@@ -12,9 +12,9 @@ Compiling
 
 Install the dependencies:
 
-__Fedora__: `sudo yum install make gcc gtk3-devel librsvg2-devel`
+__Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel`
 
-__Debian/Ubuntu__: `sudo apt-get install make gcc libgtk-3-dev librsvg2-dev`
+__Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev`
 
 Get source:
 
@@ -26,13 +26,17 @@ Compile:
 
 ```bash
 $ cd sails
+$ mkdir build
+$ cd build
+$ cmake ..
 $ make
+$ cd ..
 ```
 
 Run with:
 
 ```bash
-$ ./sails
+$ ./build/sails
 ```
 
 ### Windows
