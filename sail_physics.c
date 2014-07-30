@@ -26,7 +26,11 @@ void sail_physics_update(Boat *boat, const double dt) {
 
     if (boat->gamma < 0) {
         boat->deltav = atan(tan(boat->psi_ap));
-        boat->ell=fabs(boat->deltav);
+
+        // make sure the sail can change side
+        if (!fabs(boat->deltav)) {
+            boat->ell = fabs(boat->deltav);
+        }
     } else {
         boat->deltav = sign(sin(-boat->psi_ap))*boat->ell;
     }
