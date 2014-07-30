@@ -225,8 +225,10 @@ int main(int argc, char *argv[]) {
 
     gtk_widget_show_all(window);
 
-    gtk_widget_set_app_paintable(window, TRUE);
-    gtk_widget_set_double_buffered(window, FALSE);
+    #if GTK_CHECK_VERSION(3, 14, 0)
+        gtk_widget_set_app_paintable(window, TRUE);
+        gtk_widget_set_double_buffered(window, FALSE);
+    #endif
 
     gdk_threads_add_timeout(SAILS_EVENT_TIMEOUT, event_loop, (gpointer) states);
 
