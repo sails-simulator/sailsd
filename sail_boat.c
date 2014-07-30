@@ -102,6 +102,7 @@ Boat* sail_boat_new() {
     new_boat->angle = 0;
     new_boat->sail_angle = 0;
     new_boat->rudder_angle = 0.2;
+    new_boat->sail_is_free = 0;
 
     new_boat->theta=M_PI_4;
     new_boat->v=5;

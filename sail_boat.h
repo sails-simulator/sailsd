@@ -20,6 +20,7 @@ typedef struct _boat {
     double angle; // orientation of boat
     double sail_angle;
     double rudder_angle;
+    int sail_is_free; // is the sail free to move?
 
     double theta,v,omega,ell; // state variables
     double beta, Jz, rg, rv, alphag, alphav, alphaf, alphatheta, l, m; // parameters

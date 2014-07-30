@@ -12,9 +12,10 @@ double sign(double a) {
 }
 
 void sail_physics_update(Boat *boat, const double dt) {
-    double dell = 0;
     double deltag = boat->rudder_angle;
-    boat->ell=boat->ell+dt*dell;
+    if (boat->ell > -M_PI_2 && boat->ell < M_PI_2) {
+        boat->ell = boat->ell + dt * boat->sail_is_free;
+    }
 
     double xw_ap = boat->a * cos(boat->psi - boat->theta) - boat->v;
     double yw_ap = boat->a * sin(boat->psi - boat->theta);

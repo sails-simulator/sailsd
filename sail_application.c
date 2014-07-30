@@ -101,6 +101,14 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
         state->view->tracking_boat = !state->view->tracking_boat;
     } else if (val == GDK_KEY_p) {
         state->view->simulator_running = !state->view->simulator_running;
+    } else if (val == GDK_KEY_s) {
+        state->boat->sail_is_free = !state->boat->sail_is_free;
+        if (state->boat->sail_is_free) {
+            g_message("sail is now free");
+        } else {
+            g_message("sail is now blocked");
+        }
+
     } else if (val == GDK_KEY_F11) {
         state->view->is_fullscreen = !state->view->is_fullscreen;
         if (state->view->is_fullscreen) {
