@@ -60,7 +60,7 @@ void draw_sail(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, -boat->images->hull_dimensions->height/5);
-    cairo_rotate(cr, boat->ell);
+    cairo_rotate(cr, -boat->deltav);
     cairo_translate(cr, -boat->images->sail_dimensions->width/2, -boat->images->sail_dimensions->height/10);
 
     rsvg_handle_render_cairo(boat->images->sail, cr);
@@ -107,7 +107,7 @@ Boat* sail_boat_new() {
     new_boat->theta=M_PI_4;
     new_boat->v=5;
     new_boat->deltav=0;
-    new_boat->ell=1;
+    new_boat->ell=0;
     new_boat->omega = 0.0;
     new_boat->Jz = 10000.0;
     new_boat->beta=0.05;
