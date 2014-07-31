@@ -39,6 +39,45 @@ Run with:
 $ ./build/sails
 ```
 
+### OS X
+
+  1. Install Xcode (not command line utilities) and accept the license.
+  2. Install JHBuild (a tool written for building large GNOME applications):
+
+```bash
+$ wget https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
+$ sh gtk-osx-build-setup.sh
+$ alias jhbuild="~/.local/bin/jhbuild"
+$ jhbuild bootstrap
+$ jhbuild build meta-gtk-osx-bootstrap
+$ jhbuild build meta-gtk-osx-gtk3
+```
+
+  3. Now, JHBuild should be all ready to compile GTK+3 applications. To get a
+     sane build environment, enter the jhbuild shell:
+
+```bash
+jhbuild shell
+```
+
+  4. In this shell, start building stuff:
+
+```bash
+$ git clone https://github.com/kragniz/sails.git
+$ cd sails
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ cd ..
+```
+
+  5. Now run with:
+
+```bash
+$ ./build/sails
+```
+
 ### Windows
 
 Install [MinGW](http://www.mingw.org/) and add the bin directory (defaults to
