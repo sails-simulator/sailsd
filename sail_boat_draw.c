@@ -9,7 +9,7 @@
 #include "sail_boat_draw.h"
 #include "sail_view.h"
 
-void draw_hull(const Boat *boat, cairo_t *cr) {
+static void draw_hull(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, -boat->images->hull_dimensions->width/2,
                         -boat->images->hull_dimensions->height/2);
@@ -17,7 +17,7 @@ void draw_hull(const Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
-void draw_sail(const Boat *boat, cairo_t *cr) {
+static void draw_sail(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, -boat->images->hull_dimensions->height/5);
@@ -29,7 +29,7 @@ void draw_sail(const Boat *boat, cairo_t *cr) {
     cairo_restore(cr);
 }
 
-void draw_rudder(const Boat *boat, cairo_t *cr) {
+static void draw_rudder(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, boat->images->hull_dimensions->height/2);
