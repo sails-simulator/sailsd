@@ -10,6 +10,7 @@
 #include "sail_physics.h"
 #include "sail_view.h"
 #include "sail_viewstate.h"
+#include "sail_wind.h"
 
 #define SAILS_MIN_WIDTH 640
 #define SAILS_MIN_HEIGHT 360
@@ -23,15 +24,19 @@
 
 typedef struct _sail_states {
     Boat *boat;
+    Wind *wind;
     ViewState *view;
     GtkWidget *draw;
 } SailState;
 
 static SailState* sail_state_new(GtkWidget *draw) {
     SailState *states = malloc(sizeof(SailState));
-    states->view = sail_viewstate_new();
+
     states->boat = sail_boat_new();
+    states->view = sail_viewstate_new();
+    states->wind = sail_wind_new();
     states->draw = draw;
+
     return states;
 }
 
@@ -182,7 +187,7 @@ static gboolean event_loop(gpointer state_p) {
         int i;
         for (i=0; i<10000; i++) {
             // make Euler integration a bit more accurate
-            sail_physics_update(state->boat, 0.000001);
+            sail_physics_update(state->boat, state->wind, 0.000001);
         }
     }
 

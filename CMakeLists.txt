@@ -7,6 +7,7 @@ add_executable(sails sail_application.c
                      sail_physics.c
                      sail_view.c
                      sail_viewstate.c
+                     sail_wind.c
     )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")

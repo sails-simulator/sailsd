@@ -81,8 +81,6 @@ Boat* sail_boat_new() {
     new_boat->alphag=2000.0;
     new_boat->l=1.0;
     new_boat->alphav=1000.0;
-    new_boat->a=4;
-    new_boat->psi=M_PI_2;
 
     load_boat_images(new_boat);
 

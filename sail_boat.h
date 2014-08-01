@@ -24,7 +24,6 @@ typedef struct _boat {
 
     double theta,v,omega,ell; // state variables
     double beta, Jz, rg, rv, alphag, alphav, alphaf, alphatheta, l, m; // parameters
-    double a,psi,psi_ap,a_ap;  // wind
     double fg,fv,gamma,deltav;  // link variables
 
     SVGImages* images;
