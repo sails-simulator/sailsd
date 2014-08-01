@@ -35,5 +35,6 @@ void sail_boat_free(Boat *boat);
 
 double sail_boat_get_angle(const Boat *boat);
 double sail_boat_get_rudder_angle(const Boat *boat);
+double sail_boat_get_sail_angle(const Boat *boat);
 
 #endif

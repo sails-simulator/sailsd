@@ -21,7 +21,7 @@ static void draw_sail(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, -boat->images->hull_dimensions->height/5);
-    cairo_rotate(cr, -boat->deltav);
+    cairo_rotate(cr, -sail_boat_get_sail_angle(boat));
     cairo_translate(cr, -boat->images->sail_dimensions->width/2, -boat->images->sail_dimensions->height/10);
 
     rsvg_handle_render_cairo(boat->images->sail, cr);

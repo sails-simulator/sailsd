@@ -52,6 +52,10 @@ double sail_boat_get_rudder_angle(const Boat *boat) {
     return boat->rudder_angle;
 }
 
+double sail_boat_get_sail_angle(const Boat *boat) {
+    return boat->deltav;
+}
+
 Boat* sail_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));
 
