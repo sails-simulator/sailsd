@@ -5,10 +5,6 @@
 #include <cairo.h>
 #include <librsvg/rsvg.h>
 
-#ifndef LIBRSVG_CHECK_VERSION
-    #include <librsvg/rsvg-cairo.h>
-#endif
-
 #include "sail_boat.h"
 #include "sail_view.h"
 
