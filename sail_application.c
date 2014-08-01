@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 
 #include "sail_boat.h"
+#include "sail_boat_draw.h"
 #include "sail_overlay.h"
 #include "sail_physics.h"
 #include "sail_view.h"

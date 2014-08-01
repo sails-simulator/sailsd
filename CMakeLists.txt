@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(Sails C)
 add_executable(sails sail_application.c
                      sail_boat.c
+                     sail_boat_draw.c
                      sail_overlay.c
                      sail_physics.c
                      sail_view.c
