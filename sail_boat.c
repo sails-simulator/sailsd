@@ -44,6 +44,10 @@ static Boat* load_boat_images(Boat *boat) {
     return boat;
 }
 
+double sail_boat_get_rudder_angle(const Boat *boat) {
+    return boat->rudder_angle;
+}
+
 Boat* sail_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));
 

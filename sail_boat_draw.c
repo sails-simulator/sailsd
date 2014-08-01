@@ -33,7 +33,7 @@ static void draw_rudder(const Boat *boat, cairo_t *cr) {
     cairo_save(cr);
 
     cairo_translate(cr, 0, boat->images->hull_dimensions->height/2);
-    cairo_rotate(cr, -boat->rudder_angle);
+    cairo_rotate(cr, -sail_boat_get_rudder_angle(boat));
     cairo_translate(cr, -boat->images->rudder_dimensions->width/2,
                         -boat->images->rudder_dimensions->height/10);
 

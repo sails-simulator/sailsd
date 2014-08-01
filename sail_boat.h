@@ -33,4 +33,6 @@ typedef struct _boat {
 Boat* sail_boat_new();
 void sail_boat_free(Boat *boat);
 
+double sail_boat_get_rudder_angle(const Boat *boat);
+
 #endif
