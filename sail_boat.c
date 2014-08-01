@@ -44,6 +44,10 @@ static Boat* load_boat_images(Boat *boat) {
     return boat;
 }
 
+double sail_boat_get_angle(const Boat *boat) {
+    return boat->angle;
+}
+
 double sail_boat_get_rudder_angle(const Boat *boat) {
     return boat->rudder_angle;
 }
