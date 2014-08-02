@@ -23,8 +23,8 @@ typedef struct _boat {
     int sail_is_free; // is the sail free to move?
 
     double theta,v,omega,ell; // state variables
-    double beta, Jz, rg, rv, alphag, alphav, alphaf, alphatheta, l, m; // parameters
-    double fg,fv,gamma,deltav;  // link variables
+    double beta, Jz, rg, rv, rudder_lift, sail_lift, alphaf, alphatheta, l, m; // parameters
+    double gamma,deltav;  // link variables
 
     SVGImages* images;
 } Boat;

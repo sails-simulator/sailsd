@@ -37,8 +37,17 @@ static gboolean mainsheet_is_tight(const Boat *boat, const Wind *wind) {
     }
 }
 
+static double force_on_rudder(const Boat *boat, const Wind *wind) {
+    return boat->rudder_lift * boat->v * sin(sail_boat_get_rudder_angle(boat));
+}
+
+static double force_on_sail(const Boat *boat, const Wind *wind) {
+    return boat->sail_lift * apparent_wind_speed(boat, wind) * sin(boat->deltav - apparent_wind_direction(boat, wind));
+}
+
 void sail_physics_update(Boat *boat, Wind *wind, const double dt) {
     double deltag = boat->rudder_angle;
+
     if (boat->ell > -M_PI_2 && boat->ell < M_PI_2) {
         boat->ell = boat->ell + dt * boat->sail_is_free;
     }
@@ -54,18 +63,16 @@ void sail_physics_update(Boat *boat, Wind *wind, const double dt) {
         boat->deltav = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->ell;
     }
 
-    boat->fg = boat->alphag * boat->v * sin(deltag);
-    boat->fv = boat->alphav * apparent_wind_speed(boat, wind) * sin(boat->deltav - apparent_wind_direction(boat, wind));
     boat->x += (boat->v * cos(boat->theta) + boat->beta * sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind))) * dt;
     boat->y += (boat->v * sin(boat->theta) + boat->beta * sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind))) * dt;
 
     boat->omega += (1/boat->Jz) *
                    ((boat->l - boat->rv * cos(boat->deltav)) *
-                    boat->fv - boat->rg * cos(deltag) * boat->fg - boat->alphatheta *
+                    force_on_sail(boat, wind) - boat->rg * cos(deltag) * force_on_rudder(boat, wind) - boat->alphatheta *
                     boat->omega * boat->v) * dt;
-    boat->v += (1/boat->m) * (sin(boat->deltav) * boat->fv - sin(deltag) *
-               boat->fg - boat->alphaf * boat->v * boat->v) * dt;
+    boat->v += (1/boat->m) * (sin(boat->deltav) * force_on_sail(boat, wind) - sin(deltag) *
+               force_on_rudder(boat, wind) - boat->alphaf * boat->v * boat->v) * dt;
 
     boat->theta += boat->omega * dt;
     boat->angle = boat->theta;
-} 
+}

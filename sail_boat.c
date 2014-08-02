@@ -78,9 +78,9 @@ Boat* sail_boat_new() {
     new_boat->m=300.0;
     new_boat->alphaf=0.2;
     new_boat->rv=1;
-    new_boat->alphag=2000.0;
+    new_boat->rudder_lift = 2000.0;
     new_boat->l=1.0;
-    new_boat->alphav=1000.0;
+    new_boat->sail_lift=1000.0;
 
     load_boat_images(new_boat);
 
