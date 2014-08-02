@@ -45,10 +45,18 @@ static double force_on_sail(const Boat *boat, const Wind *wind) {
     return boat->sail_lift * apparent_wind_speed(boat, wind) * sin(boat->deltav - apparent_wind_direction(boat, wind));
 }
 
+static gboolean sail_is_in_bounds(Boat *boat) {
+    if (boat->ell > -M_PI_2 && boat->ell < M_PI_2) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
 void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
     double deltag = boat->rudder_angle;
 
-    if (boat->ell > -M_PI_2 && boat->ell < M_PI_2) {
+    if (sail_is_in_bounds(boat)) {
         boat->ell = boat->ell + dt * boat->sail_is_free;
     }
 
