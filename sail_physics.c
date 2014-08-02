@@ -53,6 +53,20 @@ static gboolean sail_is_in_bounds(Boat *boat) {
     }
 }
 
+static double delta_x(const Boat *boat, const Wind *wind) {
+    return sail_boat_get_velocity(boat) * cos(sail_boat_get_angle(boat)) +
+           boat->drift_coefficient *
+           sail_wind_get_speed(wind) *
+           cos(sail_wind_get_direction(wind));
+}
+
+static double delta_y(const Boat *boat, const Wind *wind) {
+    return sail_boat_get_velocity(boat) * sin(sail_boat_get_angle(boat)) +
+           boat->drift_coefficient *
+           sail_wind_get_speed(wind) *
+           sin(sail_wind_get_direction(wind));
+}
+
 void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
     double deltag = boat->rudder_angle;
 
@@ -71,8 +85,8 @@ void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
         boat->deltav = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->ell;
     }
 
-    boat->x += (boat->v * cos(boat->theta) + boat->beta * sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind))) * dt;
-    boat->y += (boat->v * sin(boat->theta) + boat->beta * sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind))) * dt;
+    boat->x += delta_x(boat, wind) * dt;
+    boat->y += delta_y(boat, wind) * dt;
 
     boat->omega += (1/boat->Jz) *
                    ((boat->l - boat->rv * cos(boat->deltav)) *

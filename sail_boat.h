@@ -23,7 +23,7 @@ typedef struct _boat {
     int sail_is_free; // is the sail free to move?
 
     double theta,v,omega,ell; // state variables
-    double beta, Jz, rg, rv, rudder_lift, sail_lift, alphaf, alphatheta, l, m; // parameters
+    double drift_coefficient, Jz, rg, rv, rudder_lift, sail_lift, alphaf, alphatheta, l, m; // parameters
     double gamma,deltav;  // link variables
 
     SVGImages* images;
@@ -35,5 +35,6 @@ void sail_boat_free(Boat *boat);
 double sail_boat_get_angle(const Boat *boat);
 double sail_boat_get_rudder_angle(const Boat *boat);
 double sail_boat_get_sail_angle(const Boat *boat);
+double sail_boat_get_velocity(const Boat *boat);
 
 #endif

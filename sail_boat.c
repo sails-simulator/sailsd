@@ -56,6 +56,10 @@ double sail_boat_get_sail_angle(const Boat *boat) {
     return boat->deltav;
 }
 
+double sail_boat_get_velocity(const Boat *boat) {
+    return boat->v;
+}
+
 Boat* sail_boat_new() {
     Boat *new_boat = malloc(sizeof(Boat));
 
@@ -72,7 +76,7 @@ Boat* sail_boat_new() {
     new_boat->ell=0;
     new_boat->omega = 0.0;
     new_boat->Jz = 10000.0;
-    new_boat->beta=0.05;
+    new_boat->drift_coefficient = 0.05;
     new_boat->rg=4.0;
     new_boat->alphatheta=6000;
     new_boat->m=300.0;
