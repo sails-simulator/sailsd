@@ -4,6 +4,6 @@
 #include "sail_boat.h"
 #include "sail_wind.h"
 
-void sail_physics_update(Boat *boat, Wind *wind, const double dt);
+void sail_physics_update(Boat *boat, const Wind *wind, const double dt);
 
 #endif
