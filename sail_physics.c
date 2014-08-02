@@ -4,7 +4,7 @@
 #include "sail_physics.h"
 #include "sail_wind.h"
 
-static double sign(double a) {
+static double sign_of(double a) {
     if (a <= 0) {
         return -1;
     } else {
@@ -35,24 +35,21 @@ void sail_physics_update(Boat *boat, Wind *wind, const double dt) {
         boat->ell = boat->ell + dt * boat->sail_is_free;
     }
 
-    wind->psi_ap = apparent_wind_direction(boat, wind);
-    wind->a_ap = apparent_wind_speed(boat, wind);
-    boat->gamma = cos(wind->psi_ap) + cos(boat->ell);
-
+    boat->gamma = cos(apparent_wind_direction(boat, wind)) + cos(boat->ell);
 
     if (boat->gamma < 0) {
-        boat->deltav = atan(tan(wind->psi_ap));
+        boat->deltav = atan(tan(apparent_wind_direction(boat, wind)));
 
         // make sure the sail can change side
         if (!fabs(boat->deltav)) {
             boat->ell = fabs(boat->deltav);
         }
     } else {
-        boat->deltav = sign(sin(-wind->psi_ap))*boat->ell;
+        boat->deltav = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->ell;
     }
 
     boat->fg = boat->alphag * boat->v * sin(deltag);
-    boat->fv = boat->alphav * wind->a_ap * sin(boat->deltav - wind->psi_ap);
+    boat->fv = boat->alphav * apparent_wind_speed(boat, wind) * sin(boat->deltav - apparent_wind_direction(boat, wind));
     boat->x += (boat->v * cos(boat->theta) + boat->beta * sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind))) * dt;
     boat->y += (boat->v * sin(boat->theta) + boat->beta * sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind))) * dt;
 

@@ -2,7 +2,7 @@
 #define SAIL_WIND_H_
 
 typedef struct _wind {
-    double speed, direction, psi_ap, a_ap;
+    double speed, direction;
 } Wind;
 
 Wind* sail_wind_new();
