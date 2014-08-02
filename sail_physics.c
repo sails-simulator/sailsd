@@ -29,15 +29,21 @@ static double apparent_wind_speed(const Boat *boat, const Wind *wind) {
                 pow(apparent_wind_y(boat, wind), 2));
 }
 
+static gboolean mainsheet_is_tight(const Boat *boat, const Wind *wind) {
+    if (cos(apparent_wind_direction(boat, wind)) + cos(boat->ell) < 0) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
 void sail_physics_update(Boat *boat, Wind *wind, const double dt) {
     double deltag = boat->rudder_angle;
     if (boat->ell > -M_PI_2 && boat->ell < M_PI_2) {
         boat->ell = boat->ell + dt * boat->sail_is_free;
     }
 
-    boat->gamma = cos(apparent_wind_direction(boat, wind)) + cos(boat->ell);
-
-    if (boat->gamma < 0) {
+    if (mainsheet_is_tight(boat, wind)) {
         boat->deltav = atan(tan(apparent_wind_direction(boat, wind)));
 
         // make sure the sail can change side
