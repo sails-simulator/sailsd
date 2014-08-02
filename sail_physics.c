@@ -4,12 +4,29 @@
 #include "sail_physics.h"
 #include "sail_wind.h"
 
-double sign(double a) {
+static double sign(double a) {
     if (a <= 0) {
         return -1;
     } else {
         return 1;
     }
+}
+
+static double apparent_wind_x(const Boat *boat, const Wind *wind) {
+    return sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind) - boat->theta) - boat->v;
+}
+
+static double apparent_wind_y(const Boat *boat, const Wind *wind) {
+    return sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind) - boat->theta);
+}
+
+static double apparent_wind_direction(const Boat *boat, const Wind *wind) {
+    return atan2(apparent_wind_y(boat, wind), apparent_wind_x(boat, wind));
+}
+
+static double apparent_wind_speed(const Boat *boat, const Wind *wind) {
+    return sqrt(pow(apparent_wind_x(boat, wind), 2) + 
+                pow(apparent_wind_y(boat, wind), 2));
 }
 
 void sail_physics_update(Boat *boat, Wind *wind, const double dt) {
@@ -18,10 +35,8 @@ void sail_physics_update(Boat *boat, Wind *wind, const double dt) {
         boat->ell = boat->ell + dt * boat->sail_is_free;
     }
 
-    double xw_ap = sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind) - boat->theta) - boat->v;
-    double yw_ap = sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind) - boat->theta);
-    wind->psi_ap = atan2(yw_ap, xw_ap);
-    wind->a_ap = sqrt(xw_ap*xw_ap + yw_ap*yw_ap);
+    wind->psi_ap = apparent_wind_direction(boat, wind);
+    wind->a_ap = apparent_wind_speed(boat, wind);
     boat->gamma = cos(wind->psi_ap) + cos(boat->ell);
 
 
