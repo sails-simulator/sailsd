@@ -10,34 +10,34 @@ Compiling
 
 ### GNU/Linux
 
-Install the dependencies:
+  1. Install the dependencies:
 
-__Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel`
+  __Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel`
 
-__Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev`
+  __Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev`
 
-Get source:
+  2. Get source:
 
-```bash
-$ git clone https://github.com/kragniz/sails.git
-```
+  ```bash
+  $ git clone https://github.com/kragniz/sails.git
+  ```
 
-Compile:
+  3. Compile:
 
-```bash
-$ cd sails
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-$ cd ..
-```
+  ```bash
+  $ cd sails
+  $ mkdir build
+  $ cd build
+  $ cmake ..
+  $ make
+  $ cd ..
+  ```
 
-Run with:
+  4. Run with:
 
-```bash
-$ ./build/sails
-```
+  ```bash
+  $ ./build/sails
+  ```
 
 ### OS X
 
