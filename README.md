@@ -57,7 +57,7 @@ $ ./build/sails
      sane build environment, enter the jhbuild shell:
 
   ```bash
-  jhbuild shell
+  $ jhbuild shell
   ```
 
   4. In this shell, start building stuff:
