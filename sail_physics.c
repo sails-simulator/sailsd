@@ -42,7 +42,7 @@ static double force_on_rudder(const Boat *boat, const Wind *wind) {
 }
 
 static double force_on_sail(const Boat *boat, const Wind *wind) {
-    return boat->sail_lift * apparent_wind_speed(boat, wind) * sin(boat->deltav - apparent_wind_direction(boat, wind));
+    return boat->sail_lift * apparent_wind_speed(boat, wind) * sin(boat->sail_angle - apparent_wind_direction(boat, wind));
 }
 
 static gboolean sail_is_in_bounds(Boat *boat) {
@@ -68,9 +68,9 @@ static double delta_y(const Boat *boat, const Wind *wind) {
 }
 
 static double delta_rotational_velocity(const Boat *boat, const Wind *wind) {
-    return ((boat->l - boat->rv * cos(boat->deltav)) * force_on_sail(boat, wind) -
+    return ((boat->l - boat->rv * cos(boat->sail_angle)) * force_on_sail(boat, wind) -
             boat->rg * cos(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
-            boat->alphatheta * boat->omega * boat->v) / boat->Jz;
+            boat->alphatheta * boat->rotational_velocity * boat->v) / boat->Jz;
 }
 
 void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
@@ -81,23 +81,23 @@ void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
     }
 
     if (mainsheet_is_tight(boat, wind)) {
-        boat->deltav = atan(tan(apparent_wind_direction(boat, wind)));
+        boat->sail_angle = atan(tan(apparent_wind_direction(boat, wind)));
 
         // make sure the sail can change side
-        if (!fabs(boat->deltav)) {
-            boat->ell = fabs(boat->deltav);
+        if (!fabs(boat->sail_angle)) {
+            boat->ell = fabs(boat->sail_angle);
         }
     } else {
-        boat->deltav = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->ell;
+        boat->sail_angle = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->ell;
     }
 
     boat->x += delta_x(boat, wind) * dt;
     boat->y += delta_y(boat, wind) * dt;
 
     boat->rotational_velocity += delta_rotational_velocity(boat, wind) * dt;
-    boat->v += (1/boat->m) * (sin(boat->deltav) * force_on_sail(boat, wind) - sin(deltag) *
+    boat->v += (1/boat->m) * (sin(boat->sail_angle) * force_on_sail(boat, wind) - sin(deltag) *
                force_on_rudder(boat, wind) - boat->alphaf * boat->v * boat->v) * dt;
 
-    boat->theta += boat->omega * dt;
+    boat->theta += boat->rotational_velocity * dt;
     boat->angle = boat->theta;
 }

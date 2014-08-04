@@ -53,7 +53,7 @@ double sail_boat_get_rudder_angle(const Boat *boat) {
 }
 
 double sail_boat_get_sail_angle(const Boat *boat) {
-    return boat->deltav;
+    return boat->sail_angle;
 }
 
 double sail_boat_get_velocity(const Boat *boat) {
@@ -72,7 +72,6 @@ Boat* sail_boat_new() {
 
     new_boat->theta=M_PI_4;
     new_boat->v=5;
-    new_boat->deltav=0;
     new_boat->ell=0;
     new_boat->rotational_velocity = 0.0;
     new_boat->Jz = 10000.0;

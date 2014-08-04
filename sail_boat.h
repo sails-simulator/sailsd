@@ -24,7 +24,7 @@ typedef struct _boat {
 
     double theta, v, rotational_velocity, ell; // state variables
     double drift_coefficient, Jz, rg, rv, rudder_lift, sail_lift, alphaf, alphatheta, l, m; // parameters
-    double gamma,deltav;  // link variables
+    double gamma;  // link variables
 
     SVGImages* images;
 } Boat;
