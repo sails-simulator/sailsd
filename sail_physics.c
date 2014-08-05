@@ -73,9 +73,13 @@ static double delta_rotational_velocity(const Boat *boat, const Wind *wind) {
             boat->alphatheta * boat->rotational_velocity * boat->v) / boat->Jz;
 }
 
-void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
-    double deltag = boat->rudder_angle;
+static double delta_velocity(const Boat *boat, const Wind *wind) {
+    return (sin(boat->sail_angle) * force_on_sail(boat, wind) -
+            sin(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
+            boat->tangential_friction * boat->v * boat->v) / boat->m;
+}
 
+void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
     if (sail_is_in_bounds(boat)) {
         boat->ell = boat->ell + dt * boat->sail_is_free;
     }
@@ -95,9 +99,7 @@ void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
     boat->y += delta_y(boat, wind) * dt;
 
     boat->rotational_velocity += delta_rotational_velocity(boat, wind) * dt;
-    boat->v += (1/boat->m) * (sin(boat->sail_angle) * force_on_sail(boat, wind) - sin(deltag) *
-               force_on_rudder(boat, wind) - boat->alphaf * boat->v * boat->v) * dt;
-
+    boat->v += delta_velocity(boat, wind) * dt;
     boat->theta += boat->rotational_velocity * dt;
     boat->angle = boat->theta;
 }

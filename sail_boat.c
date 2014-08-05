@@ -79,7 +79,7 @@ Boat* sail_boat_new() {
     new_boat->rg=4.0;
     new_boat->alphatheta=6000;
     new_boat->m=300.0;
-    new_boat->alphaf=0.2;
+    new_boat->tangential_friction = 0.2;
     new_boat->mast_distance = 1;
     new_boat->rudder_lift = 2000.0;
     new_boat->sail_center_of_effort = 1.0;
