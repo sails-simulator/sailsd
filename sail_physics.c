@@ -68,7 +68,7 @@ static double delta_y(const Boat *boat, const Wind *wind) {
 }
 
 static double delta_rotational_velocity(const Boat *boat, const Wind *wind) {
-    return ((boat->l - boat->rv * cos(boat->sail_angle)) * force_on_sail(boat, wind) -
+    return ((boat->sail_center_of_effort - boat->mast_distance * cos(boat->sail_angle)) * force_on_sail(boat, wind) -
             boat->rg * cos(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
             boat->alphatheta * boat->rotational_velocity * boat->v) / boat->Jz;
 }
