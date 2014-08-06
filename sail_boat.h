@@ -20,11 +20,13 @@ typedef struct _boat {
     double angle; // orientation of boat
     double sail_angle;
     double rudder_angle;
+    double sheet_length;
     int sail_is_free; // is the sail free to move?
 
     double theta, v, rotational_velocity, ell; // state variables
-    double drift_coefficient, Jz, rg, mast_distance, rudder_lift, sail_lift, tangential_friction, alphatheta, sail_center_of_effort, m; // parameters
-    double gamma;  // link variables
+    double drift_coefficient, mass, rudder_distance, mast_distance,
+           rudder_lift, sail_lift, tangential_friction, angular_friction,
+           sail_center_of_effort, m; // parameters
 
     SVGImages* images;
 } Boat;

@@ -30,7 +30,7 @@ static double apparent_wind_speed(const Boat *boat, const Wind *wind) {
 }
 
 static gboolean mainsheet_is_tight(const Boat *boat, const Wind *wind) {
-    if (cos(apparent_wind_direction(boat, wind)) + cos(boat->ell) < 0) {
+    if (cos(apparent_wind_direction(boat, wind)) + cos(boat->sheet_length) < 0) {
         return TRUE;
     } else {
         return FALSE;
@@ -46,7 +46,7 @@ static double force_on_sail(const Boat *boat, const Wind *wind) {
 }
 
 static gboolean sail_is_in_bounds(Boat *boat) {
-    if (boat->ell > -M_PI_2 && boat->ell < M_PI_2) {
+    if (boat->sheet_length > -M_PI_2 && boat->sheet_length < M_PI_2) {
         return TRUE;
     } else {
         return FALSE;
@@ -69,8 +69,8 @@ static double delta_y(const Boat *boat, const Wind *wind) {
 
 static double delta_rotational_velocity(const Boat *boat, const Wind *wind) {
     return ((boat->sail_center_of_effort - boat->mast_distance * cos(boat->sail_angle)) * force_on_sail(boat, wind) -
-            boat->rg * cos(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
-            boat->alphatheta * boat->rotational_velocity * boat->v) / boat->Jz;
+            boat->rudder_distance * cos(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
+            boat->angular_friction * boat->rotational_velocity * boat->v) / boat->mass;
 }
 
 static double delta_velocity(const Boat *boat, const Wind *wind) {
@@ -81,7 +81,7 @@ static double delta_velocity(const Boat *boat, const Wind *wind) {
 
 void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
     if (sail_is_in_bounds(boat)) {
-        boat->ell = boat->ell + dt * boat->sail_is_free;
+        boat->sheet_length = boat->sheet_length + dt * boat->sail_is_free;
     }
 
     if (mainsheet_is_tight(boat, wind)) {
@@ -89,10 +89,10 @@ void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
 
         // make sure the sail can change side
         if (!fabs(boat->sail_angle)) {
-            boat->ell = fabs(boat->sail_angle);
+            boat->sheet_length = fabs(boat->sail_angle);
         }
     } else {
-        boat->sail_angle = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->ell;
+        boat->sail_angle = sign_of(sin(-apparent_wind_direction(boat, wind)))*boat->sheet_length;
     }
 
     boat->x += delta_x(boat, wind) * dt;

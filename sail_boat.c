@@ -72,12 +72,12 @@ Boat* sail_boat_new() {
 
     new_boat->theta=M_PI_4;
     new_boat->v=5;
-    new_boat->ell=0;
+    new_boat->sheet_length = 0;
     new_boat->rotational_velocity = 0.0;
-    new_boat->Jz = 10000.0;
+    new_boat->mass = 10000.0;
     new_boat->drift_coefficient = 0.05;
-    new_boat->rg=4.0;
-    new_boat->alphatheta=6000;
+    new_boat->rudder_distance = 4.0;
+    new_boat->angular_friction = 6000;
     new_boat->m=300.0;
     new_boat->tangential_friction = 0.2;
     new_boat->mast_distance = 1;
