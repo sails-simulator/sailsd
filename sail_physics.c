@@ -45,7 +45,7 @@ static double force_on_sail(const Boat *boat, const Wind *wind) {
     return boat->sail_lift * apparent_wind_speed(boat, wind) * sin(boat->sail_angle - apparent_wind_direction(boat, wind));
 }
 
-static gboolean sail_is_in_bounds(Boat *boat) {
+static gboolean sail_is_in_bounds(const Boat *boat) {
     if (boat->sheet_length > -M_PI_2 && boat->sheet_length < M_PI_2) {
         return TRUE;
     } else {
