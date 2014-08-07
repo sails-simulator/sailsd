@@ -133,6 +133,12 @@ static gboolean on_button_release_event(GtkWidget *widget, GdkEvent *ev, SailSta
     return FALSE;
 }
 
+static void toggle_tracking(SailState *state) {
+    state->view->tracking_boat = !state->view->tracking_boat;
+    state->view->translation_x = -state->boat->x * SAILS_GRID_SPACING;
+    state->view->translation_y = state->boat->y * SAILS_GRID_SPACING;
+}
+
 static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
@@ -143,7 +149,7 @@ static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *s
     } else if (val == GDK_KEY_e) {
         state->boat->rudder_angle -= 0.05;
     } else if (val == GDK_KEY_space) {
-        state->view->tracking_boat = !state->view->tracking_boat;
+        toggle_tracking(state);
     } else if (val == GDK_KEY_p) {
         state->view->simulator_running = !state->view->simulator_running;
     } else if (val == GDK_KEY_s) {
