@@ -94,15 +94,35 @@ static gboolean on_destroy_event(GtkWidget *widget, SailState *state) {
     return FALSE;
 }
 
+static gboolean on_button_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
+    guint button;
+    gdk_event_get_button(ev, &button);
+    if (button == 2) {
+        g_message("button pressed");
+        state->view->button_middle_held = TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean on_button_release_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
+    guint button;
+    gdk_event_get_button(ev, &button);
+    if (button == 2) {
+        g_message("button released");
+        state->view->button_middle_held = FALSE;
+    }
+    return FALSE;
+}
+
 static gboolean on_key_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint val = 0;
     gdk_event_get_keyval(ev, &val);
     if (val == GDK_KEY_Escape) {
         on_quit(state);
     } else if (val == GDK_KEY_r) {
-        state->boat->rudder_angle += 0.01;
+        state->boat->rudder_angle += 0.05;
     } else if (val == GDK_KEY_e) {
-        state->boat->rudder_angle -= 0.01;
+        state->boat->rudder_angle -= 0.05;
     } else if (val == GDK_KEY_space) {
         state->view->tracking_boat = !state->view->tracking_boat;
     } else if (val == GDK_KEY_p) {
@@ -221,6 +241,10 @@ int main(int argc, char *argv[]) {
             G_CALLBACK(on_destroy_event), states);
     g_signal_connect(window, "scroll-event",
             G_CALLBACK(on_scroll_event), states);
+    g_signal_connect(window, "button-press-event",
+            G_CALLBACK(on_button_press_event), states) ;
+    g_signal_connect(window, "button-release-event",
+            G_CALLBACK(on_button_release_event), states) ;
     g_signal_connect(window, "key-press-event",
             G_CALLBACK(on_key_press_event), states);
     g_signal_connect(window, "key-release-event",
@@ -228,7 +252,9 @@ int main(int argc, char *argv[]) {
     g_signal_connect(window, "configure-event",
             G_CALLBACK(on_configure_event), states);
 
-    gtk_widget_add_events(window, GDK_SCROLL_MASK | GDK_KEY_PRESS_MASK);
+    gtk_widget_add_events(window, GDK_SCROLL_MASK);
+    gtk_widget_add_events(window, GDK_KEY_PRESS_MASK);
+    gtk_widget_add_events(window , GDK_BUTTON_PRESS_MASK);
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),

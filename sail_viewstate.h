@@ -15,6 +15,7 @@ typedef struct _sim {
     gboolean is_fullscreen;
     gboolean tracking_boat;
     gboolean simulator_running;
+    gboolean button_middle_held;
 } ViewState;
 
 ViewState* sail_viewstate_new();
