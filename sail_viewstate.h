@@ -6,6 +6,10 @@ struct _sim;
 typedef struct _sim {
     double translation_x;
     double translation_y;
+
+    gdouble last_motion_x;
+    gdouble last_motion_y;
+
     double scale;
     gint width;
     gint height;

@@ -7,6 +7,8 @@ ViewState* sail_viewstate_new() {
     ViewState *new_state = malloc(sizeof(ViewState));
     new_state->translation_x = 0;
     new_state->translation_y = 0;
+    new_state->last_motion_x = 0;
+    new_state->last_motion_y = 0;
     new_state->scale = 1;
 
     new_state->width = 1;

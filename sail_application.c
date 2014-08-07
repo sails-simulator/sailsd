@@ -83,6 +83,20 @@ static gboolean on_scroll_event(GtkWidget *widget, GdkEvent *ev, SailState *stat
     return FALSE;
 }
 
+static gboolean on_motion_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
+    if (state->view->button_middle_held) {
+        gdouble x, y;
+        gdk_event_get_coords(ev, &x, &y);
+
+        state->view->translation_x -= (state->view->last_motion_x - x) / state->view->scale;
+        state->view->translation_y -= (state->view->last_motion_y - y) / state->view->scale;
+
+        state->view->last_motion_x = x;
+        state->view->last_motion_y = y;
+    }
+    return FALSE;
+}
+
 static void on_quit(SailState *state) {
     g_message("qutting...");
     sail_state_free(state);
@@ -97,9 +111,14 @@ static gboolean on_destroy_event(GtkWidget *widget, SailState *state) {
 static gboolean on_button_press_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint button;
     gdk_event_get_button(ev, &button);
+
+    gdouble x, y;
+    gdk_event_get_coords(ev, &x, &y);
+
     if (button == 2) {
-        g_message("button pressed");
         state->view->button_middle_held = TRUE;
+        state->view->last_motion_x = x;
+        state->view->last_motion_y = y;
     }
     return FALSE;
 }
@@ -107,8 +126,8 @@ static gboolean on_button_press_event(GtkWidget *widget, GdkEvent *ev, SailState
 static gboolean on_button_release_event(GtkWidget *widget, GdkEvent *ev, SailState *state) {
     guint button;
     gdk_event_get_button(ev, &button);
+
     if (button == 2) {
-        g_message("button released");
         state->view->button_middle_held = FALSE;
     }
     return FALSE;
@@ -241,6 +260,8 @@ int main(int argc, char *argv[]) {
             G_CALLBACK(on_destroy_event), states);
     g_signal_connect(window, "scroll-event",
             G_CALLBACK(on_scroll_event), states);
+    g_signal_connect(window, "motion-notify-event",
+            G_CALLBACK(on_motion_event), states);
     g_signal_connect(window, "button-press-event",
             G_CALLBACK(on_button_press_event), states) ;
     g_signal_connect(window, "button-release-event",
