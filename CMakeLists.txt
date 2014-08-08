@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 
 project(Sails C)
 
+set (SAILS_VERSION_MAJOR 0)
+set (SAILS_VERSION_MINOR 1)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 set(DATADIR "${CMAKE_INSTALL_PREFIX}/share")
 set(RESOURCESDIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
