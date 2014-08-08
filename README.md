@@ -1,7 +1,10 @@
 Sails
 ====
 
-Simulator for autonomous sailing aquatic vehicles.
+Sails is a simulator designed to test the AI of autonomous sailing robots. It
+emulates the basic physics of sailing a small single sail boat
+
+Currently a large work in progress.
 
 Build status: [![BuildStatus](https://travis-ci.org/kragniz/sails.png?branch=master)](https://travis-ci.org/kragniz/sails)
 
