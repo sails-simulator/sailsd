@@ -6,6 +6,7 @@
 #include <librsvg/rsvg.h>
 
 #include "sail_boat.h"
+#include "sail_resources.h"
 #include "sail_view.h"
 
 static RsvgHandle* load_svg(const char *path) {
@@ -26,17 +27,17 @@ static Boat* load_boat_images(Boat *boat) {
         g_type_init();
     #endif
 
-    boat->images->hull = load_svg("resources/hull.svg");
+    boat->images->hull = load_svg(SAIL_IMAGE_HULL);
     boat->images->hull_dimensions = malloc(sizeof(RsvgDimensionData));
     rsvg_handle_get_dimensions(boat->images->hull,
                                boat->images->hull_dimensions);
 
-    boat->images->sail = load_svg("resources/sail.svg");
+    boat->images->sail = load_svg(SAIL_IMAGE_SAIL);
     boat->images->sail_dimensions = malloc(sizeof(RsvgDimensionData));
     rsvg_handle_get_dimensions(boat->images->sail,
                                boat->images->sail_dimensions);
 
-    boat->images->rudder = load_svg("resources/rudder.svg");
+    boat->images->rudder = load_svg(SAIL_IMAGE_RUDDER);
     boat->images->rudder_dimensions = malloc(sizeof(RsvgDimensionData));
     rsvg_handle_get_dimensions(boat->images->rudder,
                                boat->images->rudder_dimensions);
