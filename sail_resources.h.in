@@ -1,0 +1,8 @@
+#ifndef SAIL_RESOURCES_
+#define SAIL_RESOURCES_
+
+#define SAIL_IMAGE_HULL "@INSTALLED_RESOURCES@/hull.svg"
+#define SAIL_IMAGE_SAIL "@INSTALLED_RESOURCES@/sail.svg"
+#define SAIL_IMAGE_RUDDER "@INSTALLED_RESOURCES@/rudder.svg"
+
+#endif
