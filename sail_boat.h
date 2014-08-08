@@ -23,7 +23,7 @@ typedef struct _boat {
     double sheet_length;
     int sail_is_free; // is the sail free to move?
 
-    double theta, v, rotational_velocity, ell; // state variables
+    double v, rotational_velocity, ell; // state variables
     double drift_coefficient, mass, rudder_distance, mast_distance,
            rudder_lift, sail_lift, tangential_friction, angular_friction,
            sail_center_of_effort, m; // parameters

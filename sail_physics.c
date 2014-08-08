@@ -13,11 +13,11 @@ static double sign_of(double a) {
 }
 
 static double apparent_wind_x(const Boat *boat, const Wind *wind) {
-    return sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind) - boat->theta) - boat->v;
+    return sail_wind_get_speed(wind) * cos(sail_wind_get_direction(wind) - boat->angle) - boat->v;
 }
 
 static double apparent_wind_y(const Boat *boat, const Wind *wind) {
-    return sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind) - boat->theta);
+    return sail_wind_get_speed(wind) * sin(sail_wind_get_direction(wind) - boat->angle);
 }
 
 static double apparent_wind_direction(const Boat *boat, const Wind *wind) {
@@ -100,6 +100,5 @@ void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
 
     boat->rotational_velocity += delta_rotational_velocity(boat, wind) * dt;
     boat->v += delta_velocity(boat, wind) * dt;
-    boat->theta += boat->rotational_velocity * dt;
-    boat->angle = boat->theta;
+    boat->angle += boat->rotational_velocity * dt;
 }
