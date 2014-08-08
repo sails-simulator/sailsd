@@ -26,7 +26,7 @@ typedef struct _boat {
     double v, rotational_velocity, ell; // state variables
     double drift_coefficient, mass, rudder_distance, mast_distance,
            rudder_lift, sail_lift, tangential_friction, angular_friction,
-           sail_center_of_effort, m; // parameters
+           sail_center_of_effort, inertia; // parameters
 
     SVGImages* images;
 } Boat;

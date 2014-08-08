@@ -70,13 +70,13 @@ static double delta_y(const Boat *boat, const Wind *wind) {
 static double delta_rotational_velocity(const Boat *boat, const Wind *wind) {
     return ((boat->sail_center_of_effort - boat->mast_distance * cos(boat->sail_angle)) * force_on_sail(boat, wind) -
             boat->rudder_distance * cos(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
-            boat->angular_friction * boat->rotational_velocity * boat->v) / boat->mass;
+            boat->angular_friction * boat->rotational_velocity * boat->v) / boat->inertia;
 }
 
 static double delta_velocity(const Boat *boat, const Wind *wind) {
     return (sin(boat->sail_angle) * force_on_sail(boat, wind) -
             sin(sail_boat_get_rudder_angle(boat)) * force_on_rudder(boat, wind) -
-            boat->tangential_friction * boat->v * boat->v) / boat->m;
+            boat->tangential_friction * boat->v * boat->v) / boat->mass;
 }
 
 void sail_physics_update(Boat *boat, const Wind *wind, const double dt) {
