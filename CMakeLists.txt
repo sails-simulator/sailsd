@@ -29,3 +29,8 @@ target_link_libraries(sails ${GTK3_LIBRARIES}
                             ${RSVG_LIBRARIES}
                             ${CAIRO_LIBRARIES}
     )
+
+install(TARGETS sails
+        RUNTIME
+        DESTINATION bin
+    )
