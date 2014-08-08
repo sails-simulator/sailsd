@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
+
 project(Sails C)
-add_executable(sails sail_application.c
-                     sail_boat.c
-                     sail_boat_draw.c
-                     sail_overlay.c
-                     sail_physics.c
-                     sail_view.c
-                     sail_viewstate.c
-                     sail_wind.c
-    )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 set(DATADIR "${CMAKE_INSTALL_PREFIX}/share")
@@ -31,6 +23,16 @@ include_directories(${CAIRO_INCLUDE_DIR})
 include_directories(${RSVG_INCLUDE_DIRS})
 
 add_definitions(${GTK3_CFLAGS_OTHER} "-Wall -Werror -O2 -g")
+
+add_executable(sails sail_application.c
+                     sail_boat.c
+                     sail_boat_draw.c
+                     sail_overlay.c
+                     sail_physics.c
+                     sail_view.c
+                     sail_viewstate.c
+                     sail_wind.c
+    )
 
 target_link_libraries(sails m)
 target_link_libraries(sails ${GTK3_LIBRARIES}
