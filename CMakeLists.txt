@@ -11,6 +11,8 @@ add_executable(sails sail_application.c
     )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+set(DATADIR "${CMAKE_INSTALL_PREFIX}/share")
+set(RESOURCESDIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
 find_package(PkgConfig REQUIRED)
 find_package(Cairo REQUIRED)
@@ -34,3 +36,12 @@ install(TARGETS sails
         RUNTIME
         DESTINATION bin
     )
+
+install(FILES ${RESOURCESDIR}/sails.desktop
+        DESTINATION ${DATADIR}/applications/)
+
+install(FILES
+        ${RESOURCESDIR}/hull.svg
+        ${RESOURCESDIR}/sail.svg
+        ${RESOURCESDIR}/rudder.svg
+        DESTINATION ${DATADIR}/sails/)
