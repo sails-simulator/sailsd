@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Version=0.1
+Version=1.0
 Name=Sails
 GenericName=Sailing Boat Simulator
 Comment=Simulator for autonomous sailing boats
@@ -8,4 +8,4 @@ Exec=sails
 Icon=application-x-executable
 Terminal=false
 Url=https://github.com/kragniz/sails
-Categories=Education;Science;Robotics;
+Categories=Science;Robotics;
