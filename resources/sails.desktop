@@ -7,5 +7,4 @@ Comment=Simulator for autonomous sailing boats
 Exec=sails
 Icon=application-x-executable
 Terminal=false
-Url=https://github.com/kragniz/sails
 Categories=Science;Robotics;
