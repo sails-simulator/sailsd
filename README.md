@@ -109,6 +109,17 @@ Run with:
 $ ./sails.exe
 ```
 
+
+Usage
+-----
+
+Currently, the only way to interact with the boat is via the keyboard. This
+will change once the API is implemented. Current controls are:
+
+  - `e` and `r` - turn the rudder left and right
+  - `s` - toggle whether the sail is held or relaxed
+  - `space` - toggle camera mode from tracking and non-tracking
+
 Licence
 -------
 
