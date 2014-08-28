@@ -231,6 +231,7 @@ static gboolean event_loop(gpointer state_p) {
     if (state->view->simulator_running) {
         int i;
         for (i=0; i<10000; i++) {
+            // FIXME make timestep proportional to framerate
             // make Euler integration a bit more accurate
             sail_physics_update(state->boat, state->wind, 0.000001);
         }
