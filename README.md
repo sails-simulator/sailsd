@@ -8,6 +8,18 @@ Currently a large work in progress.
 
 Build status: [![BuildStatus](https://travis-ci.org/kragniz/sails.png?branch=master)](https://travis-ci.org/kragniz/sails)
 
+
+Installing
+----------
+
+If you're running Nix, sails is available from the unstable channel:
+
+```bash
+$ nix-channel --add http://nixos.org/channels/nixpkgs-unstable
+$ nix-channel --update
+$ nix-env --install sails
+```
+
 Compiling
 ---------
 
@@ -15,9 +27,9 @@ Compiling
 
   1. Install the dependencies:
 
-  __Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel`
+  __Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel libsoup-devel`
 
-  __Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev`
+  __Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev libsoup-dev`
 
   2. Get source:
 
@@ -32,8 +44,7 @@ Compiling
   $ mkdir build
   $ cd build
   $ cmake ..
-  $ make
-  $ cd ..
+  $ make install
   ```
 
   4. Run with:
@@ -71,8 +82,7 @@ Compiling
   $ mkdir build
   $ cd build
   $ cmake ..
-  $ make
-  $ cd ..
+  $ make install
   ```
 
   5. Now run with:
@@ -100,7 +110,7 @@ Compile using make:
 
 ```bash
 $ cd sails
-$ make
+$ make install
 ```
 
 Run with:
