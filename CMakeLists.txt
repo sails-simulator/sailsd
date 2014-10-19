@@ -43,6 +43,7 @@ target_link_libraries(sails m)
 target_link_libraries(sails ${GTK3_LIBRARIES}
                             ${RSVG_LIBRARIES}
                             ${CAIRO_LIBRARIES}
+                            ${LIBSOUP_LIBRARIES}
     )
 
 install(TARGETS sails
