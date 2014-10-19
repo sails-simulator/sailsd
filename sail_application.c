@@ -316,7 +316,7 @@ int main(int argc, char *argv[]) {
 
     server = soup_server_new(SOUP_SERVER_SERVER_HEADER, "sails ", SOUP_SERVER_PORT, 3434, NULL);
     g_message("running on port %i", soup_server_get_port(server));
-    soup_server_add_handler(server, "/", http_server_callback, NULL, NULL);
+    soup_server_add_handler(server, "/api", http_server_callback, NULL, NULL);
     soup_server_run_async(server);
 
     gtk_main();
