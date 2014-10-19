@@ -247,6 +247,9 @@ static void http_server_callback(SoupServer *server,
                                  const char *path, GHashTable *query,
                                  SoupClientContext *client,
                                  gpointer user_data) {
+    soup_message_set_response(msg, "application/json", SOUP_MEMORY_COPY,
+                              "{\"hello\": \"hi\"}", 16);
+    soup_message_set_status(msg, SOUP_STATUS_OK);
     g_message("http request: %s", path);
 }
 
