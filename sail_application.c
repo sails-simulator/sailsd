@@ -3,6 +3,7 @@
 
 #include <cairo.h>
 #include <gtk/gtk.h>
+#include <libsoup/soup.h>
 
 #include "sail_boat.h"
 #include "sail_boat_draw.h"
