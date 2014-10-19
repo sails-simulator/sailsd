@@ -1,5 +1,5 @@
 Sails
-====
+=====
 
 Sails is a simulator designed to test the AI of autonomous sailing robots. It
 emulates the basic physics of sailing a small single sail boat
@@ -19,6 +19,35 @@ $ nix-channel --add http://nixos.org/channels/nixpkgs-unstable
 $ nix-channel --update
 $ nix-env --install sails
 ```
+
+API (draft)
+-----------
+
+Most of the interaction with sails takes place through the API. This is a
+fairly standard REST+JSON based API, listening on port `3434`.
+
+  - `/api`
+
+  - `/api/boats`
+
+    - `GET`: List all current boats.
+
+    - `POST`: Launch a new boat.
+
+  - `/api/boats/{name}`
+
+    - `GET`: Show the current information about that boat.
+
+    - `PATCH`: Update certain writable attributes of a boat. These are HTTP
+      PATCH requests which conform to the JSON Patch format
+      [RFC6902](http://tools.ietf.org/html/rfc6902).
+
+    - `DELETE`: Sink the boat.
+
+  - `/api/wind`
+
+  - `/api/water`
+
 
 Compiling
 ---------
