@@ -19,11 +19,13 @@ find_package(PkgConfig REQUIRED)
 find_package(Cairo REQUIRED)
 find_package(GTK3 REQUIRED)
 find_package(Rsvg REQUIRED)
+find_package(LibSoup REQUIRED)
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${GTK3_INCLUDE_DIRS})
 include_directories(${CAIRO_INCLUDE_DIR})
 include_directories(${RSVG_INCLUDE_DIRS})
+include_directories(${LIBSOUP_INCLUDE_DIRS})
 
 add_definitions(${GTK3_CFLAGS_OTHER} "-Wall -Werror -O2 -g")
 
@@ -41,6 +43,7 @@ target_link_libraries(sails m)
 target_link_libraries(sails ${GTK3_LIBRARIES}
                             ${RSVG_LIBRARIES}
                             ${CAIRO_LIBRARIES}
+                            ${LIBSOUP_LIBRARIES}
     )
 
 install(TARGETS sails
