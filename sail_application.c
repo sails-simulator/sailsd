@@ -242,6 +242,13 @@ static gboolean event_loop(gpointer state_p) {
     return TRUE;
 }
 
+static void http_server_callback(SoupServer *server,
+                                 SoupMessage *msg,
+                                 const char *path, GHashTable *query,
+                                 SoupClientContext *client,
+                                 gpointer user_data) {
+}
+
 int main(int argc, char *argv[]) {
     SoupServer *server;
 
@@ -304,6 +311,7 @@ int main(int argc, char *argv[]) {
     gdk_threads_add_timeout(SAILS_EVENT_TIMEOUT, event_loop, (gpointer) states);
 
     server = soup_server_new(SOUP_SERVER_SERVER_HEADER, "sails ", SOUP_SERVER_PORT, 3434, NULL);
+    soup_server_add_handler(server, "/", http_server_callback, NULL, NULL);
 
     gtk_main();
 
