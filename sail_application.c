@@ -247,7 +247,7 @@ static void http_server_callback(SoupServer *server,
                                  const char *path, GHashTable *query,
                                  SoupClientContext *client,
                                  gpointer user_data) {
-    g_message("http request");
+    g_message("http request: %s", path);
 }
 
 int main(int argc, char *argv[]) {
