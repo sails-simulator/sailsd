@@ -19,6 +19,7 @@ find_package(PkgConfig REQUIRED)
 find_package(Cairo REQUIRED)
 find_package(GTK3 REQUIRED)
 find_package(Rsvg REQUIRED)
+find_package(LibSoup REQUIRED)
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${GTK3_INCLUDE_DIRS})
