@@ -243,6 +243,8 @@ static gboolean event_loop(gpointer state_p) {
 }
 
 int main(int argc, char *argv[]) {
+    SoupServer *server;
+
     GtkWidget *window;
     GtkWidget *draw;
     GdkGeometry hints;
@@ -300,6 +302,8 @@ int main(int argc, char *argv[]) {
     #endif
 
     gdk_threads_add_timeout(SAILS_EVENT_TIMEOUT, event_loop, (gpointer) states);
+
+    server = soup_server_new(SOUP_SERVER_SERVER_HEADER, "sails ", SOUP_SERVER_PORT, 3434, NULL);
 
     gtk_main();
 
