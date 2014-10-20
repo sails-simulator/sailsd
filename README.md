@@ -30,6 +30,10 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
   - `/api/boats`
 
+    - GET: List all current boats.
+
+    - POST: Launch a new boat.
+
   - `/api/boats/{name}`
 
   - `/api/wind`
