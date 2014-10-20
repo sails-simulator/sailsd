@@ -26,13 +26,15 @@ API
 Most of the interaction with sails takes place through the API. This is a
 fairly standard REST+JSON based API, listening on port `3434`.
 
-`/api`
+  - `/api`
 
-`/api/boats`
+  - `/api/boats`
 
 `/api/wind`
 
-`/api/water`
+  - `/api/wind`
+
+  - `/api/water`
 
 
 Compiling
