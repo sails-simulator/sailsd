@@ -1,5 +1,5 @@
 Sails
-====
+=====
 
 Sails is a simulator designed to test the AI of autonomous sailing robots. It
 emulates the basic physics of sailing a small single sail boat
