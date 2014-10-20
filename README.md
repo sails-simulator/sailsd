@@ -36,6 +36,12 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
   - `/api/boats/{name}`
 
+    - `GET`: Show the current information about that boat.
+
+    - `PATCH`: Update certain writable attributes of a boat. These are HTTP
+      PATCH requests which conform to the JSON Patch format
+      [RFC6902](http://tools.ietf.org/html/rfc6902).
+
   - `/api/wind`
 
   - `/api/water`
