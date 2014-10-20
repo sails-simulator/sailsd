@@ -30,7 +30,7 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
   - `/api/boats`
 
-`/api/wind`
+  - `/api/boats/{name}`
 
   - `/api/wind`
 
