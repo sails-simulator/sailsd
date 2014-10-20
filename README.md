@@ -20,8 +20,8 @@ $ nix-channel --update
 $ nix-env --install sails
 ```
 
-API
----
+API (draft)
+-----------
 
 Most of the interaction with sails takes place through the API. This is a
 fairly standard REST+JSON based API, listening on port `3434`.
