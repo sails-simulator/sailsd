@@ -20,6 +20,13 @@ $ nix-channel --update
 $ nix-env --install sails
 ```
 
+API
+---
+
+Most of the interaction with sails takes place through the API. This is a
+fairly standard REST+JSON based API.
+
+
 Compiling
 ---------
 
