@@ -30,11 +30,15 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
   - `/api/boats`
 
+    The list of boats.
+
     - `GET`: List all current boats.
 
     - `POST`: Launch a new boat.
 
   - `/api/boats/{name}`
+
+    Data about a certain named boat.
 
     - `GET`: Show the current information about that boat.
 
@@ -57,16 +61,18 @@ fairly standard REST+JSON based API, listening on port `3434`.
       PATCH requests which conform to the JSON Patch format
       ([RFC6902](http://tools.ietf.org/html/rfc6902)).
 
-      - Example body:
+      Example body:
 
-            ```json
-            {"op": "replace", "path": "/rudder_angle", "value": 2.4}
-            ```
+        ```json
+        {"op": "replace", "path": "/rudder_angle", "value": 2.4}
+        ```
 
 
     - `DELETE`: Sink the boat.
 
   - `/api/wind`
+
+    Data about the speed and direction of the wind.
 
     - `GET`: Example:
 
@@ -78,6 +84,8 @@ fairly standard REST+JSON based API, listening on port `3434`.
         ```
 
   - `/api/water`
+
+    Data about the current state of the water surface.
 
     - `GET`: Example:
 
