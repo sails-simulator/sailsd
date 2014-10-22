@@ -61,6 +61,15 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
   - `/api/wind`
 
+    - `GET`: Example:
+
+        ```json
+        {
+            "direction": 90,
+            "speed": 15.0
+        }
+        ```
+
   - `/api/water`
 
 
