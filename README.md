@@ -45,7 +45,11 @@ fairly standard REST+JSON based API, listening on port `3434`.
             "position": {
                 "latitude": 4.231,
                 "longitude": -1.232
-            }
+            },
+            "bearing": 34.34,
+            "speed": 10.2,
+            "rudder_angle": 0.5,
+            "sail_angle": 35
         }
         ```
 
