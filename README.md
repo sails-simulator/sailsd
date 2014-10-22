@@ -40,7 +40,7 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
     - `PATCH`: Update certain writable attributes of a boat. These are HTTP
       PATCH requests which conform to the JSON Patch format
-      [RFC6902](http://tools.ietf.org/html/rfc6902).
+      ([RFC6902](http://tools.ietf.org/html/rfc6902)).
 
     - `DELETE`: Sink the boat.
 
