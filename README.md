@@ -38,7 +38,7 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
   - `/api/boats/{name}`
 
-    Data about a certain named boat.
+    Data about a single named boat.
 
     - `GET`: Show the current information about that boat.
 
@@ -96,6 +96,14 @@ fairly standard REST+JSON based API, listening on port `3434`.
                 "direction": 45.0
             }
         }
+
+  - `/api/markers`
+
+    The list of markers out on the water.
+
+    - `GET`: List all the markers.
+
+    - `POST`: Add a new marker.
 
 
 Compiling
