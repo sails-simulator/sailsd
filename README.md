@@ -38,6 +38,17 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
     - `GET`: Show the current information about that boat.
 
+        Example:
+        ```json
+        {
+            "name": "kitty",
+            "position": {
+                "latitude": 4.231,
+                "longitude": -1.232
+            }
+        }
+        ```
+
     - `PATCH`: Update certain writable attributes of a boat. These are HTTP
       PATCH requests which conform to the JSON Patch format
       ([RFC6902](http://tools.ietf.org/html/rfc6902)).
