@@ -65,8 +65,8 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
         ```json
         {
-            "direction": 90,
-            "speed": 15.0
+            "speed": 15.0,
+            "direction": 90
         }
         ```
 
