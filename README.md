@@ -105,6 +105,19 @@ fairly standard REST+JSON based API, listening on port `3434`.
 
     - `POST`: Add a new marker.
 
+  - `/api/markers/{marker_id}`
+
+    Information about a single marker.
+
+    - `GET`: Example:
+
+        ```json
+        {
+            "id": 1,
+            "latitude": 23.21,
+            "longitude": 12.23
+        }
+
 
 Compiling
 ---------
