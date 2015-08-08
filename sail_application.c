@@ -3,7 +3,6 @@
 
 #include <cairo.h>
 #include <gtk/gtk.h>
-#include <libsoup/soup.h>
 
 #include "sail_boat.h"
 #include "sail_boat_draw.h"
@@ -242,20 +241,7 @@ static gboolean event_loop(gpointer state_p) {
     return TRUE;
 }
 
-static void http_server_callback(SoupServer *server,
-                                 SoupMessage *msg,
-                                 const char *path, GHashTable *query,
-                                 SoupClientContext *client,
-                                 gpointer user_data) {
-    soup_message_set_response(msg, "application/json", SOUP_MEMORY_COPY,
-                              "{\"hello\": \"hi\"}", 16);
-    soup_message_set_status(msg, SOUP_STATUS_OK);
-    g_message("http request: %s", path);
-}
-
 int main(int argc, char *argv[]) {
-    SoupServer *server;
-
     GtkWidget *window;
     GtkWidget *draw;
     GdkGeometry hints;
@@ -313,11 +299,6 @@ int main(int argc, char *argv[]) {
     #endif
 
     gdk_threads_add_timeout(SAILS_EVENT_TIMEOUT, event_loop, (gpointer) states);
-
-    server = soup_server_new(SOUP_SERVER_SERVER_HEADER, "sails ", SOUP_SERVER_PORT, 3434, NULL);
-    g_message("running on port %i", soup_server_get_port(server));
-    soup_server_add_handler(server, "/api", http_server_callback, NULL, NULL);
-    soup_server_run_async(server);
 
     gtk_main();
 

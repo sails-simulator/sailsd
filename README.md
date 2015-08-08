@@ -126,9 +126,9 @@ Compiling
 
   1. Install the dependencies:
 
-  __Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel libsoup-devel`
+  __Fedora__: `sudo yum install cmake gtk3-devel librsvg2-devel`
 
-  __Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev libsoup-dev`
+  __Debian/Ubuntu__: `sudo apt-get install cmake build-essential libgtk-3-dev librsvg2-dev`
 
   2. Get source:
 
