@@ -91,6 +91,6 @@ int main(int argc, char *argv[])
     g_print("Entering main loop");
     g_main_loop_run(loop);
 
-    g_bus_unown_name (owner_id);
-    g_dbus_node_info_unref (introspection_data);
+    g_bus_unown_name(owner_id);
+    g_dbus_node_info_unref(introspection_data);
 }
