@@ -48,7 +48,7 @@ static void on_bus_acquired(GDBusConnection *connection,
 {
     guint registration_id;
     registration_id = g_dbus_connection_register_object(connection,
-                                                        "/eu/kragniz/sails/Boat1",
+                                                        "/sails/boats/Boat1",
                                                         introspection_data->interfaces[0],
                                                         &interface_vtable,
                                                         NULL,
