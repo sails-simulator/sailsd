@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <gio/gio.h>
+#include <glib.h>
+
 
 static GDBusNodeInfo *introspection_data = NULL;
 
@@ -13,6 +16,16 @@ static const gchar introspection_xml[] =
     "</node>";
 
 static GMainLoop *loop;
+
+static gpointer physics_thread(gpointer data)
+{
+    for (;;) {
+        g_print("hi from the thread\n");
+        g_usleep(100000);
+    }
+
+    return NULL;
+}
 
 static GVariant *handle_get_property(GDBusConnection  *connection,
                                      const gchar      *sender,
@@ -55,6 +68,9 @@ static void on_bus_acquired(GDBusConnection *connection,
                                                         NULL,
                                                         NULL);
     g_assert(registration_id > 0);
+
+    // start the physics model thread after we're connected to the bus
+    g_thread_new("physics_thread", physics_thread, NULL);
 }
 
 static void on_name_acquired(GDBusConnection *connection,
