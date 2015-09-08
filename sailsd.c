@@ -14,10 +14,27 @@ static const gchar introspection_xml[] =
 
 static GMainLoop *loop;
 
+static GVariant *handle_get_property(GDBusConnection  *connection,
+                                     const gchar      *sender,
+                                     const gchar      *object_path,
+                                     const gchar      *interface_name,
+                                     const gchar      *property_name,
+                                     GError          **error,
+                                     gpointer          user_data)
+{
+    GVariant *ret = NULL;
+
+    if (g_strcmp0(property_name, "Bearing") == 0) {
+        ret = g_variant_new_double(42.2);
+    }
+
+    return ret;
+}
+
 static const GDBusInterfaceVTable interface_vtable =
 {
     NULL,
-    NULL,
+    handle_get_property,
     NULL
 };
 
@@ -27,7 +44,7 @@ static void on_bus_acquired(GDBusConnection *connection,
 {
     guint registration_id;
     registration_id = g_dbus_connection_register_object(connection,
-                                                        "/eu/kragniz/sails/Boat",
+                                                        "/eu/kragniz/sails/Boat1",
                                                         introspection_data->interfaces[0],
                                                         &interface_vtable,
                                                         NULL,
