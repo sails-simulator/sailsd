@@ -68,16 +68,14 @@ static void on_bus_acquired(GDBusConnection *connection,
                                                         NULL,
                                                         NULL);
     g_assert(registration_id > 0);
-
-    // start the physics model thread after we're connected to the bus
-    g_thread_new("physics_thread", physics_thread, NULL);
 }
 
 static void on_name_acquired(GDBusConnection *connection,
                              const gchar     *name,
                              gpointer         user_data)
 {
-    /* something */
+    // start the physics model thread after we're connected to the bus and acquired name
+    g_thread_new("physics_thread", physics_thread, NULL);
 }
 
 static void on_name_lost(GDBusConnection *connection,
@@ -104,7 +102,7 @@ int main(int argc, char *argv[])
                               NULL,
                               NULL);
 
-    g_print("Entering main loop");
+    g_print("Entering main loop\n");
     g_main_loop_run(loop);
 
     g_bus_unown_name(owner_id);
