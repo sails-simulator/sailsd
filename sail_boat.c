@@ -1,49 +1,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <glib.h>
-#include <cairo.h>
-#include <librsvg/rsvg.h>
-
 #include "sail_boat.h"
-#include "sail_resources.h"
-#include "sail_view.h"
-
-static RsvgHandle* load_svg(const char *path) {
-    GError *err = NULL;
-    RsvgHandle *image = rsvg_handle_new_from_file(path, &err);
-    if (err != NULL) {
-        g_log("sails", G_LOG_LEVEL_ERROR, "can't open file \"%s\": %s", path, err->message);
-    } else {
-        g_message("loaded image \"%s\"", path);
-    }
-    return image;
-}
-
-static Boat* load_boat_images(Boat *boat) {
-    boat->images = malloc(sizeof(SVGImages));
-
-    #if !GLIB_CHECK_VERSION(2, 35, 0)
-        g_type_init();
-    #endif
-
-    boat->images->hull = load_svg(SAIL_IMAGE_HULL);
-    boat->images->hull_dimensions = malloc(sizeof(RsvgDimensionData));
-    rsvg_handle_get_dimensions(boat->images->hull,
-                               boat->images->hull_dimensions);
-
-    boat->images->sail = load_svg(SAIL_IMAGE_SAIL);
-    boat->images->sail_dimensions = malloc(sizeof(RsvgDimensionData));
-    rsvg_handle_get_dimensions(boat->images->sail,
-                               boat->images->sail_dimensions);
-
-    boat->images->rudder = load_svg(SAIL_IMAGE_RUDDER);
-    boat->images->rudder_dimensions = malloc(sizeof(RsvgDimensionData));
-    rsvg_handle_get_dimensions(boat->images->rudder,
-                               boat->images->rudder_dimensions);
-
-    return boat;
-}
 
 double sail_boat_get_angle(const Boat *boat) {
     return boat->angle;
@@ -85,14 +43,9 @@ Boat* sail_boat_new() {
     new_boat->sail_center_of_effort = 1.0;
     new_boat->sail_lift = 1000.0;
 
-    load_boat_images(new_boat);
-
     return new_boat;
 }
 
 void sail_boat_free(Boat *boat) {
-    g_object_unref(boat->images->hull);
-    g_object_unref(boat->images->sail);
-    free(boat->images);
     free(boat);
 }

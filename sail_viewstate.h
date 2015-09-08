@@ -1,6 +1,8 @@
 #ifndef SAIL_VIEWSTATE_H_
 #define SAIL_VIEWSTATE_H_
 
+#include <glib.h>
+
 struct _sim;
 
 typedef struct _sim {

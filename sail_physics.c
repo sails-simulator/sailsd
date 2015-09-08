@@ -1,5 +1,7 @@
 #include <math.h>
 
+#include <glib.h>
+
 #include "sail_boat.h"
 #include "sail_physics.h"
 #include "sail_wind.h"

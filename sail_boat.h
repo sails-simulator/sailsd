@@ -1,18 +1,6 @@
 #ifndef SAIL_BOAT_H_
 #define SAIL_BOAT_H_
 
-#include <cairo.h>
-#include <librsvg/rsvg.h>
-
-typedef struct _images {
-    RsvgHandle *hull;
-    RsvgHandle *sail;
-    RsvgHandle *rudder;
-    RsvgDimensionData *hull_dimensions;
-    RsvgDimensionData *sail_dimensions;
-    RsvgDimensionData *rudder_dimensions;
-} SVGImages;
-
 struct _boat;
 
 typedef struct _boat {
@@ -27,8 +15,6 @@ typedef struct _boat {
     double drift_coefficient, mass, rudder_distance, mast_distance,
            rudder_lift, sail_lift, tangential_friction, angular_friction,
            sail_center_of_effort, inertia; // parameters
-
-    SVGImages* images;
 } Boat;
 
 Boat* sail_boat_new();

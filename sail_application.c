@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include <cairo.h>
+#include <librsvg/rsvg.h>
 #include <gtk/gtk.h>
 
 #include "sail_boat.h"
@@ -9,6 +10,7 @@
 #include "sail_overlay.h"
 #include "sail_physics.h"
 #include "sail_view.h"
+#include "sail_resources.h"
 #include "sail_viewstate.h"
 #include "sail_wind.h"
 
@@ -27,7 +29,42 @@ typedef struct _sail_states {
     Wind *wind;
     ViewState *view;
     GtkWidget *draw;
+    SVGImages *images;
 } SailState;
+
+static RsvgHandle* load_svg(const char *path) {
+    GError *err = NULL;
+    RsvgHandle *image = rsvg_handle_new_from_file(path, &err);
+    if (err != NULL) {
+        g_log("sails", G_LOG_LEVEL_ERROR, "can't open file \"%s\": %s", path, err->message);
+    } else {
+        g_message("loaded image \"%s\"", path);
+    }
+    return image;
+}
+
+static SVGImages* load_boat_images(SVGImages *images) {
+#if !GLIB_CHECK_VERSION(2, 35, 0)
+    g_type_init();
+#endif
+
+    images->hull = load_svg(SAIL_IMAGE_HULL);
+    images->hull_dimensions = malloc(sizeof(RsvgDimensionData));
+    rsvg_handle_get_dimensions(images->hull,
+                               images->hull_dimensions);
+
+    images->sail = load_svg(SAIL_IMAGE_SAIL);
+    images->sail_dimensions = malloc(sizeof(RsvgDimensionData));
+    rsvg_handle_get_dimensions(images->sail,
+                               images->sail_dimensions);
+
+    images->rudder = load_svg(SAIL_IMAGE_RUDDER);
+    images->rudder_dimensions = malloc(sizeof(RsvgDimensionData));
+    rsvg_handle_get_dimensions(images->rudder,
+                               images->rudder_dimensions);
+
+    return images;
+}
 
 static SailState* sail_state_new(GtkWidget *draw) {
     SailState *states = malloc(sizeof(SailState));
@@ -36,6 +73,8 @@ static SailState* sail_state_new(GtkWidget *draw) {
     states->view = sail_viewstate_new();
     states->wind = sail_wind_new();
     states->draw = draw;
+    states->images = malloc(sizeof(SVGImages));
+    load_boat_images(states->images);
 
     return states;
 }
@@ -43,6 +82,9 @@ static SailState* sail_state_new(GtkWidget *draw) {
 static void sail_state_free(SailState *state) {
     sail_boat_free(state->boat);
     sail_viewstate_free(state->view);
+    g_object_unref(state->images->hull);
+    g_object_unref(state->images->sail);
+    free(state->images);
     free(state);
 }
 
@@ -210,7 +252,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
             state->view->width, state->view->height,
             translation_x, translation_y,
             state->view->scale);
-    sail_boat_draw(buffer, state->boat);
+    sail_boat_draw(buffer, state->boat, state->images);
 
     if (SAILS_SHOW_OVERLAY) {
         sail_overlay_draw(buffer, state->boat, state->view);
