@@ -8,7 +8,7 @@ static const gchar introspection_xml[] =
     "<node>"
     "  <interface name='eu.kragniz.sails.Boat'>"
     "    <property name='Bearing' type='d' access='read'/>"
-    "    <property name='Location' type='d' access='read'/>"
+    "    <property name='Location' type='(dd)' access='read'/>"
     "  </interface>"
     "</node>";
 
@@ -26,6 +26,10 @@ static GVariant *handle_get_property(GDBusConnection  *connection,
 
     if (g_strcmp0(property_name, "Bearing") == 0) {
         ret = g_variant_new_double(42.2);
+    }
+
+    else if (g_strcmp0(property_name, "Location") == 0) {
+        ret = g_variant_new("(ii)", 1, 2);
     }
 
     return ret;
