@@ -113,4 +113,6 @@ int main(int argc, char *argv[])
 
     g_bus_unown_name(owner_id);
     g_dbus_node_info_unref(introspection_data);
+
+    return 0;
 }
