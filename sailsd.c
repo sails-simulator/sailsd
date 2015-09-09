@@ -26,7 +26,8 @@ static GMainLoop *loop;
 static gpointer physics_thread(gpointer data)
 {
     for (;;) {
-        g_print("hi from the thread\n");
+        sail_physics_update(boat, wind, 0.000001);
+        g_print("Boat x: %f, y: %f\n", boat->x, boat->y);
         g_usleep(100000);
     }
 
