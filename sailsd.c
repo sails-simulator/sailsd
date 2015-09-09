@@ -45,11 +45,11 @@ static GVariant *handle_get_property(GDBusConnection  *connection,
     GVariant *ret = NULL;
 
     if (g_strcmp0(property_name, "Bearing") == 0) {
-        ret = g_variant_new_double(42.2);
+        ret = g_variant_new_double(sail_boat_get_angle(boat));
     }
 
     else if (g_strcmp0(property_name, "Location") == 0) {
-        ret = g_variant_new("(ii)", 1, 2);
+        ret = g_variant_new("(dd)", boat->x, boat->y);
     }
 
     return ret;
