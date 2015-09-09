@@ -4,7 +4,6 @@
 
 #include "sail_boat.h"
 #include "sail_physics.h"
-#include "sail_wind.h"
 
 static double sign_of(double a) {
     if (a <= 0) {
