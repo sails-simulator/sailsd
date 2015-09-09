@@ -48,7 +48,9 @@ target_link_libraries(sails ${GTK3_LIBRARIES}
     )
 
 add_executable(sailsd sailsd.c
-                      sail_boat.c)
+                      sail_boat.c
+                      sail_physics.c
+                      sail_wind.c)
 
 target_link_libraries(sailsd m)
 target_link_libraries(sailsd ${GLIB_LIBRARIES}
