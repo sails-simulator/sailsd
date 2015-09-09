@@ -1,11 +1,15 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <gio/gio.h>
 #include <glib.h>
 
+#include "sail_physics.h"
+#include "sail_boat.h"
+
 
 static GDBusNodeInfo *introspection_data = NULL;
+
+static Boat *boat;
 
 static const gchar introspection_xml[] =
     "<node>"
@@ -87,6 +91,8 @@ static void on_name_lost(GDBusConnection *connection,
 
 int main(int argc, char *argv[])
 {
+    boat = sail_boat_new();
+
     loop = g_main_loop_new(NULL, FALSE);
     guint owner_id;
 
