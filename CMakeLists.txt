@@ -19,11 +19,15 @@ find_package(PkgConfig REQUIRED)
 find_package(Cairo REQUIRED)
 find_package(GTK3 REQUIRED)
 find_package(Rsvg REQUIRED)
+find_package(GLIB REQUIRED)
+find_package(GIO REQUIRED)
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${GTK3_INCLUDE_DIRS})
 include_directories(${CAIRO_INCLUDE_DIR})
 include_directories(${RSVG_INCLUDE_DIRS})
+include_directories(${GLIB_INCLUDE_DIRS})
+include_directories(${GIO_INCLUDE_DIRS})
 
 add_definitions(${GTK3_CFLAGS_OTHER} "-Wall -Werror -O2 -g")
 
@@ -42,6 +46,13 @@ target_link_libraries(sails ${GTK3_LIBRARIES}
                             ${RSVG_LIBRARIES}
                             ${CAIRO_LIBRARIES}
     )
+
+add_executable(sailsd sailsd.c
+                      sail_boat.c)
+
+target_link_libraries(sailsd m)
+target_link_libraries(sailsd ${GLIB_LIBRARIES}
+                             ${GIO_LIBRARIES})
 
 install(TARGETS sails
         RUNTIME
