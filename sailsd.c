@@ -18,6 +18,9 @@ static const gchar introspection_xml[] =
     "  <interface name='eu.kragniz.sails.Boat'>"
     "    <property name='Bearing' type='d' access='read'/>"
     "    <property name='Location' type='(dd)' access='read'/>"
+    "    <method name='MoveRudderTo'>"
+    "      <arg type='d' name='angle' direction='in'/>"
+    "    </method>"
     "  </interface>"
     "  <interface name='eu.kragniz.sails.Wind'>"
     "    <property name='Direction' type='d' access='readwrite'/>"
@@ -36,6 +39,26 @@ static gpointer physics_thread(gpointer data)
     }
 
     return NULL;
+}
+
+static void handle_method_call(GDBusConnection       *connection,
+                               const gchar           *sender,
+                               const gchar           *object_path,
+                               const gchar           *interface_name,
+                               const gchar           *method_name,
+                               GVariant              *parameters,
+                               GDBusMethodInvocation *invocation,
+                               gpointer               user_data)
+{
+    if (g_strcmp0(method_name, "MoveRudderTo") == 0) {
+        g_message("Handling method call 'MoveRudderTo'");
+        gdouble angle;
+        g_variant_get(parameters, "(d)", &angle);
+        boat->rudder_angle = angle;
+        g_dbus_method_invocation_return_value(invocation, NULL);
+    }
+
+
 }
 
 static GVariant *handle_get_property(GDBusConnection  *connection,
@@ -86,7 +109,7 @@ static gboolean handle_set_property(GDBusConnection  *connection,
 
 static const GDBusInterfaceVTable interface_vtable =
 {
-    NULL,
+    handle_method_call,
     handle_get_property,
     handle_set_property
 };
