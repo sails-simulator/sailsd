@@ -19,6 +19,10 @@ static const gchar introspection_xml[] =
     "    <property name='Bearing' type='d' access='read'/>"
     "    <property name='Location' type='(dd)' access='read'/>"
     "  </interface>"
+    "  <interface name='eu.kragniz.sails.Wind'>"
+    "    <property name='Direction' type='d' access='readwrite'/>"
+    "    <property name='Speed' type='d' access='readwrite'/>"
+    "  </interface>"
     "</node>";
 
 static GMainLoop *loop;
@@ -52,6 +56,14 @@ static GVariant *handle_get_property(GDBusConnection  *connection,
         ret = g_variant_new("(dd)", boat->x, boat->y);
     }
 
+    else if (g_strcmp0(property_name, "Direction") == 0) {
+        ret = g_variant_new_double(sail_wind_get_direction(wind));
+    }
+
+    else if (g_strcmp0(property_name, "Speed") == 0) {
+        ret = g_variant_new_double(sail_wind_get_speed(wind));
+    }
+
     return ret;
 }
 
@@ -70,6 +82,15 @@ static void on_bus_acquired(GDBusConnection *connection,
     registration_id = g_dbus_connection_register_object(connection,
                                                         "/sails/boats/Boat1",
                                                         introspection_data->interfaces[0],
+                                                        &interface_vtable,
+                                                        NULL,
+                                                        NULL,
+                                                        NULL);
+    g_assert(registration_id > 0);
+
+    registration_id = g_dbus_connection_register_object(connection,
+                                                        "/sails/Wind",
+                                                        introspection_data->interfaces[1],
                                                         &interface_vtable,
                                                         NULL,
                                                         NULL,
