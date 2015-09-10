@@ -114,7 +114,7 @@ static gboolean handle_set_property(GDBusConnection  *connection,
         wind->direction = g_variant_get_double(value);
     }
 
-    return NULL;
+    return *error == NULL;
 }
 
 static const GDBusInterfaceVTable interface_vtable =
