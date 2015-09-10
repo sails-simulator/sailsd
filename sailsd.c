@@ -67,11 +67,28 @@ static GVariant *handle_get_property(GDBusConnection  *connection,
     return ret;
 }
 
+static gboolean handle_set_property(GDBusConnection  *connection,
+                                    const gchar      *sender,
+                                    const gchar      *object_path,
+                                    const gchar      *interface_name,
+                                    const gchar      *property_name,
+                                    GVariant         *value,
+                                    GError          **error,
+                                    gpointer          user_data)
+{
+
+    if (g_strcmp0(property_name, "Direction") == 0) {
+        wind->direction = g_variant_get_double(value);
+    }
+
+    return NULL;
+}
+
 static const GDBusInterfaceVTable interface_vtable =
 {
     NULL,
     handle_get_property,
-    NULL
+    handle_set_property
 };
 
 static void on_bus_acquired(GDBusConnection *connection,
