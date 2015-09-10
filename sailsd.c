@@ -18,6 +18,8 @@ static const gchar introspection_xml[] =
     "  <interface name='eu.kragniz.sails.Boat'>"
     "    <property name='Bearing' type='d' access='read'/>"
     "    <property name='Location' type='(dd)' access='read'/>"
+    "    <property name='SailAngle' type='d' access='read'/>"
+    "    <property name='RudderAngle' type='d' access='read'/>"
     "    <method name='MoveRudderTo'>"
     "      <arg type='d' name='angle' direction='in'/>"
     "    </method>"
@@ -85,6 +87,14 @@ static GVariant *handle_get_property(GDBusConnection  *connection,
 
     else if (g_strcmp0(property_name, "Speed") == 0) {
         ret = g_variant_new_double(sail_wind_get_speed(wind));
+    }
+
+    else if (g_strcmp0(property_name, "SailAngle") == 0) {
+        ret = g_variant_new_double(sail_boat_get_sail_angle(boat));
+    }
+
+    else if (g_strcmp0(property_name, "RudderAngle") == 0) {
+        ret = g_variant_new_double(sail_boat_get_rudder_angle(boat));
     }
 
     return ret;
