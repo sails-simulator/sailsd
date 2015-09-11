@@ -12,7 +12,6 @@
 #include "sail_view.h"
 #include "sail_resources.h"
 #include "sail_viewstate.h"
-#include "sail_wind.h"
 
 #define SAILS_MIN_WIDTH 640
 #define SAILS_MIN_HEIGHT 360
@@ -26,7 +25,6 @@
 
 typedef struct _sail_states {
     Boat *boat;
-    Wind *wind;
     ViewState *view;
     GtkWidget *draw;
     SVGImages *images;
@@ -71,7 +69,6 @@ static SailState* sail_state_new(GtkWidget *draw) {
 
     states->boat = sail_boat_new();
     states->view = sail_viewstate_new();
-    states->wind = sail_wind_new();
     states->draw = draw;
     states->images = malloc(sizeof(SVGImages));
     load_boat_images(states->images);
@@ -269,16 +266,6 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, SailState *state) 
 
 static gboolean event_loop(gpointer state_p) {
     SailState *state = (SailState*) state_p;
-
-    if (state->view->simulator_running) {
-        int i;
-        for (i=0; i<10000; i++) {
-            // FIXME make timestep proportional to framerate
-            // make Euler integration a bit more accurate
-            sail_physics_update(state->boat, state->wind, 0.000001);
-        }
-    }
-
     gtk_widget_queue_draw(state->draw);
     return TRUE;
 }
