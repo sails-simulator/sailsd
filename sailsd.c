@@ -117,6 +117,25 @@ static gboolean handle_set_property(GDBusConnection  *connection,
     return *error == NULL;
 }
 
+static gboolean calculate_signals(gpointer user_data)
+{
+    g_message("do we need signals?");
+    GDBusConnection *connection = G_DBUS_CONNECTION(user_data);
+    GError *error;
+
+    error = NULL;
+    g_dbus_connection_emit_signal(connection,
+                                  NULL,
+                                  "/sails/boats/Boat1",
+                                  "org.freedesktop.DBus.Properties",
+                                  "PropertiesChanged",
+                                  NULL,
+                                  &error);
+    g_assert_no_error(error);
+
+    return TRUE;
+}
+
 static const GDBusInterfaceVTable interface_vtable =
 {
     handle_method_call,
@@ -154,6 +173,8 @@ static void on_name_acquired(GDBusConnection *connection,
 {
     // start the physics model thread after we're connected to the bus and acquired name
     g_thread_new("physics_thread", physics_thread, NULL);
+
+    g_timeout_add(60, calculate_signals, connection);
 }
 
 static void on_name_lost(GDBusConnection *connection,
