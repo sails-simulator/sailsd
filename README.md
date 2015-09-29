@@ -122,6 +122,8 @@ fairly standard REST+JSON based API, listening on port `3434`.
 Compiling
 ---------
 
+Note: this is not compatible with the new `sailsd`.
+
 ### GNU/Linux
 
   1. Install the dependencies:
