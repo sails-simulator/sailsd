@@ -234,7 +234,7 @@ will change once the API is implemented. Current controls are:
 Licence
 -------
 
-Copyright © 2014 Louis Taylor
+Copyright © 2014-2015 Louis Taylor
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
