@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/kragniz/sails.png?label=ready&title=Ready)](https://waffle.io/kragniz/sails)
 Sails
 =====
 
