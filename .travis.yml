@@ -2,10 +2,9 @@ language: c
 compiler:
   - clang
   - gcc
-
-before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq cmake libgtk-3-dev librsvg2-dev libcairo2-dev
+os:
+  - linux
+  - osx
 
 before_script:
     - mkdir build
