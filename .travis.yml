@@ -1,0 +1,14 @@
+language: c
+compiler:
+  - clang
+  - gcc
+os:
+  - linux
+  - osx
+
+before_script:
+    - mkdir build
+    - cd build
+    - cmake ..
+
+script: make
