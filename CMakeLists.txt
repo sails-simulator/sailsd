@@ -9,11 +9,14 @@ set(INSTALLED_RESOURCES "${DATADIR}/sailsd")
 
 find_package(PkgConfig REQUIRED)
 
-add_definitions("-Wall -Werror -g")
-
 add_executable(sailsd sailsd.c)
 
 target_link_libraries(sailsd m)
+
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+    message("Debug build.")
+    add_definitions("-Wall -Werror -g")
+ENDIF()
 
 install(TARGETS sailsd
         RUNTIME
