@@ -7,8 +7,6 @@ set (SAILS_VERSION_MINOR 1)
 
 set(INSTALLED_RESOURCES "${DATADIR}/sailsd")
 
-find_package(PkgConfig REQUIRED)
-
 add_executable(sailsd sailsd.c)
 
 target_link_libraries(sailsd m)
