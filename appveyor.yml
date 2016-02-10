@@ -1,8 +1,17 @@
 version: "{branch}-ci-{build}"
 clone_depth: 5
 
-build_script:
+environment:
+  matrix:
+    - GENERATOR: MinGW Makefiles
+
+configuration: Debug
+
+before_build:
+  - rm "C:/Program Files/Git/usr/bin/sh.exe"
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug ..
-  - cmake --build .
+  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "%GENERATOR%" ..
+
+build_script:
+  - cmake --build . --config %CONFIGURATION%
