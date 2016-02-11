@@ -1,6 +1,7 @@
-#include <argp.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
+
 
 void put_boat(void) {
     puts("                            \n"
@@ -16,6 +17,28 @@ void put_boat(void) {
 }
 
 int main(int argc, char *argv[]) {
+    int c;
+    const char *short_opt = "h";
+    struct option long_opt[] = {
+        {"help", no_argument, NULL, 'h'},
+        {NULL,   0,           NULL, 0  }
+    };
+
+    while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
+        switch(c) {
+            case -1: /* no more arguments */
+            case 0:  /* long options toggles */
+                break;
+            case 'h':
+                printf("Usage: %s [OPTIONS]\n", argv[0]);
+                printf("  -h, --help            print this help and exit\n");
+                printf("\n");
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
     put_boat();
     return 0;
 }
