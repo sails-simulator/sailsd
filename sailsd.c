@@ -44,7 +44,7 @@ static void vlog_msg(const enum log_level level,
     struct tm *p = localtime(&t);
     strftime(timestamp, 32, "%c", p);
 
-    printf("[%s] %s: ", timestamp, level_str);
+    printf("[%s] %s:\t", timestamp, level_str);
     vprintf(format, argp);
     printf("\n");
 }
