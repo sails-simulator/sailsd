@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <time.h>
 #include <getopt.h>
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
@@ -38,7 +39,13 @@ static void log_msg(const enum log_level level, const char *format, ...) {
             break;
     }
 
-    printf("%s: ", level_str);
+    char timestamp[32];
+
+    time_t t = time(NULL);
+    struct tm *p = localtime(&t);
+    strftime(timestamp, 32, "%c", p);
+
+    printf("[%s] %s: ", timestamp, level_str);
     vprintf(format, arglist);
     printf("\n");
     va_end(arglist);
