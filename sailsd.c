@@ -6,6 +6,7 @@
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
 
+/* print a giant boat to the screen */
 void put_boat(void) {
     puts("                            \n"
          "                ,\x1b[31m~\x1b[0m          \n"
@@ -19,6 +20,7 @@ void put_boat(void) {
          "      |___|__,|_|_|___|___| \n");
 }
 
+/* logging function in the vein of vprintf, taking a va_list of arguments */
 static void vlog_msg(const enum log_level level,
                     const char *format,
                     va_list argp) {
@@ -56,6 +58,7 @@ static void log_msg(const enum log_level level, const char *format, ...) {
     va_end(arglist);
 }
 
+/* TODO: add log_error etc */
 static void log_info(const char *format, ...) {
     va_list arglist;
     va_start(arglist, format);
