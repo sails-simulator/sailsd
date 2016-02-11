@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <getopt.h>
 
 
@@ -14,6 +15,16 @@ void put_boat(void) {
          "   \x1b[34m~^~ \x1b[0m___\x1b[34m^\x1b[0m___|_| |___\x1b[34m~\x1b[0m_| | \x1b[34m ^~  \x1b[0m\n"
          "    \x1b[34m~ \x1b[0m|_ -| .'| | |_ -| . |\x1b[34m ~ \x1b[0m\n"
          "      |___|__,|_|_|___|___| \n");
+}
+
+static void log_msg(const char *level, const char *format, ...) {
+    va_list arglist;
+    va_start(arglist, format);
+
+    printf("%s: ", level);
+    vprintf(format, arglist);
+    printf("\n");
+    va_end(arglist);
 }
 
 int main(int argc, char *argv[]) {
@@ -40,5 +51,6 @@ int main(int argc, char *argv[]) {
     }
 
     put_boat();
+    log_msg("info", "started sailsd");
     return 0;
 }
