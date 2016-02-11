@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <getopt.h>
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
@@ -92,5 +94,14 @@ int main(int argc, char *argv[]) {
     put_boat();
     log_info("started sailsd");
     log_msg(WARNING, "warning log");
+
+    /* start up socket server */
+    struct sockaddr_in addr;
+
+    int sd = socket(PF_INET, SOCK_STREAM, 0);
+    if (sd < 0) {
+        log_msg(ERROR, "cannot start socket");
+    }
+
     return 0;
 }
