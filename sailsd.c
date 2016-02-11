@@ -19,10 +19,9 @@ void put_boat(void) {
          "      |___|__,|_|_|___|___| \n");
 }
 
-static void log_msg(const enum log_level level, const char *format, ...) {
-    va_list arglist;
-    va_start(arglist, format);
-
+static void vlog_msg(const enum log_level level,
+                    const char *format,
+                    va_list argp) {
     char *level_str = "";
     switch(level) {
         case ERROR:
@@ -46,8 +45,21 @@ static void log_msg(const enum log_level level, const char *format, ...) {
     strftime(timestamp, 32, "%c", p);
 
     printf("[%s] %s: ", timestamp, level_str);
-    vprintf(format, arglist);
+    vprintf(format, argp);
     printf("\n");
+}
+
+static void log_msg(const enum log_level level, const char *format, ...) {
+    va_list arglist;
+    va_start(arglist, format);
+    vlog_msg(level, format, arglist);
+    va_end(arglist);
+}
+
+static void log_info(const char *format, ...) {
+    va_list arglist;
+    va_start(arglist, format);
+    vlog_msg(INFO, format, arglist);
     va_end(arglist);
 }
 
@@ -75,6 +87,7 @@ int main(int argc, char *argv[]) {
     }
 
     put_boat();
-    log_msg(INFO, "started sailsd");
+    log_info("started sailsd");
+    log_msg(WARNING, "warning log");
     return 0;
 }
