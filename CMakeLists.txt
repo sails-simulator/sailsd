@@ -9,7 +9,8 @@ set(INSTALLED_RESOURCES "${DATADIR}/sailsd")
 
 add_executable(sailsd sailsd.c)
 
-target_link_libraries(sailsd m)
+target_link_libraries(sailsd m
+                             pthread)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     message("Debug build.")

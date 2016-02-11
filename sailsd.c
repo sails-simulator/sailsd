@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <unistd.h>
 #include <time.h>
+#include <resolv.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <errno.h>
+#include <pthread.h>
 #include <getopt.h>
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
@@ -68,6 +73,24 @@ static void log_info(const char *format, ...) {
     va_end(arglist);
 }
 
+void *worker(void *arg) {
+    char line[100];
+    int bytes_read;
+    int client = *(int *)arg;
+    log_info("in thread");
+
+    do {
+        bytes_read = recv(client, line, sizeof(line), 0);
+        if (bytes_read == -1) {
+            perror("error reading from socket");
+        }
+        log_info("bytes read: %i", bytes_read);
+        send(client, line, bytes_read, 0);
+    } while (bytes_read != 0);
+    close(client);
+    return arg;
+}
+
 int main(int argc, char *argv[]) {
     int c;
     const char *short_opt = "h";
@@ -101,6 +124,33 @@ int main(int argc, char *argv[]) {
     int sd = socket(PF_INET, SOCK_STREAM, 0);
     if (sd < 0) {
         log_msg(ERROR, "cannot start socket");
+    }
+
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(3333);
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
+        log_msg(ERROR, "failed to listen on port");
+    }
+
+    if (listen(sd, 20) != 0) {
+        log_msg(ERROR, "failed to listen on port");
+    }
+
+    for (;;) {
+        socklen_t addr_size = sizeof(addr);
+        pthread_t child;
+
+        int client = accept(sd, (struct sockaddr*)&addr, &addr_size);
+        log_info("connected: %s:%d",
+                 inet_ntoa(addr.sin_addr),
+                 ntohs(addr.sin_port));
+        if (pthread_create(&child, NULL, worker, &client) != 0) {
+            perror("error creating thread");
+        } else {
+            pthread_detach(child);
+        }
     }
 
     return 0;
