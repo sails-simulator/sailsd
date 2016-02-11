@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <getopt.h>
 
+enum log_level { ERROR, WARNING, INFO, DEBUG };
 
 void put_boat(void) {
     puts("                            \n"
@@ -17,11 +18,27 @@ void put_boat(void) {
          "      |___|__,|_|_|___|___| \n");
 }
 
-static void log_msg(const char *level, const char *format, ...) {
+static void log_msg(const enum log_level level, const char *format, ...) {
     va_list arglist;
     va_start(arglist, format);
 
-    printf("%s: ", level);
+    char *level_str = "";
+    switch(level) {
+        case ERROR:
+            level_str = "error";
+            break;
+        case WARNING:
+            level_str = "warning";
+            break;
+        case INFO:
+            level_str = "info";
+            break;
+        case DEBUG:
+            level_str = "debug";
+            break;
+    }
+
+    printf("%s: ", level_str);
     vprintf(format, arglist);
     printf("\n");
     va_end(arglist);
@@ -51,6 +68,6 @@ int main(int argc, char *argv[]) {
     }
 
     put_boat();
-    log_msg("info", "started sailsd");
+    log_msg(INFO, "started sailsd");
     return 0;
 }
