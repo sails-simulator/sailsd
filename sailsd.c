@@ -11,6 +11,8 @@
 #include <pthread.h>
 #include <getopt.h>
 
+#define SAILS_PORT 3333
+
 enum log_level { ERROR, WARNING, INFO, DEBUG };
 
 /* print a giant boat to the screen */
@@ -73,21 +75,30 @@ static void log_info(const char *format, ...) {
     va_end(arglist);
 }
 
+static void log_debug(const char *format, ...) {
+    va_list arglist;
+    va_start(arglist, format);
+    vlog_msg(DEBUG, format, arglist);
+    va_end(arglist);
+}
+
 void *worker(void *arg) {
     char line[100];
     int bytes_read;
     int client = *(int *)arg;
-    log_info("in thread");
+
+    log_debug("started thread");
 
     do {
         bytes_read = recv(client, line, sizeof(line), 0);
         if (bytes_read == -1) {
             perror("error reading from socket");
         }
-        log_info("bytes read: %i", bytes_read);
+        log_debug("bytes read: %i", bytes_read);
         send(client, line, bytes_read, 0);
     } while (bytes_read != 0);
     close(client);
+    log_debug("closed thread");
     return arg;
 }
 
@@ -127,7 +138,7 @@ int main(int argc, char *argv[]) {
     }
 
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(3333);
+    addr.sin_port = htons(SAILS_PORT);
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
@@ -137,6 +148,7 @@ int main(int argc, char *argv[]) {
     if (listen(sd, 20) != 0) {
         log_msg(ERROR, "failed to listen on port");
     }
+    log_info("listening on port %i", SAILS_PORT);
 
     for (;;) {
         socklen_t addr_size = sizeof(addr);
