@@ -80,6 +80,13 @@ Usage
 
 TODO
 
+Code styling
+------------
+
+Sailsd uses astyle to automate style conformity. Run:
+
+    $ astyle --style=google --indent-switches sailsd.c
+
 Licence
 -------
 
