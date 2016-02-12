@@ -31,8 +31,8 @@ void put_boat(void) {
 
 /* logging function in the vein of vprintf, taking a va_list of arguments */
 static void vlog_msg(const enum log_level level,
-                    const char *format,
-                    va_list argp) {
+                     const char *format,
+                     va_list argp) {
     char *level_str = "";
     switch(level) {
         case ERROR:
