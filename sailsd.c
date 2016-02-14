@@ -17,6 +17,14 @@
 
 #define SAILS_PORT 3333
 
+#define COLOR_RED     "\x1b[31m"
+#define COLOR_GREEN   "\x1b[32m"
+#define COLOR_YELLOW  "\x1b[33m"
+#define COLOR_BLUE    "\x1b[34m"
+#define COLOR_MAGENTA "\x1b[35m"
+#define COLOR_CYAN    "\x1b[36m"
+#define COLOR_RESET   "\x1b[0m"
+
 enum log_level { ERROR, WARNING, INFO, DEBUG };
 
 /* print a giant boat to the screen */
@@ -40,13 +48,13 @@ static void vlog_msg(const enum log_level level,
     char *level_str = "";
     switch(level) {
         case ERROR:
-            level_str = "error";
+            level_str = COLOR_RED "error" COLOR_RESET;
             break;
         case WARNING:
-            level_str = "warning";
+            level_str = COLOR_YELLOW "warning" COLOR_RESET;
             break;
         case INFO:
-            level_str = "info";
+            level_str = COLOR_BLUE "info" COLOR_RESET;
             break;
         case DEBUG:
             level_str = "debug";
