@@ -3,6 +3,8 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <time.h>
+#include <string.h>
+#include <inttypes.h>
 #include <resolv.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
@@ -107,6 +109,7 @@ void *worker(void *arg) {
     char line[1000];
     int bytes_read;
     int client = *(int *)arg;
+    int length = -1;
 
     log_debug("started thread");
 
@@ -116,11 +119,21 @@ void *worker(void *arg) {
             perror("error reading from socket");
             break;
         }
-        log_debug("request: %s", line);
+
+        if (length == -1) {
+            /* read the first four characters specifying message length */
+            char length_str[4];
+            strncpy(length_str, line, 4);
+            length = strtoimax(length_str, NULL, 10);
+            log_debug("line length: %i", length);
+        }
+
+        log_debug("request: \"%s\"", line);
         log_debug("bytes read: %i", bytes_read);
         parse_request(line);
         send(client, line, bytes_read, 0);
     } while (bytes_read != 0);
+
     close(client);
     log_debug("closed thread");
     return arg;
