@@ -94,6 +94,13 @@ static void log_error(const char *format, ...) {
     va_end(arglist);
 }
 
+static void log_warning(const char *format, ...) {
+    va_list arglist;
+    va_start(arglist, format);
+    vlog_msg(WARNING, format, arglist);
+    va_end(arglist);
+}
+
 static void log_debug(const char *format, ...) {
     va_list arglist;
     va_start(arglist, format);
@@ -125,7 +132,7 @@ void *worker(void *arg) {
         bytes_read = recv(client, line, sizeof(line), 0);
         if (bytes_read == -1) {
             perror("error reading from socket");
-            break;
+            goto end;
         }
 
         if (length == -1) {
@@ -133,6 +140,11 @@ void *worker(void *arg) {
             char length_str[4];
             strncpy(length_str, line, 4);
             length = strtoimax(length_str, NULL, 10);
+            if (!(length > 0)) {
+                /* if the length is not one or more characters */
+                log_warning("request length too short or invalid");
+                goto end;
+            }
             log_debug("line length: %i", length);
         }
 
@@ -142,6 +154,8 @@ void *worker(void *arg) {
         send(client, line, bytes_read, 0);
     } while (bytes_read != 0);
 
+end:
+    /* clean up and return */
     close(client);
     log_debug("closed thread");
     return arg;
