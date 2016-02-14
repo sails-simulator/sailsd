@@ -93,6 +93,7 @@ void *worker(void *arg) {
         bytes_read = recv(client, line, sizeof(line), 0);
         if (bytes_read == -1) {
             perror("error reading from socket");
+            break;
         }
         log_debug("bytes read: %i", bytes_read);
         send(client, line, bytes_read, 0);
