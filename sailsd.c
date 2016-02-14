@@ -11,6 +11,8 @@
 #include <pthread.h>
 #include <getopt.h>
 
+#include <jansson.h>
+
 #define SAILS_PORT 3333
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
@@ -75,6 +77,13 @@ static void log_info(const char *format, ...) {
     va_end(arglist);
 }
 
+static void log_error(const char *format, ...) {
+    va_list arglist;
+    va_start(arglist, format);
+    vlog_msg(ERROR, format, arglist);
+    va_end(arglist);
+}
+
 static void log_debug(const char *format, ...) {
     va_list arglist;
     va_start(arglist, format);
@@ -82,8 +91,20 @@ static void log_debug(const char *format, ...) {
     va_end(arglist);
 }
 
+void parse_request(const char *request) {
+    json_error_t error;
+
+    json_t *root = json_loads(request, 0, &error);
+
+    if (!root) {
+        log_error("request is not valid json at line %d: %s",
+                  error.line,
+                  error.text);
+    }
+}
+
 void *worker(void *arg) {
-    char line[100];
+    char line[1000];
     int bytes_read;
     int client = *(int *)arg;
 
@@ -95,7 +116,9 @@ void *worker(void *arg) {
             perror("error reading from socket");
             break;
         }
+        log_debug("request: %s", line);
         log_debug("bytes read: %i", bytes_read);
+        parse_request(line);
         send(client, line, bytes_read, 0);
     } while (bytes_read != 0);
     close(client);
