@@ -121,42 +121,26 @@ void parse_request(const char *request) {
 }
 
 void *worker(void *arg) {
-    char line[1000];
+    #define MAX_MESSAGE_LENGTH 2048
+    char *line = calloc(1, MAX_MESSAGE_LENGTH);
     int bytes_read;
     int client = *(int *)arg;
-    int length = -1;
 
     log_debug("started thread");
 
-    do {
-        bytes_read = recv(client, line, sizeof(line), 0);
-        if (bytes_read == -1) {
-            perror("error reading from socket");
-            goto end;
-        }
-
-        if (length == -1) {
-            /* read the first four characters specifying message length */
-            char length_str[4];
-            strncpy(length_str, line, 4);
-            length = strtoimax(length_str, NULL, 10);
-            if (!(length > 0)) {
-                /* if the length is not one or more characters */
-                log_warning("request length too short or invalid");
-                goto end;
-            }
-            log_debug("line length: %i", length);
-        }
-
+    bytes_read = recv(client, line, MAX_MESSAGE_LENGTH, 0);
+    if (bytes_read == -1) {
+        perror("error reading from socket");
+    } else {
         log_debug("request: \"%s\"", line);
         log_debug("bytes read: %i", bytes_read);
         parse_request(line);
         send(client, line, bytes_read, 0);
-    } while (bytes_read != 0);
+    }
 
-end:
     /* clean up and return */
     close(client);
+    free(line);
     log_debug("closed thread");
     return arg;
 }
@@ -187,6 +171,7 @@ int main(int argc, char *argv[]) {
     put_boat();
     log_info("started sailsd");
     log_msg(WARNING, "warning log");
+    log_warning("warning log");
 
     /* start up socket server */
     struct sockaddr_in addr;
