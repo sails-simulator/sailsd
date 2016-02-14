@@ -108,16 +108,36 @@ static void log_debug(const char *format, ...) {
     va_end(arglist);
 }
 
-void parse_request(const char *request) {
+void parse_request(const char *request_str) {
     json_error_t error;
 
-    json_t *root = json_loads(request, 0, &error);
+    json_t *root = json_loads(request_str, 0, &error);
 
     if (!root) {
         log_error("request is not valid json at line %d: %s",
                   error.line,
                   error.text);
+        goto error;
     }
+
+    if (!json_is_object(root)) {
+        log_error("request is not a json object");
+        goto error;
+    }
+
+    json_t *request = json_object_get(root, "request");
+    if (!json_is_string(request)) {
+        log_error("\"request\" is not a string");
+        goto error;
+    }
+
+    if (strcmp(json_string_value(request), "version") == 0) {
+        log_info("version");
+    }
+
+ error:
+    json_decref(root);
+    return;
 }
 
 void *worker(void *arg) {
