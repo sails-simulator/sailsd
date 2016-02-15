@@ -15,7 +15,8 @@
 
 #include <jansson.h>
 
-#define SAILS_PORT 3333
+#define SAILSD_PORT 3333
+#define SAILSD_MAX_MESSAGE_LENGTH 2048
 
 #define COLOR_RED     "\x1b[31m"
 #define COLOR_GREEN   "\x1b[32m"
@@ -135,20 +136,19 @@ void parse_request(const char *request_str) {
         log_info("version");
     }
 
- error:
+error:
     json_decref(root);
     return;
 }
 
 void *worker(void *arg) {
-    #define MAX_MESSAGE_LENGTH 2048
-    char *line = calloc(1, MAX_MESSAGE_LENGTH);
+    char *line = calloc(1, SAILSD_MAX_MESSAGE_LENGTH);
     int bytes_read;
     int client = *(int *)arg;
 
     log_debug("started thread");
 
-    bytes_read = recv(client, line, MAX_MESSAGE_LENGTH, 0);
+    bytes_read = recv(client, line, SAILSD_MAX_MESSAGE_LENGTH, 0);
     if (bytes_read == -1) {
         perror("error reading from socket");
     } else {
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
     }
 
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(SAILS_PORT);
+    addr.sin_port = htons(SAILSD_PORT);
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
     if (listen(sd, 20) != 0) {
         log_msg(ERROR, "failed to listen on port");
     }
-    log_info("listening on port %i", SAILS_PORT);
+    log_info("listening on port %i", SAILSD_PORT);
 
     for (;;) {
         socklen_t addr_size = sizeof(addr);
