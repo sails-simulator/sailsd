@@ -28,6 +28,12 @@
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
 
+enum request_attribute_t { REQUEST_VERSION };
+
+struct request_t {
+    enum request_attribute_t requested_attribute;
+};
+
 /* print a giant boat to the screen */
 void put_boat(void) {
     puts("                            \n"
@@ -109,10 +115,12 @@ static void log_debug(const char *format, ...) {
     va_end(arglist);
 }
 
-void parse_request(const char *request_str) {
+struct request_t *parse_request(const char *request_str) {
     json_error_t error;
 
     json_t *root = json_loads(request_str, 0, &error);
+
+    struct request_t *r = calloc(1, sizeof(struct request_t));
 
     if (!root) {
         log_error("request is not valid json at line %d: %s",
@@ -134,11 +142,12 @@ void parse_request(const char *request_str) {
 
     if (strcmp(json_string_value(request), "version") == 0) {
         log_info("version");
+        r->requested_attribute = REQUEST_VERSION;
     }
 
 error:
     json_decref(root);
-    return;
+    return r;
 }
 
 void *worker(void *arg) {
