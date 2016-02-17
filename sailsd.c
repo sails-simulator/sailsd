@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <time.h>
 #include <string.h>
 #include <inttypes.h>
@@ -31,6 +32,7 @@ enum log_level { ERROR, WARNING, INFO, DEBUG };
 enum request_attribute_t { REQUEST_VERSION };
 
 struct request_t {
+    bool error;
     enum request_attribute_t requested_attribute;
 };
 
@@ -131,23 +133,30 @@ struct request_t *parse_request(const char *request_str) {
 
     if (!json_is_object(root)) {
         log_error("request is not a json object");
+        r->error = true;
         goto error;
     }
 
     json_t *request = json_object_get(root, "request");
     if (!json_is_string(request)) {
         log_error("\"request\" is not a string");
+        r->error = true;
         goto error;
     }
 
     if (strcmp(json_string_value(request), "version") == 0) {
         log_info("version");
+        r->error = false;
         r->requested_attribute = REQUEST_VERSION;
     }
 
 error:
     json_decref(root);
     return r;
+}
+
+json_t *make_error_resp(char *msg) {
+    return json_pack("{ss}", "error", msg);
 }
 
 void *worker(void *arg) {
@@ -161,10 +170,23 @@ void *worker(void *arg) {
     if (bytes_read == -1) {
         perror("error reading from socket");
     } else {
+        json_t *resp;
+
         log_debug("request: \"%s\"", line);
         log_debug("bytes read: %i", bytes_read);
-        parse_request(line);
-        send(client, line, bytes_read, 0);
+
+        struct request_t *r = parse_request(line);
+        if (r->error) {
+            log_warning("error in request");
+            resp = make_error_resp("you messed up");
+        } else {
+            resp = make_error_resp("you didn't messed up");
+        }
+        char *resp_str = json_dumps(resp, 0);
+        log_debug("response: '%s'", resp_str);
+        send(client, resp_str, strlen(resp_str), 0);
+        free(r);
+        free(resp);
     }
 
     /* clean up and return */
