@@ -18,6 +18,7 @@
 
 #define SAILSD_PORT 3333
 #define SAILSD_MAX_MESSAGE_LENGTH 2048
+#define SAILSD_VERSION "1.0"
 
 #define COLOR_RED     "\x1b[31m"
 #define COLOR_GREEN   "\x1b[32m"
@@ -159,6 +160,14 @@ json_t *make_error_resp(char *msg) {
     return json_pack("{ss}", "error", msg);
 }
 
+json_t *make_resp(struct request_t *request) {
+    if (request->requested_attribute == REQUEST_VERSION) {
+        log_debug("requested the version");
+        return json_pack("{ss}", "version", SAILSD_VERSION);
+    }
+    return NULL;
+}
+
 void *worker(void *arg) {
     char *line = calloc(1, SAILSD_MAX_MESSAGE_LENGTH);
     int bytes_read;
@@ -180,7 +189,7 @@ void *worker(void *arg) {
             log_warning("error in request");
             resp = make_error_resp("you messed up");
         } else {
-            resp = make_error_resp("you didn't messed up");
+            resp = make_resp(r);
         }
         char *resp_str = json_dumps(resp, 0);
         log_debug("response: '%s'", resp_str);
@@ -238,6 +247,7 @@ int main(int argc, char *argv[]) {
 
     if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
         log_msg(ERROR, "failed to listen on port");
+        perror("failed to listen on port");
     }
 
     if (listen(sd, 20) != 0) {
