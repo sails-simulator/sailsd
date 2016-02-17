@@ -119,12 +119,20 @@ static void log_debug(const char *format, ...) {
     va_end(arglist);
 }
 
+struct request_t *request_t_init(void) {
+    struct request_t *r = calloc(1, sizeof(struct request_t));
+    r->requested_attributes = 0;
+    r->error = false;
+
+    return r;
+}
+
 struct request_t *parse_request(const char *request_str) {
     json_error_t error;
 
     json_t *root = json_loads(request_str, 0, &error);
 
-    struct request_t *r = calloc(1, sizeof(struct request_t));
+    struct request_t *r = request_t_init();
 
     if (!root) {
         log_error("request is not valid json at line %d: %s",
@@ -149,7 +157,7 @@ struct request_t *parse_request(const char *request_str) {
     if (strcmp(json_string_value(request), "version") != 0) {
         log_info("version");
         r->error = false;
-        r->requested_attributes = REQUEST_VERSION;
+        r->requested_attributes = r->requested_attributes | REQUEST_VERSION;
     }
 
 error:
