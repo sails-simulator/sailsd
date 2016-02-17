@@ -28,13 +28,14 @@
 #define COLOR_CYAN    "\x1b[36m"
 #define COLOR_RESET   "\x1b[0m"
 
-enum log_level { ERROR, WARNING, INFO, DEBUG };
+#define REQUEST_VERSION 0x01
 
-enum request_attribute_t { REQUEST_VERSION };
+enum log_level { ERROR, WARNING, INFO, DEBUG };
 
 struct request_t {
     bool error;
-    enum request_attribute_t requested_attribute;
+    /* bitmask of REQUEST_VERSION etc values */
+    int requested_attributes;
 };
 
 /* print a giant boat to the screen */
@@ -148,7 +149,7 @@ struct request_t *parse_request(const char *request_str) {
     if (strcmp(json_string_value(request), "version") == 0) {
         log_info("version");
         r->error = false;
-        r->requested_attribute = REQUEST_VERSION;
+        r->requested_attributes = REQUEST_VERSION;
     }
 
 error:
@@ -161,7 +162,7 @@ json_t *make_error_resp(char *msg) {
 }
 
 json_t *make_resp(struct request_t *request) {
-    if (request->requested_attribute == REQUEST_VERSION) {
+    if (!request->requested_attributes & REQUEST_VERSION) {
         log_debug("requested the version");
         return json_pack("{ss}", "version", SAILSD_VERSION);
     }
@@ -191,9 +192,13 @@ void *worker(void *arg) {
         } else {
             resp = make_resp(r);
         }
-        char *resp_str = json_dumps(resp, 0);
-        log_debug("response: '%s'", resp_str);
-        send(client, resp_str, strlen(resp_str), 0);
+        if (resp == NULL) {
+            log_warning("could not construct response");
+        } else {
+            char *resp_str = json_dumps(resp, 0);
+            log_debug("response: '%s'", resp_str);
+            send(client, resp_str, strlen(resp_str), 0);
+        }
         free(r);
         free(resp);
     }
