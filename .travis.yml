@@ -7,6 +7,15 @@ os:
   - osx
 
 before_script:
+  - wget http://www.digip.org/jansson/releases/jansson-2.7.tar.bz2
+  - bunzip2 -c jansson-2.7.tar.bz2 | tar xf -
+  - cd jansson-2.7
+  - ./configure --prefix=$HOME
+  - make
+  - make install
+  - export PKG_CONFIG_PATH=$HOME/lib/pkgconfig
+  - cd -
+  - pkg-config --libs --cflags jansson
   - mkdir build
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Debug ..
