@@ -15,10 +15,7 @@ before_script:
   - make install
   - export PKG_CONFIG_PATH=$HOME/lib/pkgconfig
   - cd -
-  - pkg-config --libs --cflags jansson
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$HOME/lib/
 
 script:
   - make
