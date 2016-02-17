@@ -162,11 +162,12 @@ json_t *make_error_resp(char *msg) {
 }
 
 json_t *make_resp(struct request_t *request) {
+    json_t *response = json_object();
     if (!request->requested_attributes & REQUEST_VERSION) {
         log_debug("requested the version");
-        return json_pack("{ss}", "version", SAILSD_VERSION);
+        json_object_set(response, "version", json_string(SAILSD_VERSION));
     }
-    return NULL;
+    return response;
 }
 
 void *worker(void *arg) {
@@ -192,13 +193,9 @@ void *worker(void *arg) {
         } else {
             resp = make_resp(r);
         }
-        if (resp == NULL) {
-            log_warning("could not construct response");
-        } else {
-            char *resp_str = json_dumps(resp, 0);
-            log_debug("response: '%s'", resp_str);
-            send(client, resp_str, strlen(resp_str), 0);
-        }
+        char *resp_str = json_dumps(resp, 0);
+        log_debug("response: '%s'", resp_str);
+        send(client, resp_str, strlen(resp_str), 0);
         free(r);
         free(resp);
     }
