@@ -146,7 +146,7 @@ struct request_t *parse_request(const char *request_str) {
         goto error;
     }
 
-    if (strcmp(json_string_value(request), "version") == 0) {
+    if (strcmp(json_string_value(request), "version") != 0) {
         log_info("version");
         r->error = false;
         r->requested_attributes = REQUEST_VERSION;
