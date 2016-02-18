@@ -28,7 +28,10 @@
 #define COLOR_CYAN    "\x1b[36m"
 #define COLOR_RESET   "\x1b[0m"
 
-#define REQUEST_VERSION 0x01
+enum request_attribute_t {
+    REQUEST_VERSION = 0x01,
+    REQUEST_STATE   = 0x02,
+};
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
 
@@ -127,6 +130,11 @@ struct request_t *request_t_init(void) {
     return r;
 }
 
+void request_t_add_requested_attribute(struct request_t *r,
+                                       const enum request_attribute_t a) {
+    r->requested_attributes |= a;
+}
+
 struct request_t *parse_request(const char *request_str) {
     json_error_t error;
 
@@ -148,16 +156,19 @@ struct request_t *parse_request(const char *request_str) {
     }
 
     json_t *request = json_object_get(root, "request");
-    if (!json_is_string(request)) {
+    if (!json_is_array(request)) {
         log_error("\"request\" is not a string");
         r->error = true;
         goto error;
     }
 
-    if (strcmp(json_string_value(request), "version") != 0) {
-        log_info("version");
-        r->error = false;
-        r->requested_attributes = r->requested_attributes | REQUEST_VERSION;
+    for (int i=0; i<json_array_size(request); i++) {
+        log_debug("%i", i);
+        const char *val = json_string_value(json_array_get(request, i));
+        log_debug("%s", val);
+        if (strcmp(val, "version") != 0) {
+            request_t_add_requested_attribute(r, REQUEST_VERSION);
+        }
     }
 
 error:
