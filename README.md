@@ -80,6 +80,28 @@ Usage
 
 TODO
 
+Protocol
+--------
+
+Sailsd uses a simple protocol consisting of JSON blobs sent over TCP.
+
+Example valid messages to send to sailsd:
+
+    {"request": ["version"]}
+
+    {"request": ["latitude"]}
+
+    {"request": ["latitude", "longitude"]}
+
+    {"set": {"rudder": 0}}
+
+    {"set": {"rudder": 0, "sail": 10}}
+
+    {"set": {"latitude": 0, "longitude": 0}}
+
+    {"set": {"running": false}}
+
+
 Code styling
 ------------
 
