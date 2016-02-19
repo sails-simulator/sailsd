@@ -28,6 +28,7 @@
 #define COLOR_CYAN    "\x1b[36m"
 #define COLOR_RESET   "\x1b[0m"
 
+/* bitmask for attributes */
 enum request_attribute_t {
     REQUEST_VERSION = 0x01,
     REQUEST_STATE   = 0x02,
@@ -163,9 +164,7 @@ struct request_t *parse_request(const char *request_str) {
     }
 
     for (int i=0; i<json_array_size(request); i++) {
-        log_debug("%i", i);
         const char *val = json_string_value(json_array_get(request, i));
-        log_debug("%s", val);
         if (strcmp(val, "version") != 0) {
             request_t_add_requested_attribute(r, REQUEST_VERSION);
         }
@@ -182,6 +181,7 @@ json_t *make_error_resp(char *msg) {
 
 json_t *make_resp(struct request_t *request) {
     json_t *response = json_object();
+
     if (!request->requested_attributes & REQUEST_VERSION) {
         log_debug("requested the version");
         json_object_set(response, "version", json_string(SAILSD_VERSION));
@@ -202,7 +202,7 @@ void *worker(void *arg) {
     } else {
         json_t *resp;
 
-        log_debug("request: \"%s\"", line);
+        log_debug("<- " COLOR_CYAN "\"%s\"" COLOR_RESET, line);
         log_debug("bytes read: %i", bytes_read);
 
         struct request_t *r = parse_request(line);
@@ -213,7 +213,7 @@ void *worker(void *arg) {
             resp = make_resp(r);
         }
         char *resp_str = json_dumps(resp, 0);
-        log_debug("response: '%s'", resp_str);
+        log_debug("-> " COLOR_CYAN "\"%s\"" COLOR_RESET, resp_str);
         send(client, resp_str, strlen(resp_str), 0);
         free(r);
         free(resp);
@@ -269,6 +269,7 @@ int main(int argc, char *argv[]) {
     if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
         log_msg(ERROR, "failed to listen on port");
         perror("failed to listen on port");
+        exit(1);
     }
 
     if (listen(sd, 20) != 0) {
