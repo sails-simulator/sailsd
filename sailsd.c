@@ -29,6 +29,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <signal.h>
 #include <pthread.h>
 #include <getopt.h>
 
@@ -45,6 +46,9 @@
 #define COLOR_MAGENTA "\x1b[35m"
 #define COLOR_CYAN    "\x1b[36m"
 #define COLOR_RESET   "\x1b[0m"
+
+/* flag used by sigint signal handling. If set to 1, sailsd should quit */
+volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute_t {
@@ -244,6 +248,12 @@ void *worker(void *arg) {
     return arg;
 }
 
+void sigint_handler(int sig) {
+    log_debug("got signal %i", sig);
+    quitting_flag = 1;
+    exit(1);
+}
+
 int main(int argc, char *argv[]) {
     int c;
     const char *short_opt = "h";
@@ -251,6 +261,9 @@ int main(int argc, char *argv[]) {
         {"help", no_argument, NULL, 'h'},
         {NULL,   0,           NULL, 0  }
     };
+
+    /* register signal handler to catch C-c signals */
+    signal(SIGINT, sigint_handler);
 
     while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
         switch(c) {
@@ -295,7 +308,7 @@ int main(int argc, char *argv[]) {
     }
     log_info("listening on port %i", SAILSD_PORT);
 
-    for (;;) {
+    while (!quitting_flag) {
         socklen_t addr_size = sizeof(addr);
         pthread_t child;
 
