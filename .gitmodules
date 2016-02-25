@@ -1,0 +1,3 @@
+[submodule "libsailing"]
+	path = libsailing
+	url = git@github.com:sails-simulator/libsailing.git
