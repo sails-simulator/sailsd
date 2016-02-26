@@ -64,6 +64,10 @@ struct request_t {
     int requested_attributes;
 };
 
+struct state {
+    bool running;
+};
+
 /* print a giant boat to the screen */
 void put_boat(void) {
     puts("                            \n"
@@ -151,6 +155,17 @@ struct request_t *request_t_init(void) {
     r->error = false;
 
     return r;
+}
+
+struct state *state_init(void) {
+    struct state *state = calloc(1, sizeof(struct state));
+    state->running = false;
+
+    return state;
+}
+
+void state_set_running(struct state *state, bool value) {
+    state->running = value;
 }
 
 void request_t_add_requested_attribute(struct request_t *r,
@@ -261,6 +276,8 @@ int main(int argc, char *argv[]) {
         {"help", no_argument, NULL, 'h'},
         {NULL,   0,           NULL, 0  }
     };
+
+    struct state *state = state_init();
 
     /* register signal handler to catch C-c signals */
     signal(SIGINT, sigint_handler);
