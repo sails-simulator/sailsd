@@ -263,6 +263,13 @@ void *worker(void *arg) {
     return arg;
 }
 
+void *simulation_thread(void *arg) {
+    for (;;) {
+        log_debug("simulation looping...");
+        sleep(1);
+    }
+}
+
 void sigint_handler(int sig) {
     log_debug("got signal %i", sig);
     quitting_flag = 1;
@@ -324,6 +331,15 @@ int main(int argc, char *argv[]) {
         log_msg(ERROR, "failed to listen on port");
     }
     log_info("listening on port %i", SAILSD_PORT);
+
+
+    /* start simulation thread */
+    pthread_t simulation;
+    if (pthread_create(&simulation, NULL, simulation_thread, &state) != 0) {
+        perror("error creating thread");
+    } else {
+        pthread_detach(simulation);
+    }
 
     while (!quitting_flag) {
         socklen_t addr_size = sizeof(addr);
