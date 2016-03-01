@@ -54,8 +54,9 @@ volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute_t {
-    REQUEST_VERSION = 0x01,
-    REQUEST_STATE   = 0x02,
+    REQUEST_VERSION  = 0x01,
+    REQUEST_STATE    = 0x02,
+    REQUEST_LATITUDE = 0x04,
 };
 
 enum log_level { ERROR, WARNING, INFO, DEBUG };
@@ -228,6 +229,12 @@ json_t *make_resp(struct request_t *request) {
         log_debug("requested the version");
         json_object_set(response, "version", json_string(SAILSD_VERSION));
     }
+
+    if (!request->requested_attributes & REQUEST_LATITUDE) {
+        log_debug("requested the latitude");
+        json_object_set(response, "latitude", json_real(SAILSD_VERSION));
+    }
+
     return response;
 }
 
