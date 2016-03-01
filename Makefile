@@ -9,3 +9,6 @@ LIBSAILING_OBJ = libsailing/sailing.o
 
 sailsd: $(OBJ) $(LIBSAILING_OBJ)
 	gcc -o $@ $^ $(CFLAGS)
+
+clean:
+	rm -v *.o libsailing/*.o
