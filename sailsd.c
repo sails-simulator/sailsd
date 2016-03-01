@@ -35,6 +35,8 @@
 
 #include <jansson.h>
 
+#include <sailing.h>
+
 #define SAILSD_PORT 3333
 #define SAILSD_MAX_MESSAGE_LENGTH 2048
 #define SAILSD_VERSION "1.0"
@@ -66,6 +68,7 @@ struct request_t {
 
 struct state {
     bool running;
+    struct sailing_boat *boat;
 };
 
 /* print a giant boat to the screen */
@@ -157,9 +160,11 @@ struct request_t *request_t_init(void) {
     return r;
 }
 
+/* TODO: write state_free() */
 struct state *state_init(void) {
     struct state *state = calloc(1, sizeof(struct state));
     state->running = false;
+    state->boat = sailing_boat_init();
 
     return state;
 }
@@ -264,8 +269,11 @@ void *worker(void *arg) {
 }
 
 void *simulation_thread(void *arg) {
+    struct state *state = (struct state*) arg;
     for (;;) {
-        log_debug("simulation looping...");
+        log_debug("simulation looping position (%f, %f)...",
+                  sailing_boat_get_latitude(state->boat),
+                  sailing_boat_get_longitude(state->boat));
         sleep(1);
     }
 }
@@ -335,7 +343,7 @@ int main(int argc, char *argv[]) {
 
     /* start simulation thread */
     pthread_t simulation;
-    if (pthread_create(&simulation, NULL, simulation_thread, &state) != 0) {
+    if (pthread_create(&simulation, NULL, simulation_thread, state) != 0) {
         perror("error creating thread");
     } else {
         pthread_detach(simulation);
