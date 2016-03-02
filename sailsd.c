@@ -53,7 +53,7 @@
 volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
-enum request_attribute_t {
+enum request_attribute {
     REQUEST_VERSION  = 0x01,
     REQUEST_STATE    = 0x02,
     REQUEST_LATITUDE = 0x04,
@@ -178,7 +178,7 @@ void state_set_running(struct state *state, bool value) {
 }
 
 void request_t_add_requested_attribute(struct request_t *r,
-                                       const enum request_attribute_t a) {
+                                       const enum request_attribute a) {
     r->requested_attributes |= a;
 }
 
@@ -227,17 +227,25 @@ json_t *make_error_resp(char *msg) {
     return json_pack("{ss}", "error", msg);
 }
 
+bool request_attribute_contains(int requested_attributes, enum request_attribute attr) {
+    if ((requested_attributes & attr) == attr) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 json_t *make_resp(struct request_t *request) {
     json_t *response = json_object();
 
-    if (!(request->requested_attributes & REQUEST_VERSION)) {
+    if (request_attribute_contains(request->requested_attributes, REQUEST_VERSION)) {
         log_debug("requested the version");
         json_object_set(response,
                         "version",
                         json_string(SAILSD_VERSION));
     }
 
-    if (!(request->requested_attributes & REQUEST_LATITUDE)) {
+    if (request_attribute_contains(request->requested_attributes, REQUEST_LATITUDE)) {
         log_debug("requested the latitude");
         json_object_set(response,
                         "latitude",
