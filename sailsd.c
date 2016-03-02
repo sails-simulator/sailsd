@@ -170,6 +170,9 @@ struct state *state_init(void) {
     return state;
 }
 
+/* state singleton */
+struct state *world_state;
+
 void state_set_running(struct state *state, bool value) {
     state->running = value;
 }
@@ -210,6 +213,8 @@ struct request_t *parse_request(const char *request_str) {
         const char *val = json_string_value(json_array_get(request, i));
         if (strcmp(val, "version") != 0) {
             request_t_add_requested_attribute(r, REQUEST_VERSION);
+        } else if (strcmp(val, "latitude") != 0) {
+            request_t_add_requested_attribute(r, REQUEST_LATITUDE);
         }
     }
 
@@ -225,14 +230,18 @@ json_t *make_error_resp(char *msg) {
 json_t *make_resp(struct request_t *request) {
     json_t *response = json_object();
 
-    if (!request->requested_attributes & REQUEST_VERSION) {
+    if (!(request->requested_attributes & REQUEST_VERSION)) {
         log_debug("requested the version");
-        json_object_set(response, "version", json_string(SAILSD_VERSION));
+        json_object_set(response,
+                        "version",
+                        json_string(SAILSD_VERSION));
     }
 
-    if (!request->requested_attributes & REQUEST_LATITUDE) {
+    if (!(request->requested_attributes & REQUEST_LATITUDE)) {
         log_debug("requested the latitude");
-        json_object_set(response, "latitude", json_real(SAILSD_VERSION));
+        json_object_set(response,
+                        "latitude",
+                        json_real(sailing_boat_get_latitude(world_state->boat)));
     }
 
     return response;
@@ -276,11 +285,10 @@ void *worker(void *arg) {
 }
 
 void *simulation_thread(void *arg) {
-    struct state *state = (struct state*) arg;
     for (;;) {
         log_debug("simulation looping position (%f, %f)...",
-                  sailing_boat_get_latitude(state->boat),
-                  sailing_boat_get_longitude(state->boat));
+                  sailing_boat_get_latitude(world_state->boat),
+                  sailing_boat_get_longitude(world_state->boat));
         sleep(1);
     }
 }
@@ -299,8 +307,6 @@ int main(int argc, char *argv[]) {
         {NULL,   0,           NULL, 0  }
     };
 
-    struct state *state = state_init();
-
     /* register signal handler to catch C-c signals */
     signal(SIGINT, sigint_handler);
 
@@ -318,6 +324,8 @@ int main(int argc, char *argv[]) {
                 return 0;
         }
     }
+
+    world_state = state_init();
 
     put_boat();
     log_info("started sailsd");
@@ -350,7 +358,7 @@ int main(int argc, char *argv[]) {
 
     /* start simulation thread */
     pthread_t simulation;
-    if (pthread_create(&simulation, NULL, simulation_thread, state) != 0) {
+    if (pthread_create(&simulation, NULL, simulation_thread, NULL) != 0) {
         perror("error creating thread");
     } else {
         pthread_detach(simulation);
