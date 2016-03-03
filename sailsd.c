@@ -37,20 +37,13 @@
 #include <limits.h>
 
 #include <jansson.h>
-
 #include <sailing.h>
+
+#include "logging.h"
 
 #define SAILSD_PORT 3333
 #define SAILSD_MAX_MESSAGE_LENGTH 2048
 #define SAILSD_VERSION "1.0"
-
-#define COLOR_RED     "\x1b[31m"
-#define COLOR_GREEN   "\x1b[32m"
-#define COLOR_YELLOW  "\x1b[33m"
-#define COLOR_BLUE    "\x1b[34m"
-#define COLOR_MAGENTA "\x1b[35m"
-#define COLOR_CYAN    "\x1b[36m"
-#define COLOR_RESET   "\x1b[0m"
 
 /* flag used by sigint signal handling. If set to 1, sailsd should quit */
 volatile sig_atomic_t quitting_flag = 0;
@@ -61,8 +54,6 @@ enum request_attribute {
     REQUEST_STATE    = 0x02,
     REQUEST_LATITUDE = 0x04,
 };
-
-enum log_level { ERROR, WARNING, INFO, DEBUG };
 
 struct request_t {
     bool error;
@@ -87,73 +78,6 @@ void put_boat(void) {
          "   \x1b[34m~^~ \x1b[0m___\x1b[34m^\x1b[0m___|_| |___\x1b[34m~\x1b[0m_| | \x1b[34m ^~  \x1b[0m\n"
          "    \x1b[34m~ \x1b[0m|_ -| .'| | |_ -| . |\x1b[34m ~ \x1b[0m\n"
          "      |___|__,|_|_|___|___| \n");
-}
-
-/* logging function in the vein of vprintf, taking a va_list of arguments */
-static void vlog_msg(const enum log_level level,
-                     const char *format,
-                     va_list argp) {
-    char *level_str = "";
-    switch(level) {
-        case ERROR:
-            level_str = COLOR_RED "error" COLOR_RESET;
-            break;
-        case WARNING:
-            level_str = COLOR_YELLOW "warning" COLOR_RESET;
-            break;
-        case INFO:
-            level_str = COLOR_BLUE "info" COLOR_RESET;
-            break;
-        case DEBUG:
-            level_str = "debug";
-            break;
-    }
-
-    char timestamp[32];
-
-    time_t t = time(NULL);
-    struct tm *p = localtime(&t);
-    strftime(timestamp, 32, "%c", p);
-
-    printf("[%s] %s:\t", timestamp, level_str);
-    vprintf(format, argp);
-    printf("\n");
-}
-
-static void log_msg(const enum log_level level, const char *format, ...) {
-    va_list arglist;
-    va_start(arglist, format);
-    vlog_msg(level, format, arglist);
-    va_end(arglist);
-}
-
-/* TODO: add log_error etc */
-static void log_info(const char *format, ...) {
-    va_list arglist;
-    va_start(arglist, format);
-    vlog_msg(INFO, format, arglist);
-    va_end(arglist);
-}
-
-static void log_error(const char *format, ...) {
-    va_list arglist;
-    va_start(arglist, format);
-    vlog_msg(ERROR, format, arglist);
-    va_end(arglist);
-}
-
-static void log_warning(const char *format, ...) {
-    va_list arglist;
-    va_start(arglist, format);
-    vlog_msg(WARNING, format, arglist);
-    va_end(arglist);
-}
-
-static void log_debug(const char *format, ...) {
-    va_list arglist;
-    va_start(arglist, format);
-    vlog_msg(DEBUG, format, arglist);
-    va_end(arglist);
 }
 
 struct request_t *request_t_init(void) {
