@@ -33,6 +33,9 @@
 #include <pthread.h>
 #include <getopt.h>
 
+/* FIXME: remove */
+#include <limits.h>
+
 #include <jansson.h>
 
 #include <sailing.h>
@@ -177,6 +180,23 @@ void state_set_running(struct state *state, bool value) {
     state->running = value;
 }
 
+/* FIXME: remove this function */
+
+char * int2bin(int i) {
+    size_t bits = sizeof(int) * CHAR_BIT;
+
+    char * str = malloc(bits + 1);
+    if(!str) return NULL;
+    str[bits] = 0;
+
+    // type punning because signed shift is implementation-defined
+    unsigned u = *(unsigned *)&i;
+    for(; bits--; u >>= 1)
+        str[bits] = u & 1 ? '1' : '0';
+
+    return str;
+}
+
 void request_t_add_requested_attribute(struct request_t *r,
                                        const enum request_attribute a) {
     r->requested_attributes |= a;
@@ -217,6 +237,7 @@ struct request_t *parse_request(const char *request_str) {
             request_t_add_requested_attribute(r, REQUEST_LATITUDE);
         }
     }
+    log_debug("parse_request bitmask:	'%s'", int2bin(r->requested_attributes));
 
 error:
     json_decref(root);
