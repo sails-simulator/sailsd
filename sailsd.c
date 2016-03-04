@@ -282,7 +282,6 @@ int main(int argc, char *argv[]) {
 
     put_boat();
     log_info("started sailsd");
-    log_msg(WARNING, "warning log");
     log_warning("warning log");
 
     /* start up socket server */
@@ -290,7 +289,7 @@ int main(int argc, char *argv[]) {
 
     int sd = socket(PF_INET, SOCK_STREAM, 0);
     if (sd < 0) {
-        log_msg(ERROR, "cannot start socket");
+        log_error("cannot start socket");
     }
 
     addr.sin_family = AF_INET;
@@ -298,13 +297,13 @@ int main(int argc, char *argv[]) {
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
-        log_msg(ERROR, "failed to listen on port");
+        log_error("failed to listen on port");
         perror("failed to listen on port");
         exit(1);
     }
 
     if (listen(sd, 20) != 0) {
-        log_msg(ERROR, "failed to listen on port");
+        log_error("failed to listen on port");
     }
     log_info("listening on port %i", SAILSD_PORT);
 
