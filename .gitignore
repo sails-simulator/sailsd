@@ -1,7 +1,9 @@
 *.o
 *.swp
+*.orig
 sails
 sails.exe
 tags
 todo.md
 build/
+sailsd
