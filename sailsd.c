@@ -245,6 +245,29 @@ void *simulation_thread(void *arg) {
     }
 }
 
+struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd) {
+    if (*sd < 0) {
+        log_error("cannot start socket");
+    }
+
+    addr->sin_family = AF_INET;
+    addr->sin_port = htons(SAILSD_PORT);
+    addr->sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    if (bind(*sd, (struct sockaddr*)addr, sizeof(*addr)) != 0) {
+        log_error("failed to listen on port");
+        perror("failed to listen on port");
+        exit(1);
+    }
+
+    if (listen(*sd, 20) != 0) {
+        log_error("failed to listen on port");
+    }
+    log_info("listening on port %i", SAILSD_PORT);
+    return addr;
+}
+
+
 void sigint_handler(int sig) {
     log_debug("got signal %i", sig);
     quitting_flag = 1;
@@ -285,27 +308,8 @@ int main(int argc, char *argv[]) {
 
     /* start up socket server */
     struct sockaddr_in addr;
-
     int sd = socket(PF_INET, SOCK_STREAM, 0);
-    if (sd < 0) {
-        log_error("cannot start socket");
-    }
-
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(SAILSD_PORT);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0) {
-        log_error("failed to listen on port");
-        perror("failed to listen on port");
-        exit(1);
-    }
-
-    if (listen(sd, 20) != 0) {
-        log_error("failed to listen on port");
-    }
-    log_info("listening on port %i", SAILSD_PORT);
-
+    socket_init(&addr, &sd);
 
     /* start simulation thread */
     pthread_t simulation;
