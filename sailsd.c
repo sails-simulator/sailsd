@@ -267,14 +267,13 @@ struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd) {
     return addr;
 }
 
-
 void sigint_handler(int sig) {
     log_debug("got signal %i", sig);
     quitting_flag = 1;
     exit(1);
 }
 
-int main(int argc, char *argv[]) {
+void parse_args(int argc, char *argv[]) {
     int c;
     const char *short_opt = "h";
     struct option long_opt[] = {
@@ -282,23 +281,28 @@ int main(int argc, char *argv[]) {
         {NULL,   0,           NULL, 0  }
     };
 
-    /* register signal handler to catch C-c signals */
-    signal(SIGINT, sigint_handler);
-
     while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
         switch(c) {
-            case -1: /* no more arguments */
-            case 0:  /* long options toggles */
-                break;
-            case 'h':
-                printf("Usage: %s [OPTIONS]\n", argv[0]);
-                printf("  -h, --help            print this help and exit\n");
-                printf("\n");
-                return 0;
-            default:
-                return 0;
+        case -1: /* no more arguments */
+        case 0:  /* long options toggles */
+            break;
+        case 'h':
+            printf("Usage: %s [OPTIONS]\n", argv[0]);
+            printf("  -h, --help            print this help and exit\n");
+            printf("\n");
+            exit(0);
+        default:
+            exit(0);
         }
     }
+}
+
+int main(int argc, char *argv[]) {
+    /* handle arguments */
+    parse_args(argc, argv);
+
+    /* register signal handler to catch C-c signals */
+    signal(SIGINT, sigint_handler);
 
     world_state = state_init();
 
