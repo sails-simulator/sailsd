@@ -323,6 +323,7 @@ int main(int argc, char *argv[]) {
         pthread_detach(simulation);
     }
 
+    /* loop and spawn a new thread for each socket connection */
     while (!quitting_flag) {
         socklen_t addr_size = sizeof(addr);
         pthread_t child;
