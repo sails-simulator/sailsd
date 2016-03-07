@@ -49,12 +49,13 @@ volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute {
-    REQUEST_VERSION    = 0x01,
-    REQUEST_STATE      = 0x02,
-    REQUEST_LATITUDE   = 0x04,
-    REQUEST_LONGITUDE  = 0x08,
-    REQUEST_SAIL_ANGLE = 0x10,
-    REQUEST_HEADING    = 0x20,
+    REQUEST_VERSION      = 0x01,
+    REQUEST_STATE        = 0x02,
+    REQUEST_LATITUDE     = 0x04,
+    REQUEST_LONGITUDE    = 0x08,
+    REQUEST_SAIL_ANGLE   = 0x10,
+    REQUEST_HEADING      = 0x20,
+    REQUEST_RUDDER_ANGLE = 0x30,
 };
 
 struct request_t {
@@ -169,6 +170,8 @@ struct request_t *parse_request(const char *request_str) {
             request_t_add_requested_attribute(r, REQUEST_SAIL_ANGLE);
         } else if (strcmp(val, "heading") == 0) {
             request_t_add_requested_attribute(r, REQUEST_HEADING);
+        } else if (strcmp(val, "rudder-angle") == 0) {
+            request_t_add_requested_attribute(r, REQUEST_RUDDER_ANGLE);
         } else {
             log_warning("requested '%s', which is not a recognized attribute", val);
         }
@@ -223,6 +226,12 @@ json_t *make_resp(struct request_t *request) {
         json_object_set(response,
                         "heading",
                         json_real(sailing_boat_get_angle(world_state->boat)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_RUDDER_ANGLE)) {
+        json_object_set(response,
+                        "rudder-angle",
+                        json_real(sailing_boat_get_rudder_angle(world_state->boat)));
     }
 
     return response;
