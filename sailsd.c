@@ -49,9 +49,10 @@ volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute {
-    REQUEST_VERSION  = 0x01,
-    REQUEST_STATE    = 0x02,
-    REQUEST_LATITUDE = 0x04,
+    REQUEST_VERSION   = 0x01,
+    REQUEST_STATE     = 0x02,
+    REQUEST_LATITUDE  = 0x04,
+    REQUEST_LONGITUDE = 0x08,
 };
 
 struct request_t {
@@ -156,10 +157,14 @@ struct request_t *parse_request(const char *request_str) {
 
     for (int i=0; i<json_array_size(request); i++) {
         const char *val = json_string_value(json_array_get(request, i));
-        if (strcmp(val, "version") != 0) {
+        if (strcmp(val, "version") == 0) {
             request_t_add_requested_attribute(r, REQUEST_VERSION);
-        } else if (strcmp(val, "latitude") != 0) {
+        } else if (strcmp(val, "latitude") == 0) {
             request_t_add_requested_attribute(r, REQUEST_LATITUDE);
+        } else if (strcmp(val, "longitude") == 0) {
+            request_t_add_requested_attribute(r, REQUEST_LONGITUDE);
+        } else {
+            log_warning("requested '%s', which is not a recognized attribute", val);
         }
     }
     log_debug("parse_request bitmask:	'%s'", int2bin(r->requested_attributes));
@@ -196,6 +201,12 @@ json_t *make_resp(struct request_t *request) {
         json_object_set(response,
                         "latitude",
                         json_real(sailing_boat_get_latitude(world_state->boat)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_LONGITUDE)) {
+        json_object_set(response,
+                        "longitude",
+                        json_real(sailing_boat_get_longitude(world_state->boat)));
     }
 
     return response;
