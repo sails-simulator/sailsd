@@ -49,10 +49,12 @@ volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute {
-    REQUEST_VERSION   = 0x01,
-    REQUEST_STATE     = 0x02,
-    REQUEST_LATITUDE  = 0x04,
-    REQUEST_LONGITUDE = 0x08,
+    REQUEST_VERSION    = 0x01,
+    REQUEST_STATE      = 0x02,
+    REQUEST_LATITUDE   = 0x04,
+    REQUEST_LONGITUDE  = 0x08,
+    REQUEST_SAIL_ANGLE = 0x10,
+    REQUEST_HEADING    = 0x20,
 };
 
 struct request_t {
@@ -163,6 +165,10 @@ struct request_t *parse_request(const char *request_str) {
             request_t_add_requested_attribute(r, REQUEST_LATITUDE);
         } else if (strcmp(val, "longitude") == 0) {
             request_t_add_requested_attribute(r, REQUEST_LONGITUDE);
+        } else if (strcmp(val, "sail-angle") == 0) {
+            request_t_add_requested_attribute(r, REQUEST_SAIL_ANGLE);
+        } else if (strcmp(val, "heading") == 0) {
+            request_t_add_requested_attribute(r, REQUEST_HEADING);
         } else {
             log_warning("requested '%s', which is not a recognized attribute", val);
         }
@@ -190,14 +196,12 @@ json_t *make_resp(struct request_t *request) {
     json_t *response = json_object();
 
     if (request_attribute_contains(request->requested_attributes, REQUEST_VERSION)) {
-        log_debug("requested the version");
         json_object_set(response,
                         "version",
                         json_string(SAILSD_VERSION));
     }
 
     if (request_attribute_contains(request->requested_attributes, REQUEST_LATITUDE)) {
-        log_debug("requested the latitude");
         json_object_set(response,
                         "latitude",
                         json_real(sailing_boat_get_latitude(world_state->boat)));
@@ -207,6 +211,18 @@ json_t *make_resp(struct request_t *request) {
         json_object_set(response,
                         "longitude",
                         json_real(sailing_boat_get_longitude(world_state->boat)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_SAIL_ANGLE)) {
+        json_object_set(response,
+                        "sail-angle",
+                        json_real(sailing_boat_get_sail_angle(world_state->boat)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_HEADING)) {
+        json_object_set(response,
+                        "heading",
+                        json_real(sailing_boat_get_angle(world_state->boat)));
     }
 
     return response;
