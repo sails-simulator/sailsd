@@ -87,20 +87,6 @@ void state_set_running(struct state *state, bool value) {
     state->running = value;
 }
 
-/* print a giant boat to the screen */
-void put_boat(void) {
-    puts("                            \n"
-         "                ,\x1b[31m~\x1b[0m          \n"
-         "                |\\         \n"
-         "               /| \\        \n"
-         "         \x1b[34m~ ^~ \x1b[0m/_|__\\\x1b[34m~^~    \x1b[0m\n"
-         "      \x1b[34m~^~^ ~ \x1b[0m'======' \x1b[34m~^ ~^~  \x1b[0m\n"
-         "    \x1b[34m~^  ^~ ~^ ~\x1b[0m_\x1b[34m~\x1b[0m_\x1b[34m~^~ ~^~\x1b[0m_\x1b[34m ~^~  \x1b[0m\n"
-         "   \x1b[34m~^~ \x1b[0m___\x1b[34m^\x1b[0m___|_| |___\x1b[34m~\x1b[0m_| | \x1b[34m ^~  \x1b[0m\n"
-         "    \x1b[34m~ \x1b[0m|_ -| .'| | |_ -| . |\x1b[34m ~ \x1b[0m\n"
-         "      |___|__,|_|_|___|___| \n");
-}
-
 struct request_t *request_t_init(void) {
     struct request_t *r = calloc(1, sizeof(struct request_t));
     r->requested_attributes = 0;

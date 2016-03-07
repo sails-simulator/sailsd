@@ -27,6 +27,7 @@
 #define COLOR_CYAN    "\x1b[36m"
 #define COLOR_RESET   "\x1b[0m"
 
+void put_boat(void);
 void log_info(const char *format, ...);
 void log_error(const char *format, ...);
 void log_warning(const char *format, ...);
