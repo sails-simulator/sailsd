@@ -261,14 +261,16 @@ void *worker(void *arg) {
 }
 
 void *simulation_thread(void *arg) {
+    double sleep_time = 0.2;
     for (;;) {
         while (world_state->running) {
             /*log_debug("simulation looping position (%f, %f)...",
                     sailing_boat_get_latitude(world_state->boat),
                     sailing_boat_get_longitude(world_state->boat));*/
             sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
+            sleep(sleep_time);
         }
-        sleep(0.2);
+        sleep(sleep_time);
     }
 }
 
