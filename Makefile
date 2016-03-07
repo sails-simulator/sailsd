@@ -1,8 +1,8 @@
 CC=gcc
-CFLAGS=-I. -Ilibsailing -std=gnu99 $(shell pkg-config --libs --cflags jansson) -lpthread -Wall
+CFLAGS=-I. -Ilibsailing -std=gnu99 $(shell pkg-config --libs --cflags jansson) -lpthread -Wall -lm
 DEPS =
 OBJ = sailsd.o logging.o
-LIBSAILING_OBJ = libsailing/sailing.o
+LIBSAILING_OBJ = libsailing/sailing.o libsailing/physics.o libsailing/wind.o libsailing/boat.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
