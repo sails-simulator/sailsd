@@ -62,8 +62,26 @@ struct request_t {
 
 struct state {
     bool running;
-    struct sailing_boat *boat;
+    Boat *boat;
+    Wind *wind;
 };
+
+/* state singleton */
+struct state *world_state;
+
+/* TODO: write state_free() */
+struct state *state_init(void) {
+    struct state *state = calloc(1, sizeof(struct state));
+    state->running = false;
+    state->boat = sailing_boat_init();
+    state->wind = sailing_wind_new();
+
+    return state;
+}
+
+void state_set_running(struct state *state, bool value) {
+    state->running = value;
+}
 
 /* print a giant boat to the screen */
 void put_boat(void) {
@@ -85,22 +103,6 @@ struct request_t *request_t_init(void) {
     r->error = false;
 
     return r;
-}
-
-/* TODO: write state_free() */
-struct state *state_init(void) {
-    struct state *state = calloc(1, sizeof(struct state));
-    state->running = false;
-    state->boat = sailing_boat_init();
-
-    return state;
-}
-
-/* state singleton */
-struct state *world_state;
-
-void state_set_running(struct state *state, bool value) {
-    state->running = value;
 }
 
 /* FIXME: remove this function */
@@ -238,10 +240,13 @@ void *worker(void *arg) {
 
 void *simulation_thread(void *arg) {
     for (;;) {
-        log_debug("simulation looping position (%f, %f)...",
-                  sailing_boat_get_latitude(world_state->boat),
-                  sailing_boat_get_longitude(world_state->boat));
-        sleep(1);
+        while (world_state->running) {
+            /*log_debug("simulation looping position (%f, %f)...",
+                    sailing_boat_get_latitude(world_state->boat),
+                    sailing_boat_get_longitude(world_state->boat));*/
+            sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
+        }
+        sleep(0.2);
     }
 }
 
@@ -310,11 +315,6 @@ int main(int argc, char *argv[]) {
     log_info("started sailsd");
     log_warning("warning log");
 
-    /* start up socket server */
-    struct sockaddr_in addr;
-    int sd = socket(PF_INET, SOCK_STREAM, 0);
-    socket_init(&addr, &sd);
-
     /* start simulation thread */
     pthread_t simulation;
     if (pthread_create(&simulation, NULL, simulation_thread, NULL) != 0) {
@@ -322,6 +322,14 @@ int main(int argc, char *argv[]) {
     } else {
         pthread_detach(simulation);
     }
+
+    /* start up socket server */
+    struct sockaddr_in addr;
+    int sd = socket(PF_INET, SOCK_STREAM, 0);
+    socket_init(&addr, &sd);
+
+    /* start running the simulation */
+    state_set_running(world_state, true);
 
     /* loop and spawn a new thread for each socket connection */
     while (!quitting_flag) {
