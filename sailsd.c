@@ -137,32 +137,36 @@ struct request_t *parse_request(const char *request_str) {
         goto error;
     }
 
+    /* check that "request" is an array */
     json_t *request = json_object_get(root, "request");
-    if (!json_is_array(request)) {
-        log_error("\"request\" is not a string");
-        r->error = true;
-        goto error;
+    if (json_is_array(request)) {
+        /* check each requested attribute named in the array */
+        for (int i=0; i<json_array_size(request); i++) {
+            const char *val = json_string_value(json_array_get(request, i));
+            if (strcmp(val, "version") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_VERSION);
+            } else if (strcmp(val, "latitude") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_LATITUDE);
+            } else if (strcmp(val, "longitude") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_LONGITUDE);
+            } else if (strcmp(val, "sail-angle") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_SAIL_ANGLE);
+            } else if (strcmp(val, "heading") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_HEADING);
+            } else if (strcmp(val, "rudder-angle") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_RUDDER_ANGLE);
+            } else {
+                log_warning("requested '%s', which is not a recognized attribute", val);
+            }
+        }
+        log_debug("parse_request bitmask:	'%s'", int2bin(r->requested_attributes));
     }
 
-    for (int i=0; i<json_array_size(request); i++) {
-        const char *val = json_string_value(json_array_get(request, i));
-        if (strcmp(val, "version") == 0) {
-            request_t_add_requested_attribute(r, REQUEST_VERSION);
-        } else if (strcmp(val, "latitude") == 0) {
-            request_t_add_requested_attribute(r, REQUEST_LATITUDE);
-        } else if (strcmp(val, "longitude") == 0) {
-            request_t_add_requested_attribute(r, REQUEST_LONGITUDE);
-        } else if (strcmp(val, "sail-angle") == 0) {
-            request_t_add_requested_attribute(r, REQUEST_SAIL_ANGLE);
-        } else if (strcmp(val, "heading") == 0) {
-            request_t_add_requested_attribute(r, REQUEST_HEADING);
-        } else if (strcmp(val, "rudder-angle") == 0) {
-            request_t_add_requested_attribute(r, REQUEST_RUDDER_ANGLE);
-        } else {
-            log_warning("requested '%s', which is not a recognized attribute", val);
-        }
+    /* check that "set" is a object */
+    json_t *set = json_object_get(root, "set");
+    if (json_is_object(set)) {
+
     }
-    log_debug("parse_request bitmask:	'%s'", int2bin(r->requested_attributes));
 
 error:
     json_decref(root);
