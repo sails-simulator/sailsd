@@ -68,6 +68,7 @@ struct state {
     bool running;
     Boat *boat;
     Wind *wind;
+    pthread_mutex_t physics_mutex;
 };
 
 /* state singleton */
@@ -79,6 +80,8 @@ struct state *state_init(void) {
     state->running = false;
     state->boat = sailing_boat_init();
     state->wind = sailing_wind_new();
+    pthread_mutex_init(&state->physics_mutex, NULL);
+    log_debug("got here");
 
     return state;
 }
@@ -165,7 +168,22 @@ struct request_t *parse_request(const char *request_str) {
     /* check that "set" is a object */
     json_t *set = json_object_get(root, "set");
     if (json_is_object(set)) {
+        const char *key;
+        json_t *value;
 
+        pthread_mutex_lock(&world_state->physics_mutex);
+
+        /* this should probably be batched and handled after the parsing of the request is done */
+        json_object_foreach(set, key, value) {
+            log_debug("key: %s", key);
+            if (strcmp(key, "latitude") == 0) {
+                log_debug("setting latitude to %f", json_number_value(value));
+                sailing_boat_set_latitude(world_state->boat,
+                                          json_number_value(value));
+            }
+        }
+
+        pthread_mutex_unlock(&world_state->physics_mutex);
     }
 
 error:
@@ -265,16 +283,22 @@ void *worker(void *arg) {
 }
 
 void *simulation_thread(void *arg) {
-    double sleep_time = 0.2;
+    /* hardcode a sleep time of half a second (500,000,000 nanoseconds) */
+    struct timespec t, t1;
+    t.tv_sec  = 0;
+    t.tv_nsec = 500000000L;
+
     for (;;) {
-        while (world_state->running) {
-            /*log_debug("simulation looping position (%f, %f)...",
+        while (!pthread_mutex_lock(&world_state->physics_mutex)) {
+            log_debug("simulation looping position (%f, %f)...",
                     sailing_boat_get_latitude(world_state->boat),
-                    sailing_boat_get_longitude(world_state->boat));*/
+                    sailing_boat_get_longitude(world_state->boat));
             sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
-            sleep(sleep_time);
+            pthread_mutex_unlock(&world_state->physics_mutex);
+            nanosleep(&t, &t1);
         }
-        sleep(sleep_time);
+        log_info("mutexed");
+        nanosleep(&t, &t1);
     }
 }
 
