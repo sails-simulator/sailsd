@@ -289,7 +289,8 @@ void *simulation_thread(void *arg) {
     t.tv_nsec = 500000000L;
 
     for (;;) {
-        while (!pthread_mutex_lock(&world_state->physics_mutex)) {
+        while(world_state->running) {
+            pthread_mutex_lock(&world_state->physics_mutex);
             log_debug("simulation looping position (%f, %f)...",
                     sailing_boat_get_latitude(world_state->boat),
                     sailing_boat_get_longitude(world_state->boat));
