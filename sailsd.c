@@ -180,7 +180,16 @@ struct request_t *parse_request(const char *request_str) {
                 log_debug("setting latitude to %f", json_number_value(value));
                 sailing_boat_set_latitude(world_state->boat,
                                           json_number_value(value));
-            }
+            } else if (strcmp(key, "longitude") == 0) {
+                log_debug("setting longitude to %f", json_number_value(value));
+                sailing_boat_set_longitude(world_state->boat,
+                                           json_number_value(value));
+            } else if (strcmp(key, "sail-angle") == 0) {
+                sailing_boat_set_sail_angle(world_state->boat,
+                                            json_number_value(value));
+            } else {
+                log_warning("tried to set '%s', which is not a recognized attribute", value);
+        }
         }
 
         pthread_mutex_unlock(&world_state->physics_mutex);
