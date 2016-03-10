@@ -189,7 +189,7 @@ struct request_t *parse_request(const char *request_str) {
                                             json_number_value(value));
             } else {
                 log_warning("tried to set '%s', which is not a recognized attribute", value);
-        }
+            }
         }
 
         pthread_mutex_unlock(&world_state->physics_mutex);
@@ -301,8 +301,8 @@ void *simulation_thread(void *arg) {
         while(world_state->running) {
             pthread_mutex_lock(&world_state->physics_mutex);
             log_debug("simulation looping position (%f, %f)...",
-                    sailing_boat_get_latitude(world_state->boat),
-                    sailing_boat_get_longitude(world_state->boat));
+                      sailing_boat_get_latitude(world_state->boat),
+                      sailing_boat_get_longitude(world_state->boat));
             sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
             pthread_mutex_unlock(&world_state->physics_mutex);
             nanosleep(&t, &t1);
@@ -350,16 +350,16 @@ void parse_args(int argc, char *argv[]) {
 
     while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
         switch(c) {
-        case -1: /* no more arguments */
-        case 0:  /* long options toggles */
-            break;
-        case 'h':
-            printf("Usage: %s [OPTIONS]\n", argv[0]);
-            printf("  -h, --help            print this help and exit\n");
-            printf("\n");
-            exit(0);
-        default:
-            exit(0);
+            case -1: /* no more arguments */
+            case 0:  /* long options toggles */
+                break;
+            case 'h':
+                printf("Usage: %s [OPTIONS]\n", argv[0]);
+                printf("  -h, --help            print this help and exit\n");
+                printf("\n");
+                exit(0);
+            default:
+                exit(0);
         }
     }
 }
