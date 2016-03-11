@@ -49,13 +49,15 @@ volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute {
-    REQUEST_VERSION      = 0x01,
-    REQUEST_STATE        = 0x02,
-    REQUEST_LATITUDE     = 0x04,
-    REQUEST_LONGITUDE    = 0x08,
-    REQUEST_SAIL_ANGLE   = 0x10,
-    REQUEST_HEADING      = 0x20,
-    REQUEST_RUDDER_ANGLE = 0x40,
+    REQUEST_VERSION      = 0x001,
+    REQUEST_STATE        = 0x002,
+    REQUEST_LATITUDE     = 0x004,
+    REQUEST_LONGITUDE    = 0x008,
+    REQUEST_SAIL_ANGLE   = 0x010,
+    REQUEST_HEADING      = 0x020,
+    REQUEST_RUDDER_ANGLE = 0x040,
+    REQUEST_WIND_SPEED   = 0x080,
+    REQUEST_WIND_ANGLE   = 0x100,
 };
 
 struct request_t {
@@ -158,6 +160,10 @@ struct request_t *parse_request(const char *request_str) {
                 request_t_add_requested_attribute(r, REQUEST_HEADING);
             } else if (strcmp(val, "rudder-angle") == 0) {
                 request_t_add_requested_attribute(r, REQUEST_RUDDER_ANGLE);
+            } else if (strcmp(val, "wind-speed") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_WIND_SPEED);
+            } else if (strcmp(val, "wind-angle") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_WIND_ANGLE);
             } else {
                 log_warning("requested '%s', which is not a recognized attribute", val);
             }
@@ -252,6 +258,18 @@ json_t *make_resp(struct request_t *request) {
         json_object_set(response,
                         "rudder-angle",
                         json_real(sailing_boat_get_rudder_angle(world_state->boat)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_SPEED)) {
+        json_object_set(response,
+                        "wind-speed",
+                        json_real(sailing_wind_get_speed(world_state->wind)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_ANGLE)) {
+        json_object_set(response,
+                        "wind-angle",
+                        json_real(sailing_wind_get_direction(world_state->wind)));
     }
 
     return response;
