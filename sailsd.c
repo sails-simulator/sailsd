@@ -55,7 +55,7 @@ enum request_attribute {
     REQUEST_LONGITUDE    = 0x08,
     REQUEST_SAIL_ANGLE   = 0x10,
     REQUEST_HEADING      = 0x20,
-    REQUEST_RUDDER_ANGLE = 0x30,
+    REQUEST_RUDDER_ANGLE = 0x40,
 };
 
 struct request_t {
@@ -187,6 +187,9 @@ struct request_t *parse_request(const char *request_str) {
             } else if (strcmp(key, "sail-angle") == 0) {
                 sailing_boat_set_sail_angle(world_state->boat,
                                             json_number_value(value));
+            } else if (strcmp(key, "rudder-angle") == 0) {
+                sailing_boat_set_rudder_angle(world_state->boat,
+                                              json_number_value(value));
             } else {
                 log_warning("tried to set '%s', which is not a recognized attribute", value);
             }
