@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Sailsd by sails-simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Sailsd</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/sails-simulator/sailsd" class="btn">View on GitHub</a>
+      <a href="https://github.com/sails-simulator/sailsd/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sails-simulator/sailsd/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="sailsd" class="anchor" href="#sailsd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sailsd</h1>
+
+<p>Build status: <a href="https://travis-ci.org/sails-simulator/sailsd"><img src="https://travis-ci.org/sails-simulator/sailsd.svg?branch=master" alt="BuildStatus"></a></p>
+
+<h2>
+<a id="compiling" class="anchor" href="#compiling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compiling</h2>
+
+<ol>
+<li>
+<p>Install the dependencies:</p>
+
+<p><strong>Fedora</strong>: <code>sudo yum install cmake</code></p>
+
+<p><strong>Debian/Ubuntu</strong>: <code>sudo apt-get install cmake build-essential</code></p>
+</li>
+<li>
+<p>Get source:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ git clone https://github.com/sails-simulator/sailsd.git</pre></div>
+</li>
+<li>
+<p>Compile:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ <span class="pl-c1">cd</span> sailsd
+$ mkdir build
+$ <span class="pl-c1">cd</span> build
+$ cmake ..
+$ make install</pre></div>
+</li>
+<li>
+<p>Run with:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ ./build/sailsd</pre></div>
+</li>
+</ol>
+
+<h3>
+<a id="os-x" class="anchor" href="#os-x" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OS X</h3>
+
+<ol>
+<li><p>Install Xcode (not command line utilities) and accept the license.</p></li>
+<li><p>TODO</p></li>
+<li><p>TODO</p></li>
+<li>
+<p>In this shell, start building stuff:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ git clone https://github.com/sails-simulator/sailsd.git
+$ <span class="pl-c1">cd</span> sailsd
+$ mkdir build
+$ <span class="pl-c1">cd</span> build
+$ cmake ..
+$ make install</pre></div>
+</li>
+<li>
+<p>Now run with:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ ./build/sailsd</pre></div>
+</li>
+</ol>
+
+<h3>
+<a id="windows" class="anchor" href="#windows" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Windows</h3>
+
+<p>Install <a href="http://www.mingw.org/">MinGW</a> and add the bin directory (defaults to
+<code>C:\MinGW\bin</code>) to PATH.</p>
+
+<p>Install <a href="http://git-scm.com/download/win">git</a>.</p>
+
+<p>Get a copy of the source (using git bash):</p>
+
+<div class="highlight highlight-source-shell"><pre>$ git clone https://github.com/sails-simulator/sailsd.git</pre></div>
+
+<p>TODO</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>TODO</p>
+
+<h2>
+<a id="protocol" class="anchor" href="#protocol" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Protocol</h2>
+
+<p>Sailsd uses a simple protocol consisting of JSON blobs sent over TCP.</p>
+
+<p>Example valid messages to send to sailsd:</p>
+
+<pre><code>{"request": ["version"]}
+
+{"request": ["latitude"]}
+
+{"request": ["latitude", "longitude"]}
+
+{"set": {"rudder": 0}}
+
+{"set": {"rudder": 0, "sail": 10}}
+
+{"set": {"latitude": 0, "longitude": 0}}
+
+{"set": {"running": false}}
+</code></pre>
+
+<h2>
+<a id="code-styling" class="anchor" href="#code-styling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Code styling</h2>
+
+<p>Sailsd uses astyle to automate style conformity. Run:</p>
+
+<pre><code>$ astyle --style=google --indent-switches sailsd.c
+</code></pre>
+
+<h2>
+<a id="licence" class="anchor" href="#licence" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Licence</h2>
+
+<p>Copyright © 2014-2016 Louis Taylor</p>
+
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.</p>
+
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License along with
+this program.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sails-simulator/sailsd">Sailsd</a> is maintained by <a href="https://github.com/sails-simulator">sails-simulator</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
