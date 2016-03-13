@@ -325,15 +325,19 @@ void *simulation_thread(void *arg) {
     /* hardcode a sleep time of half a second (500,000,000 nanoseconds) */
     struct timespec t, t1;
     t.tv_sec  = 0;
-    t.tv_nsec = 500000000L;
+    t.tv_nsec = 5000000L;
 
     for (;;) {
         while(world_state->running) {
             pthread_mutex_lock(&world_state->physics_mutex);
-            log_debug("simulation looping position (%f, %f)...",
+            /*log_debug("simulation looping position (%f, %f)...",
                       sailing_boat_get_latitude(world_state->boat),
-                      sailing_boat_get_longitude(world_state->boat));
-            sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
+                      sailing_boat_get_longitude(world_state->boat));*/
+
+            /* TODO: implement better integration (runge-kutta would be good) */
+            for (int i=0; i<10000; i++) {
+                sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
+            }
             pthread_mutex_unlock(&world_state->physics_mutex);
             nanosleep(&t, &t1);
         }
