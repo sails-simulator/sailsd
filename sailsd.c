@@ -193,6 +193,9 @@ struct request_t *parse_request(const char *request_str) {
             } else if (strcmp(key, "sail-angle") == 0) {
                 sailing_boat_set_sail_angle(world_state->boat,
                                             json_number_value(value));
+            } else if (strcmp(key, "heading") == 0) {
+                sailing_boat_set_angle(world_state->boat,
+                                       json_number_value(value));
             } else if (strcmp(key, "rudder-angle") == 0) {
                 sailing_boat_set_rudder_angle(world_state->boat,
                                               json_number_value(value));
