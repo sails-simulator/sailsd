@@ -345,7 +345,7 @@ void *simulation_thread(void *arg) {
 
             /* TODO: implement better integration (runge-kutta would be good) */
             for (int i=0; i<10000; i++) {
-                sailing_physics_update(world_state->boat, world_state->wind, 0.000001);
+                sailing_physics_update(world_state->boat, world_state->wind, 0.000002);
             }
             pthread_mutex_unlock(&world_state->physics_mutex);
             nanosleep(&t, &t1);
