@@ -58,6 +58,7 @@ enum request_attribute {
     REQUEST_RUDDER_ANGLE = 0x040,
     REQUEST_WIND_SPEED   = 0x080,
     REQUEST_WIND_ANGLE   = 0x100,
+    REQUEST_SPEED        = 0x200,
 };
 
 struct request_t {
@@ -164,6 +165,8 @@ struct request_t *parse_request(const char *request_str) {
                 request_t_add_requested_attribute(r, REQUEST_WIND_SPEED);
             } else if (strcmp(val, "wind-angle") == 0) {
                 request_t_add_requested_attribute(r, REQUEST_WIND_ANGLE);
+            } else if (strcmp(val, "speed") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_SPEED);
             } else {
                 log_warning("requested '%s', which is not a recognized attribute", val);
             }
@@ -267,6 +270,12 @@ json_t *make_resp(struct request_t *request) {
         json_object_set(response,
                         "rudder-angle",
                         json_real(sailing_boat_get_rudder_angle(world_state->boat)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_SPEED)) {
+        json_object_set(response,
+                        "speed",
+                        json_real(sailing_boat_get_velocity(world_state->boat)));
     }
 
     if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_SPEED)) {
