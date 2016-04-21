@@ -84,7 +84,6 @@ struct state *state_init(void) {
     state->boat = sailing_boat_init();
     state->wind = sailing_wind_new();
     pthread_mutex_init(&state->physics_mutex, NULL);
-    log_debug("got here");
 
     return state;
 }
@@ -350,7 +349,6 @@ void *simulation_thread(void *arg) {
             pthread_mutex_unlock(&world_state->physics_mutex);
             nanosleep(&t, &t1);
         }
-        log_info("mutexed");
         nanosleep(&t, &t1);
     }
 }
