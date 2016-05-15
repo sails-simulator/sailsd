@@ -3,10 +3,18 @@ Sailsd
 
 Build status: [![BuildStatus](https://travis-ci.org/sails-simulator/sailsd.svg?branch=master)](https://travis-ci.org/sails-simulator/sailsd)
 
-Compiling
----------
+Installing
+----------
+
+Make sure `libsailing` is installed by cloning this repository with
+
+    $ git clone --recursive https://github.com/sails-simulator/sailsd.git
 
 Install dependencies (jansson for JSON parsing), then run `make`.
+
+Alternatively, install Nix and run
+
+    $ nix-env -i sailsd
 
 Protocol
 --------
