@@ -3,6 +3,8 @@ Sailsd
 
 Build status: [![BuildStatus](https://travis-ci.org/sails-simulator/sailsd.svg?branch=master)](https://travis-ci.org/sails-simulator/sailsd)
 
+Sailsd - designed to be run with [boatd](http://boatd.readthedocs.io/).
+
 Installing
 ----------
 
