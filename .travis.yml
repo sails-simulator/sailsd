@@ -6,6 +6,11 @@ os:
   - linux
   - osx
 
+addons:
+  apt:
+    packages:
+      - python-virtualenv
+
 before_script:
   - wget http://www.digip.org/jansson/releases/jansson-2.7.tar.bz2
   - bunzip2 -c jansson-2.7.tar.bz2 | tar xf -
@@ -17,6 +22,12 @@ before_script:
   - cd -
   - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$HOME/lib/
 
+  - virtualenv env
+  - source env/bin/activate
+  - pip install python-sailsd
+
 script:
   - make
-  - ./sailsd
+  - ./sailsd &
+  - python -c "import sailsd; s = sailsd.Sailsd(); print(s.request('latitude', 'longitude', 'heading')); s.set(latitude=0, longitude=0)"
+  - killall sailsd
