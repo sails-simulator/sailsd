@@ -81,7 +81,7 @@ struct state *world_state;
 struct state *state_init(void) {
     struct state *state = calloc(1, sizeof(struct state));
     state->running = false;
-    state->boat = sailing_boat_init();
+    state->boat = sailing_boat_init("default");
     state->wind = sailing_wind_new();
     pthread_mutex_init(&state->physics_mutex, NULL);
 
