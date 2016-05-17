@@ -295,11 +295,11 @@ json_t *make_resp(struct request_t *request) {
 void *worker(void *arg) {
     char *line = calloc(1, SAILSD_MAX_MESSAGE_LENGTH);
     int bytes_read;
-    int client = *(int *)arg;
+    int *client = arg;
 
     log_debug("started thread");
 
-    bytes_read = recv(client, line, SAILSD_MAX_MESSAGE_LENGTH, 0);
+    bytes_read = recv(*client, line, SAILSD_MAX_MESSAGE_LENGTH, 0);
     if (bytes_read == -1) {
         perror("error reading from socket");
     } else {
@@ -317,14 +317,15 @@ void *worker(void *arg) {
         }
         char *resp_str = json_dumps(resp, 0);
         log_debug("-> " COLOR_CYAN "\"%s\"" COLOR_RESET, resp_str);
-        send(client, resp_str, strlen(resp_str), 0);
+        send(*client, resp_str, strlen(resp_str), 0);
         free(r);
         free(resp);
     }
 
     /* clean up and return */
-    close(client);
+    close(*client);
     free(line);
+    free(client);
     log_debug("closed thread");
     return arg;
 }
@@ -434,16 +435,18 @@ int main(int argc, char *argv[]) {
     /* start running the simulation */
     state_set_running(world_state, true);
 
+    socklen_t addr_size = sizeof(addr);
+    pthread_t child;
+
     /* loop and spawn a new thread for each socket connection */
     while (!quitting_flag) {
-        socklen_t addr_size = sizeof(addr);
-        pthread_t child;
-
-        int client = accept(sd, (struct sockaddr*)&addr, &addr_size);
+        int *client = (int *) calloc(sizeof(int), 1);
+        *client = accept(sd, (struct sockaddr*)&addr, &addr_size);
+        log_warning("accepted client\n\n");
         log_info("connected: %s:%d",
                  inet_ntoa(addr.sin_addr),
                  ntohs(addr.sin_port));
-        if (pthread_create(&child, NULL, worker, &client) != 0) {
+        if (pthread_create(&child, NULL, worker, client) != 0) {
             perror("error creating thread");
         } else {
             pthread_detach(child);
