@@ -358,6 +358,9 @@ void *simulation_thread(void *arg) {
 }
 
 struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd) {
+    /* allow reconnect on socket */
+    int socketLevel = 1;
+    setsockopt(*sd, SOL_SOCKET, SO_REUSEADDR, (char*)&socketLevel, sizeof(socketLevel));
     if (*sd < 0) {
         log_error("cannot start socket");
     }
