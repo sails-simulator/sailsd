@@ -100,23 +100,6 @@ struct request_t *request_t_init(void) {
     return r;
 }
 
-/* FIXME: remove this function */
-
-char * int2bin(int i) {
-    size_t bits = sizeof(int) * CHAR_BIT;
-
-    char * str = malloc(bits + 1);
-    if(!str) return NULL;
-    str[bits] = 0;
-
-    // type punning because signed shift is implementation-defined
-    unsigned u = *(unsigned *)&i;
-    for(; bits--; u >>= 1)
-        str[bits] = u & 1 ? '1' : '0';
-
-    return str;
-}
-
 void request_t_add_requested_attribute(struct request_t *r,
                                        const enum request_attribute a) {
     r->requested_attributes |= a;
@@ -170,7 +153,6 @@ struct request_t *parse_request(const char *request_str) {
                 log_warning("requested '%s', which is not a recognized attribute", val);
             }
         }
-        log_debug("parse_request bitmask:	'%s'", int2bin(r->requested_attributes));
     }
 
     /* check that "set" is a object */
