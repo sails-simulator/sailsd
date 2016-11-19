@@ -12,7 +12,7 @@ Make sure `libsailing` is installed by cloning this repository with
 
     $ git clone --recursive https://github.com/sails-simulator/sailsd.git
 
-Install dependencies (jansson for JSON parsing), then run `make`.
+Install dependencies (jansson for JSON parsing, on Debian like distros use libjansson-dev), then run `make`.
 
 Alternatively, install Nix and run
 
