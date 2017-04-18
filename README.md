@@ -12,7 +12,23 @@ Make sure `libsailing` is installed by cloning this repository with
 
     $ git clone --recursive https://github.com/sails-simulator/sailsd.git
 
-Install dependencies (jansson for JSON parsing, on Debian like distros use libjansson-dev), then run `make`.
+Install dependencies (jansson for JSON parsing):
+
+### Debian and ubuntu
+
+    $ sudo apt install libjansson-dev
+
+### Fedora and other red hat distros
+
+    $ sudo dnf install jansson-devel
+
+### NixOS
+
+    $ nix-shell --pure -p pkgconfig jansson
+
+Then compile using make:
+
+    $ make
 
 Alternatively, install Nix and run
 
@@ -50,7 +66,7 @@ Sailsd uses astyle to automate style conformity. Run:
 Licence
 -------
 
-Copyright © 2014-2016 Louis Taylor
+Copyright © 2014-2017 Louis Taylor
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
