@@ -59,6 +59,7 @@ enum request_attribute {
     REQUEST_WIND_SPEED   = 0x080,
     REQUEST_WIND_ANGLE   = 0x100,
     REQUEST_SPEED        = 0x200,
+    REQUEST_SHEET_LENGTH = 0x400,
 };
 
 struct request_t {
@@ -149,6 +150,8 @@ struct request_t *parse_request(const char *request_str) {
                 request_t_add_requested_attribute(r, REQUEST_WIND_ANGLE);
             } else if (strcmp(val, "speed") == 0) {
                 request_t_add_requested_attribute(r, REQUEST_SPEED);
+            } else if (strcmp(val, "sheet-length") == 0) {
+                request_t_add_requested_attribute(r, REQUEST_SHEET_LENGTH);
             } else {
                 log_warning("requested '%s', which is not a recognized attribute", val);
             }
@@ -272,6 +275,12 @@ json_t *make_resp(struct request_t *request) {
         json_object_set(response,
                         "wind-angle",
                         json_real(sailing_wind_get_direction(world_state->wind)));
+    }
+
+    if (request_attribute_contains(request->requested_attributes, REQUEST_SHEET_LENGTH)) {
+        json_object_set(response,
+                        "sheet-length",
+                        json_real(sailing_boat_get_sheet_length(world_state->boat)));
     }
 
     return response;
