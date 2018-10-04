@@ -1,4 +1,4 @@
-FROM sails-simulator/libsailing:latest as libsailing
+FROM quay.io/sails/libsailing:latest as libsailing
 
 FROM alpine:latest as build
 
