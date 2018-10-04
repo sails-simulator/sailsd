@@ -5,8 +5,16 @@ Build status: [![BuildStatus](https://travis-ci.org/sails-simulator/sailsd.svg?b
 
 Sailsd - designed to be run with [boatd](http://boatd.readthedocs.io/).
 
-Installing
-----------
+Build and run with Docker
+------------------------------
+
+    $ docker build -t sails-simulator/sailsd .
+    $ docker run -p 3333:3333 sails-simulator/sailsd
+    $ echo '{"request": ["version"]}' | nc localhost 3333
+      {"version": "1.0"}
+
+Installing locally
+------------------
 
 Make sure `libsailing` is installed by cloning this repository with
 
