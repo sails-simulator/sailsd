@@ -3,15 +3,36 @@ Sailsd
 
 Build status: [![BuildStatus](https://travis-ci.org/sails-simulator/sailsd.svg?branch=master)](https://travis-ci.org/sails-simulator/sailsd)
 
-Sailsd - designed to be run with [boatd](http://boatd.readthedocs.io/).
+Sailsd is a simple daemon which simulates a small sailing boat in real time
+using [libsailing](https://github.com/sails-simulator/libsailing).
+Information about the boat's current sensor readings (position, heading and
+wind conditions), and commands to move the rudder and sails can be accessed
+over a socket.
 
-Build and run with Docker
-------------------------------
+The intended purpose of sailsd is to be a component of a testing framework for
+evaluating the behaviour of autonomous sailing boats.
 
-    $ docker build -t sails-simulator/sailsd .
-    $ docker run -p 3333:3333 sails-simulator/sailsd
-    $ echo '{"request": ["version"]}' | nc localhost 3333
-      {"version": "1.0"}
+Protocol
+--------
+
+Sailsd uses a simple protocol consisting of JSON blobs sent over TCP.
+
+Example valid messages to send to sailsd:
+
+    {"request": ["version"]}
+
+    {"request": ["latitude"]}
+
+    {"request": ["latitude", "longitude"]}
+
+    {"set": {"rudder": 0}}
+
+    {"set": {"rudder": 0, "sail": 10}}
+
+    {"set": {"latitude": 0, "longitude": 0}}
+
+    {"set": {"running": false}}
+
 
 Installing locally
 ------------------
@@ -42,27 +63,13 @@ Alternatively, install Nix and run
 
     $ nix-env -i sailsd
 
-Protocol
---------
+Build and run with Docker
+------------------------------
 
-Sailsd uses a simple protocol consisting of JSON blobs sent over TCP.
-
-Example valid messages to send to sailsd:
-
-    {"request": ["version"]}
-
-    {"request": ["latitude"]}
-
-    {"request": ["latitude", "longitude"]}
-
-    {"set": {"rudder": 0}}
-
-    {"set": {"rudder": 0, "sail": 10}}
-
-    {"set": {"latitude": 0, "longitude": 0}}
-
-    {"set": {"running": false}}
-
+    $ docker build -t quay.io/sails/sailsd .
+    $ docker run -p 3333:3333 quay.io/sails/sailsd
+    $ echo '{"request": ["version"]}' | nc localhost 3333
+      {"version": "1.0"}
 
 Code styling
 ------------
