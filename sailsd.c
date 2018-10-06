@@ -394,10 +394,11 @@ void sigint_handler(int sig)
 void parse_args(int argc, char *argv[])
 {
 	int c;
-	const char *short_opt = "h";
+	const char *short_opt = "hv";
 	struct option long_opt[] = {
-		{"help", no_argument, NULL, 'h'},
-		{NULL,   0,           NULL, 0  }
+		{"help",    no_argument,	NULL, 'h'},
+		{"verbose", optional_argument,	NULL, 'v'},
+		{NULL,      0,			NULL, 0  }
 	};
 
 	while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
@@ -405,10 +406,13 @@ void parse_args(int argc, char *argv[])
 		case -1: /* no more arguments */
 		case 0:  /* long options toggles */
 			break;
+		case 'v':
+			current_log_level = DEBUG;
+			break;
 		case 'h':
 			printf("Usage: %s [OPTIONS]\n", argv[0]);
 			printf("  -h, --help            print this help and exit\n");
-			printf("\n");
+			printf("  -v, --verbose         enable more verbose logging\n");
 			exit(0);
 		default:
 			exit(0);
@@ -453,7 +457,7 @@ int main(int argc, char *argv[])
 	while (!quitting_flag) {
 		int *client = (int *) calloc(sizeof(int), 1);
 		*client = accept(sd, (struct sockaddr*)&addr, &addr_size);
-		log_warning("accepted client\n\n");
+		log_debug("accepted client");
 		log_info("connected: %s:%d",
 		         inet_ntoa(addr.sin_addr),
 		         ntohs(addr.sin_port));
