@@ -1,6 +1,6 @@
 /* This file is part of sailsd
  *
- * Copyright (C) 2014-2016 Louis Taylor <louis@kragniz.eu>
+ * Copyright (C) 2014-2018 Louis Taylor <louis@kragniz.eu>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
