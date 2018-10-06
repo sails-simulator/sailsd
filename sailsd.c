@@ -49,406 +49,420 @@ volatile sig_atomic_t quitting_flag = 0;
 
 /* bitmask for attributes */
 enum request_attribute {
-    REQUEST_VERSION      = 0x001,
-    REQUEST_STATE        = 0x002,
-    REQUEST_LATITUDE     = 0x004,
-    REQUEST_LONGITUDE    = 0x008,
-    REQUEST_SAIL_ANGLE   = 0x010,
-    REQUEST_HEADING      = 0x020,
-    REQUEST_RUDDER_ANGLE = 0x040,
-    REQUEST_WIND_SPEED   = 0x080,
-    REQUEST_WIND_ANGLE   = 0x100,
-    REQUEST_SPEED        = 0x200,
-    REQUEST_SHEET_LENGTH = 0x400,
+	REQUEST_VERSION      = 0x001,
+	REQUEST_STATE        = 0x002,
+	REQUEST_LATITUDE     = 0x004,
+	REQUEST_LONGITUDE    = 0x008,
+	REQUEST_SAIL_ANGLE   = 0x010,
+	REQUEST_HEADING      = 0x020,
+	REQUEST_RUDDER_ANGLE = 0x040,
+	REQUEST_WIND_SPEED   = 0x080,
+	REQUEST_WIND_ANGLE   = 0x100,
+	REQUEST_SPEED        = 0x200,
+	REQUEST_SHEET_LENGTH = 0x400,
 };
 
 struct request_t {
-    bool error;
-    /* bitmask of REQUEST_VERSION etc values */
-    int requested_attributes;
+	bool error;
+	/* bitmask of REQUEST_VERSION etc values */
+	int requested_attributes;
 };
 
 struct state {
-    bool running;
-    Boat *boat;
-    Wind *wind;
-    pthread_mutex_t physics_mutex;
+	bool running;
+	Boat *boat;
+	Wind *wind;
+	pthread_mutex_t physics_mutex;
 };
 
 /* state singleton */
 struct state *world_state;
 
 /* TODO: write state_free() */
-struct state *state_init(void) {
-    struct state *state = calloc(1, sizeof(struct state));
-    state->running = false;
-    state->boat = sailing_boat_init("default");
-    state->wind = sailing_wind_new();
-    pthread_mutex_init(&state->physics_mutex, NULL);
+struct state *state_init(void)
+{
+	struct state *state = calloc(1, sizeof(struct state));
+	state->running = false;
+	state->boat = sailing_boat_init("default");
+	state->wind = sailing_wind_new();
+	pthread_mutex_init(&state->physics_mutex, NULL);
 
-    return state;
+	return state;
 }
 
-void state_set_running(struct state *state, bool value) {
-    state->running = value;
+void state_set_running(struct state *state, bool value)
+{
+	state->running = value;
 }
 
-struct request_t *request_t_init(void) {
-    struct request_t *r = calloc(1, sizeof(struct request_t));
-    r->requested_attributes = 0;
-    r->error = false;
+struct request_t *request_t_init(void)
+{
+	struct request_t *r = calloc(1, sizeof(struct request_t));
+	r->requested_attributes = 0;
+	r->error = false;
 
-    return r;
+	return r;
 }
 
 void request_t_add_requested_attribute(struct request_t *r,
-                                       const enum request_attribute a) {
-    r->requested_attributes |= a;
+                                       const enum request_attribute a)
+{
+	r->requested_attributes |= a;
 }
 
-struct request_t *parse_request(const char *request_str) {
-    json_error_t error;
+struct request_t *parse_request(const char *request_str)
+{
+	json_error_t error;
 
-    json_t *root = json_loads(request_str, 0, &error);
+	json_t *root = json_loads(request_str, 0, &error);
 
-    struct request_t *r = request_t_init();
+	struct request_t *r = request_t_init();
 
-    if (!root) {
-        log_error("request is not valid json at line %d: %s",
-                  error.line,
-                  error.text);
-        goto error;
-    }
+	if (!root) {
+		log_error("request is not valid json at line %d: %s",
+		          error.line,
+		          error.text);
+		goto error;
+	}
 
-    if (!json_is_object(root)) {
-        log_error("request is not a json object");
-        r->error = true;
-        goto error;
-    }
+	if (!json_is_object(root)) {
+		log_error("request is not a json object");
+		r->error = true;
+		goto error;
+	}
 
-    /* check that "request" is an array */
-    json_t *request = json_object_get(root, "request");
-    if (json_is_array(request)) {
-        /* check each requested attribute named in the array */
-        for (int i=0; i<json_array_size(request); i++) {
-            const char *val = json_string_value(json_array_get(request, i));
-            if (strcmp(val, "version") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_VERSION);
-            } else if (strcmp(val, "latitude") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_LATITUDE);
-            } else if (strcmp(val, "longitude") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_LONGITUDE);
-            } else if (strcmp(val, "sail-angle") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_SAIL_ANGLE);
-            } else if (strcmp(val, "heading") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_HEADING);
-            } else if (strcmp(val, "rudder-angle") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_RUDDER_ANGLE);
-            } else if (strcmp(val, "wind-speed") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_WIND_SPEED);
-            } else if (strcmp(val, "wind-angle") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_WIND_ANGLE);
-            } else if (strcmp(val, "speed") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_SPEED);
-            } else if (strcmp(val, "sheet-length") == 0) {
-                request_t_add_requested_attribute(r, REQUEST_SHEET_LENGTH);
-            } else {
-                log_warning("requested '%s', which is not a recognized attribute", val);
-            }
-        }
-    }
+	/* check that "request" is an array */
+	json_t *request = json_object_get(root, "request");
+	if (json_is_array(request)) {
+		/* check each requested attribute named in the array */
+		for (int i=0; i<json_array_size(request); i++) {
+			const char *val = json_string_value(json_array_get(request, i));
+			if (strcmp(val, "version") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_VERSION);
+			} else if (strcmp(val, "latitude") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_LATITUDE);
+			} else if (strcmp(val, "longitude") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_LONGITUDE);
+			} else if (strcmp(val, "sail-angle") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_SAIL_ANGLE);
+			} else if (strcmp(val, "heading") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_HEADING);
+			} else if (strcmp(val, "rudder-angle") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_RUDDER_ANGLE);
+			} else if (strcmp(val, "wind-speed") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_WIND_SPEED);
+			} else if (strcmp(val, "wind-angle") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_WIND_ANGLE);
+			} else if (strcmp(val, "speed") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_SPEED);
+			} else if (strcmp(val, "sheet-length") == 0) {
+				request_t_add_requested_attribute(r, REQUEST_SHEET_LENGTH);
+			} else {
+				log_warning("requested '%s', which is not a recognized attribute", val);
+			}
+		}
+	}
 
-    /* check that "set" is a object */
-    json_t *set = json_object_get(root, "set");
-    if (json_is_object(set)) {
-        const char *key;
-        json_t *value;
+	/* check that "set" is a object */
+	json_t *set = json_object_get(root, "set");
+	if (json_is_object(set)) {
+		const char *key;
+		json_t *value;
 
-        pthread_mutex_lock(&world_state->physics_mutex);
+		pthread_mutex_lock(&world_state->physics_mutex);
 
-        /* this should probably be batched and handled after the parsing of the request is done */
-        json_object_foreach(set, key, value) {
-            log_debug("key: %s", key);
-            if (strcmp(key, "latitude") == 0) {
-                log_debug("setting latitude to %f", json_number_value(value));
-                sailing_boat_set_latitude(world_state->boat,
-                                          json_number_value(value));
-            } else if (strcmp(key, "longitude") == 0) {
-                log_debug("setting longitude to %f", json_number_value(value));
-                sailing_boat_set_longitude(world_state->boat,
-                                           json_number_value(value));
-            } else if (strcmp(key, "sail-angle") == 0) {
-                sailing_boat_set_sail_angle(world_state->boat,
-                                            json_number_value(value));
-            } else if (strcmp(key, "heading") == 0) {
-                sailing_boat_set_angle(world_state->boat,
-                                       json_number_value(value));
-            } else if (strcmp(key, "rudder-angle") == 0) {
-                sailing_boat_set_rudder_angle(world_state->boat,
-                                              json_number_value(value));
-            } else if (strcmp(key, "sheet-length") == 0) {
-                sailing_boat_set_sheet_length(world_state->boat,
-                                              json_number_value(value));
-            } else if (strcmp(key, "wind-speed") == 0) {
-                sailing_wind_set_speed(world_state->wind,
-                                       json_number_value(value));
-            } else if (strcmp(key, "wind-angle") == 0) {
-                sailing_wind_set_direction(world_state->wind,
-                                              json_number_value(value));
-            } else {
-                log_warning("tried to set '%s', which is not a recognized attribute", value);
-            }
-        }
+		/* this should probably be batched and handled after the parsing of the request is done */
+		json_object_foreach(set, key, value) {
+			log_debug("key: %s", key);
+			if (strcmp(key, "latitude") == 0) {
+				log_debug("setting latitude to %f", json_number_value(value));
+				sailing_boat_set_latitude(world_state->boat,
+				                          json_number_value(value));
+			} else if (strcmp(key, "longitude") == 0) {
+				log_debug("setting longitude to %f", json_number_value(value));
+				sailing_boat_set_longitude(world_state->boat,
+				                           json_number_value(value));
+			} else if (strcmp(key, "sail-angle") == 0) {
+				sailing_boat_set_sail_angle(world_state->boat,
+				                            json_number_value(value));
+			} else if (strcmp(key, "heading") == 0) {
+				sailing_boat_set_angle(world_state->boat,
+				                       json_number_value(value));
+			} else if (strcmp(key, "rudder-angle") == 0) {
+				sailing_boat_set_rudder_angle(world_state->boat,
+				                              json_number_value(value));
+			} else if (strcmp(key, "sheet-length") == 0) {
+				sailing_boat_set_sheet_length(world_state->boat,
+				                              json_number_value(value));
+			} else if (strcmp(key, "wind-speed") == 0) {
+				sailing_wind_set_speed(world_state->wind,
+				                       json_number_value(value));
+			} else if (strcmp(key, "wind-angle") == 0) {
+				sailing_wind_set_direction(world_state->wind,
+				                           json_number_value(value));
+			} else {
+				log_warning("tried to set '%s', which is not a recognized attribute", value);
+			}
+		}
 
-        pthread_mutex_unlock(&world_state->physics_mutex);
-    }
+		pthread_mutex_unlock(&world_state->physics_mutex);
+	}
 
 error:
-    json_decref(root);
-    return r;
+	json_decref(root);
+	return r;
 }
 
-json_t *make_error_resp(char *msg) {
-    return json_pack("{ss}", "error", msg);
+json_t *make_error_resp(char *msg)
+{
+	return json_pack("{ss}", "error", msg);
 }
 
-bool request_attribute_contains(int requested_attributes, enum request_attribute attr) {
-    if ((requested_attributes & attr) == attr) {
-        return true;
-    } else {
-        return false;
-    }
+bool request_attribute_contains(int requested_attributes, enum request_attribute attr)
+{
+	if ((requested_attributes & attr) == attr) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-json_t *make_resp(struct request_t *request) {
-    json_t *response = json_object();
+json_t *make_resp(struct request_t *request)
+{
+	json_t *response = json_object();
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_VERSION)) {
-        json_object_set(response,
-                        "version",
-                        json_string(SAILSD_VERSION));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_VERSION)) {
+		json_object_set(response,
+		                "version",
+		                json_string(SAILSD_VERSION));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_LATITUDE)) {
-        json_object_set(response,
-                        "latitude",
-                        json_real(sailing_boat_get_latitude(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_LATITUDE)) {
+		json_object_set(response,
+		                "latitude",
+		                json_real(sailing_boat_get_latitude(world_state->boat)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_LONGITUDE)) {
-        json_object_set(response,
-                        "longitude",
-                        json_real(sailing_boat_get_longitude(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_LONGITUDE)) {
+		json_object_set(response,
+		                "longitude",
+		                json_real(sailing_boat_get_longitude(world_state->boat)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_SAIL_ANGLE)) {
-        json_object_set(response,
-                        "sail-angle",
-                        json_real(sailing_boat_get_sail_angle(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_SAIL_ANGLE)) {
+		json_object_set(response,
+		                "sail-angle",
+		                json_real(sailing_boat_get_sail_angle(world_state->boat)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_HEADING)) {
-        json_object_set(response,
-                        "heading",
-                        json_real(sailing_boat_get_angle(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_HEADING)) {
+		json_object_set(response,
+		                "heading",
+		                json_real(sailing_boat_get_angle(world_state->boat)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_RUDDER_ANGLE)) {
-        json_object_set(response,
-                        "rudder-angle",
-                        json_real(sailing_boat_get_rudder_angle(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_RUDDER_ANGLE)) {
+		json_object_set(response,
+		                "rudder-angle",
+		                json_real(sailing_boat_get_rudder_angle(world_state->boat)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_SPEED)) {
-        json_object_set(response,
-                        "speed",
-                        json_real(sailing_boat_get_velocity(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_SPEED)) {
+		json_object_set(response,
+		                "speed",
+		                json_real(sailing_boat_get_velocity(world_state->boat)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_SPEED)) {
-        json_object_set(response,
-                        "wind-speed",
-                        json_real(sailing_wind_get_speed(world_state->wind)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_SPEED)) {
+		json_object_set(response,
+		                "wind-speed",
+		                json_real(sailing_wind_get_speed(world_state->wind)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_ANGLE)) {
-        json_object_set(response,
-                        "wind-angle",
-                        json_real(sailing_wind_get_direction(world_state->wind)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_ANGLE)) {
+		json_object_set(response,
+		                "wind-angle",
+		                json_real(sailing_wind_get_direction(world_state->wind)));
+	}
 
-    if (request_attribute_contains(request->requested_attributes, REQUEST_SHEET_LENGTH)) {
-        json_object_set(response,
-                        "sheet-length",
-                        json_real(sailing_boat_get_sheet_length(world_state->boat)));
-    }
+	if (request_attribute_contains(request->requested_attributes, REQUEST_SHEET_LENGTH)) {
+		json_object_set(response,
+		                "sheet-length",
+		                json_real(sailing_boat_get_sheet_length(world_state->boat)));
+	}
 
-    return response;
+	return response;
 }
 
-void *worker(void *arg) {
-    char *line = calloc(1, SAILSD_MAX_MESSAGE_LENGTH);
-    int bytes_read;
-    int *client = arg;
+void *worker(void *arg)
+{
+	char *line = calloc(1, SAILSD_MAX_MESSAGE_LENGTH);
+	int bytes_read;
+	int *client = arg;
 
-    log_debug("started thread");
+	log_debug("started thread");
 
-    bytes_read = recv(*client, line, SAILSD_MAX_MESSAGE_LENGTH, 0);
-    if (bytes_read == -1) {
-        perror("error reading from socket");
-    } else {
-        json_t *resp;
+	bytes_read = recv(*client, line, SAILSD_MAX_MESSAGE_LENGTH, 0);
+	if (bytes_read == -1) {
+		perror("error reading from socket");
+	} else {
+		json_t *resp;
 
-        log_debug("<- " COLOR_CYAN "\"%s\"" COLOR_RESET, line);
-        log_debug("bytes read: %i", bytes_read);
+		log_debug("<- " COLOR_CYAN "\"%s\"" COLOR_RESET, line);
+		log_debug("bytes read: %i", bytes_read);
 
-        struct request_t *r = parse_request(line);
-        if (r->error) {
-            log_warning("error in request");
-            resp = make_error_resp("you messed up");
-        } else {
-            resp = make_resp(r);
-        }
-        char *resp_str = json_dumps(resp, 0);
-        log_debug("-> " COLOR_CYAN "\"%s\"" COLOR_RESET, resp_str);
-        send(*client, resp_str, strlen(resp_str), 0);
-        free(r);
-        free(resp);
-    }
+		struct request_t *r = parse_request(line);
+		if (r->error) {
+			log_warning("error in request");
+			resp = make_error_resp("you messed up");
+		} else {
+			resp = make_resp(r);
+		}
+		char *resp_str = json_dumps(resp, 0);
+		log_debug("-> " COLOR_CYAN "\"%s\"" COLOR_RESET, resp_str);
+		send(*client, resp_str, strlen(resp_str), 0);
+		free(r);
+		free(resp);
+	}
 
-    /* clean up and return */
-    close(*client);
-    free(line);
-    free(client);
-    log_debug("closed thread");
-    return arg;
+	/* clean up and return */
+	close(*client);
+	free(line);
+	free(client);
+	log_debug("closed thread");
+	return arg;
 }
 
-void *simulation_thread(void *arg) {
-    /* hardcode a sleep time of half a second (500,000,000 nanoseconds) */
-    struct timespec t, t1;
-    t.tv_sec  = 0;
-    t.tv_nsec = 5000000L;
+void *simulation_thread(void *arg)
+{
+	/* hardcode a sleep time of half a second (500,000,000 nanoseconds) */
+	struct timespec t, t1;
+	t.tv_sec  = 0;
+	t.tv_nsec = 5000000L;
 
-    for (;;) {
-        while(world_state->running) {
-            pthread_mutex_lock(&world_state->physics_mutex);
-            /*log_debug("simulation looping position (%f, %f)...",
-                      sailing_boat_get_latitude(world_state->boat),
-                      sailing_boat_get_longitude(world_state->boat));*/
+	for (;;) {
+		while(world_state->running) {
+			pthread_mutex_lock(&world_state->physics_mutex);
+			/*log_debug("simulation looping position (%f, %f)...",
+			          sailing_boat_get_latitude(world_state->boat),
+			          sailing_boat_get_longitude(world_state->boat));*/
 
-            /* TODO: implement better integration (runge-kutta would be good) */
-            for (int i=0; i<10000; i++) {
-                sailing_physics_update(world_state->boat, world_state->wind, 0.000002);
-            }
-            pthread_mutex_unlock(&world_state->physics_mutex);
-            nanosleep(&t, &t1);
-        }
-        nanosleep(&t, &t1);
-    }
+			/* TODO: implement better integration (runge-kutta would be good) */
+			for (int i=0; i<10000; i++) {
+				sailing_physics_update(world_state->boat, world_state->wind, 0.000002);
+			}
+			pthread_mutex_unlock(&world_state->physics_mutex);
+			nanosleep(&t, &t1);
+		}
+		nanosleep(&t, &t1);
+	}
 }
 
-struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd) {
-    /* allow reconnect on socket */
-    int socketLevel = 1;
-    setsockopt(*sd, SOL_SOCKET, SO_REUSEADDR, (char*)&socketLevel, sizeof(socketLevel));
-    if (*sd < 0) {
-        log_error("cannot start socket");
-    }
+struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd)
+{
+	/* allow reconnect on socket */
+	int socketLevel = 1;
+	setsockopt(*sd, SOL_SOCKET, SO_REUSEADDR, (char*)&socketLevel, sizeof(socketLevel));
+	if (*sd < 0) {
+		log_error("cannot start socket");
+	}
 
-    addr->sin_family = AF_INET;
-    addr->sin_port = htons(SAILSD_PORT);
-    addr->sin_addr.s_addr = inet_addr("127.0.0.1");
+	addr->sin_family = AF_INET;
+	addr->sin_port = htons(SAILSD_PORT);
+	addr->sin_addr.s_addr = inet_addr("127.0.0.1");
 
-    if (bind(*sd, (struct sockaddr*)addr, sizeof(*addr)) != 0) {
-        log_error("failed to listen on port");
-        perror("failed to listen on port");
-        exit(1);
-    }
+	if (bind(*sd, (struct sockaddr*)addr, sizeof(*addr)) != 0) {
+		log_error("failed to listen on port");
+		perror("failed to listen on port");
+		exit(1);
+	}
 
-    if (listen(*sd, 20) != 0) {
-        log_error("failed to listen on port");
-    }
-    log_info("listening on port %i", SAILSD_PORT);
-    return addr;
+	if (listen(*sd, 20) != 0) {
+		log_error("failed to listen on port");
+	}
+	log_info("listening on port %i", SAILSD_PORT);
+	return addr;
 }
 
-void sigint_handler(int sig) {
-    log_debug("got signal %i", sig);
-    quitting_flag = 1;
-    exit(1);
+void sigint_handler(int sig)
+{
+	log_debug("got signal %i", sig);
+	quitting_flag = 1;
+	exit(1);
 }
 
-void parse_args(int argc, char *argv[]) {
-    int c;
-    const char *short_opt = "h";
-    struct option long_opt[] = {
-        {"help", no_argument, NULL, 'h'},
-        {NULL,   0,           NULL, 0  }
-    };
+void parse_args(int argc, char *argv[])
+{
+	int c;
+	const char *short_opt = "h";
+	struct option long_opt[] = {
+		{"help", no_argument, NULL, 'h'},
+		{NULL,   0,           NULL, 0  }
+	};
 
-    while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
-        switch(c) {
-            case -1: /* no more arguments */
-            case 0:  /* long options toggles */
-                break;
-            case 'h':
-                printf("Usage: %s [OPTIONS]\n", argv[0]);
-                printf("  -h, --help            print this help and exit\n");
-                printf("\n");
-                exit(0);
-            default:
-                exit(0);
-        }
-    }
+	while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
+		switch(c) {
+		case -1: /* no more arguments */
+		case 0:  /* long options toggles */
+			break;
+		case 'h':
+			printf("Usage: %s [OPTIONS]\n", argv[0]);
+			printf("  -h, --help            print this help and exit\n");
+			printf("\n");
+			exit(0);
+		default:
+			exit(0);
+		}
+	}
 }
 
-int main(int argc, char *argv[]) {
-    /* handle arguments */
-    parse_args(argc, argv);
+int main(int argc, char *argv[])
+{
+	/* handle arguments */
+	parse_args(argc, argv);
 
-    /* register signal handler to catch C-c signals */
-    signal(SIGINT, sigint_handler);
+	/* register signal handler to catch C-c signals */
+	signal(SIGINT, sigint_handler);
 
-    world_state = state_init();
+	world_state = state_init();
 
-    put_boat();
-    log_info("started sailsd");
-    log_warning("warning log");
+	put_boat();
+	log_info("started sailsd");
+	log_warning("warning log");
 
-    /* start simulation thread */
-    pthread_t simulation;
-    if (pthread_create(&simulation, NULL, simulation_thread, NULL) != 0) {
-        perror("error creating thread");
-    } else {
-        pthread_detach(simulation);
-    }
+	/* start simulation thread */
+	pthread_t simulation;
+	if (pthread_create(&simulation, NULL, simulation_thread, NULL) != 0) {
+		perror("error creating thread");
+	} else {
+		pthread_detach(simulation);
+	}
 
-    /* start up socket server */
-    struct sockaddr_in addr;
-    int sd = socket(PF_INET, SOCK_STREAM, 0);
-    socket_init(&addr, &sd);
+	/* start up socket server */
+	struct sockaddr_in addr;
+	int sd = socket(PF_INET, SOCK_STREAM, 0);
+	socket_init(&addr, &sd);
 
-    /* start running the simulation */
-    state_set_running(world_state, true);
+	/* start running the simulation */
+	state_set_running(world_state, true);
 
-    socklen_t addr_size = sizeof(addr);
-    pthread_t child;
+	socklen_t addr_size = sizeof(addr);
+	pthread_t child;
 
-    /* loop and spawn a new thread for each socket connection */
-    while (!quitting_flag) {
-        int *client = (int *) calloc(sizeof(int), 1);
-        *client = accept(sd, (struct sockaddr*)&addr, &addr_size);
-        log_warning("accepted client\n\n");
-        log_info("connected: %s:%d",
-                 inet_ntoa(addr.sin_addr),
-                 ntohs(addr.sin_port));
-        if (pthread_create(&child, NULL, worker, client) != 0) {
-            perror("error creating thread");
-        } else {
-            pthread_detach(child);
-        }
-    }
+	/* loop and spawn a new thread for each socket connection */
+	while (!quitting_flag) {
+		int *client = (int *) calloc(sizeof(int), 1);
+		*client = accept(sd, (struct sockaddr*)&addr, &addr_size);
+		log_warning("accepted client\n\n");
+		log_info("connected: %s:%d",
+		         inet_ntoa(addr.sin_addr),
+		         ntohs(addr.sin_port));
+		if (pthread_create(&child, NULL, worker, client) != 0) {
+			perror("error creating thread");
+		} else {
+			pthread_detach(child);
+		}
+	}
 
-    return 0;
+	return 0;
 }
