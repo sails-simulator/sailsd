@@ -76,7 +76,7 @@ Code styling
 
 Sailsd uses astyle to automate style conformity. Run:
 
-    $ astyle --style=google --indent-switches sailsd.c
+    $ astyle --style=linux --indent=tab *.c
 
 Licence
 -------
