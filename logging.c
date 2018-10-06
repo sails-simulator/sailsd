@@ -22,7 +22,8 @@
 
 #include "logging.h"
 
-enum log_level { ERROR, WARNING, INFO, DEBUG };
+/* log level */
+enum log_level current_log_level = WARNING;
 
 /* print a giant boat to the screen */
 void put_boat(void)
@@ -80,6 +81,9 @@ static void vlog_msg(const enum log_level level,
 
 void log_info(const char *format, ...)
 {
+	if (current_log_level < INFO)
+		return;
+
 	va_list arglist;
 	va_start(arglist, format);
 	vlog_msg(INFO, format, arglist);
@@ -88,6 +92,9 @@ void log_info(const char *format, ...)
 
 void log_error(const char *format, ...)
 {
+	if (current_log_level < ERROR)
+		return;
+
 	va_list arglist;
 	va_start(arglist, format);
 	vlog_msg(ERROR, format, arglist);
@@ -96,6 +103,9 @@ void log_error(const char *format, ...)
 
 void log_warning(const char *format, ...)
 {
+	if (current_log_level < WARNING)
+		return;
+
 	va_list arglist;
 	va_start(arglist, format);
 	vlog_msg(WARNING, format, arglist);
@@ -104,6 +114,9 @@ void log_warning(const char *format, ...)
 
 void log_debug(const char *format, ...)
 {
+	if (current_log_level < DEBUG)
+		return;
+
 	va_list arglist;
 	va_start(arglist, format);
 	vlog_msg(DEBUG, format, arglist);
