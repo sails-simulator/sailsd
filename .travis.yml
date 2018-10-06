@@ -6,6 +6,11 @@ os:
   - linux
   - osx
 
+addons:
+  apt:
+    packages:
+      - python3-venv
+
 before_script:
   - wget http://www.digip.org/jansson/releases/jansson-2.7.tar.bz2
   - bunzip2 -c jansson-2.7.tar.bz2 | tar xf -
