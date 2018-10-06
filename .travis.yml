@@ -22,7 +22,9 @@ before_script:
   - cd -
   - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$HOME/lib/
 
-  - virtualenv env
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 -m venv env; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then virtualenv -p python3 env; fi
+
   - source env/bin/activate
   - pip install python-sailsd
 
