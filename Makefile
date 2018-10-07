@@ -18,3 +18,6 @@ install:
 
 clean:
 	rm -v *.o libsailing/*.o
+
+fmt:
+	clang-format -i *.[ch]
