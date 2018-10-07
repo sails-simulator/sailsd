@@ -15,15 +15,16 @@ evaluating the behaviour of autonomous sailing boats.
 Protocol
 --------
 
-Sailsd uses a simple protocol consisting of JSON blobs sent over TCP.
+Sailsd uses a simple protocol consisting of JSON message sent over TCP on port
+3333.
 
-Example valid messages to send to sailsd:
+Current values can be requested with `"request"`:
 
     {"request": ["version"]}
 
-    {"request": ["latitude"]}
-
     {"request": ["latitude", "longitude"]}
+
+And values can be set using `"set"`:
 
     {"set": {"rudder": 0}}
 
@@ -31,7 +32,22 @@ Example valid messages to send to sailsd:
 
     {"set": {"latitude": 0, "longitude": 0}}
 
-    {"set": {"running": false}}
+Setting and requesting can be combined in the same message, for example:
+
+    {"set": {"rudder-angle": 0.2}, "request": ["heading", "rudder-angle"]}
+
+Available values:
+
+- `version`
+- `latitude`
+- `longitude`
+- `sail-angle`
+- `heading`
+- `rudder-angle`
+- `wind-speed`
+- `wind-angle`
+- `speed`
+- `sheet-length`
 
 
 Installing locally
