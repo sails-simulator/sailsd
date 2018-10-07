@@ -330,7 +330,7 @@ void *worker(void *arg)
 	free(line);
 	free(client);
 	log_debug("closed thread");
-	return arg;
+	return NULL;
 }
 
 void *simulation_thread(void *arg)
