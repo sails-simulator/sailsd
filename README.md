@@ -20,28 +20,42 @@ Sailsd uses a simple protocol consisting of JSON message sent over TCP on port
 
 Current values can be requested with `"request"`:
 
-    {"request": ["version"]}
+```json
+{"request": ["version"]}
+```
 
-    {"request": ["latitude", "longitude"]}
+```json
+{"request": ["latitude", "longitude"]}
+```
 
 Another JSON message is returned, which contains an object containing the
 requested attributes.
 This can be quickly tested using netcat:
 
-    $ echo '{"request": ["heading"]}' | nc localhost 3333
-    {"heading": 0.36001499947321913}
+```bash
+$ echo '{"request": ["heading"]}' | nc localhost 3333
+{"heading": 0.36001499947321913}
+```
 
 Values can be set using `"set"`:
 
-    {"set": {"rudder": 0}}
+```json
+{"set": {"rudder": 0}}
+```
 
-    {"set": {"rudder": 0, "sail": 10}}
+```json
+{"set": {"rudder": 0, "sail": 10}}
+```
 
-    {"set": {"latitude": 0, "longitude": 0}}
+```json
+{"set": {"latitude": 0, "longitude": 0}}
+```
 
 Setting and requesting can be combined in the same message, for example:
 
-    {"set": {"rudder-angle": 0.2}, "request": ["heading", "rudder-angle"]}
+```json
+{"set": {"rudder-angle": 0.2}, "request": ["heading", "rudder-angle"]}
+```
 
 Available values:
 
