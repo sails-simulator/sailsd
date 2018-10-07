@@ -24,7 +24,14 @@ Current values can be requested with `"request"`:
 
     {"request": ["latitude", "longitude"]}
 
-And values can be set using `"set"`:
+Another JSON message is returned, which contains an object containing the
+requested attributes.
+This can be quickly tested using netcat:
+
+    $ echo '{"request": ["heading"]}' | nc localhost 3333
+    {"heading": 0.36001499947321913}
+
+Values can be set using `"set"`:
 
     {"set": {"rudder": 0}}
 
