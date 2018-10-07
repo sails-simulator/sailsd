@@ -432,7 +432,6 @@ int main(int argc, char *argv[])
 
 	put_boat();
 	log_info("started sailsd");
-	log_warning("warning log");
 
 	/* start simulation thread */
 	pthread_t simulation;
