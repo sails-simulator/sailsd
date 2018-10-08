@@ -23,7 +23,7 @@
 #include "logging.h"
 
 /* log level */
-enum log_level current_log_level = WARNING;
+enum log_level current_log_level = INFO;
 
 /* print a giant boat to the screen */
 void put_boat(void)

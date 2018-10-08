@@ -41,6 +41,7 @@
 #include "logging.h"
 
 #define SAILSD_PORT 3333
+#define SAILSD_LISTEN_ADDRESS "127.0.0.1"
 #define SAILSD_MAX_MESSAGE_LENGTH 2048
 #define SAILSD_VERSION "1.0"
 
@@ -369,7 +370,7 @@ struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd)
 
 	addr->sin_family = AF_INET;
 	addr->sin_port = htons(SAILSD_PORT);
-	addr->sin_addr.s_addr = inet_addr("127.0.0.1");
+	addr->sin_addr.s_addr = inet_addr(SAILSD_LISTEN_ADDRESS);
 
 	if (bind(*sd, (struct sockaddr*)addr, sizeof(*addr)) != 0) {
 		log_error("failed to listen on port");
@@ -380,7 +381,7 @@ struct sockaddr_in *socket_init(struct sockaddr_in *addr, int *sd)
 	if (listen(*sd, 20) != 0) {
 		log_error("failed to listen on port");
 	}
-	log_info("listening on port %i", SAILSD_PORT);
+	log_info("listening on %s:%i", SAILSD_LISTEN_ADDRESS, SAILSD_PORT);
 	return addr;
 }
 
@@ -431,7 +432,6 @@ int main(int argc, char *argv[])
 	world_state = state_init();
 
 	put_boat();
-	log_info("started sailsd");
 
 	/* start simulation thread */
 	pthread_t simulation;
@@ -456,10 +456,9 @@ int main(int argc, char *argv[])
 	while (!quitting_flag) {
 		int *client = (int *) calloc(sizeof(int), 1);
 		*client = accept(sd, (struct sockaddr*)&addr, &addr_size);
-		log_debug("accepted client");
-		log_info("connected: %s:%d",
-		         inet_ntoa(addr.sin_addr),
-		         ntohs(addr.sin_port));
+		log_debug("accepted client: %s:%d",
+		          inet_ntoa(addr.sin_addr),
+		          ntohs(addr.sin_port));
 		if (pthread_create(&child, NULL, worker, client) != 0) {
 			perror("error creating thread");
 		} else {
