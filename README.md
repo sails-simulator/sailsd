@@ -80,6 +80,11 @@ Make sure `libsailing` is installed by cloning this repository with
 
 Install dependencies (jansson for JSON parsing):
 
+### MacOS
+
+    $ xcode-select --install
+    $ brew install jansson
+
 ### Debian and ubuntu
 
     $ sudo apt install libjansson-dev
