@@ -202,7 +202,7 @@ struct request_t *parse_request(const char *request_str)
 				sailing_wind_set_direction(world_state->wind,
 				                           json_number_value(value));
 			} else {
-				log_warning("tried to set '%s', which is not a recognized attribute", value);
+				log_warning("tried to set '%s', which is not a recognized attribute", key);
 			}
 		}
 
