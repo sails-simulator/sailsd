@@ -322,8 +322,10 @@ void *worker(void *arg)
 		char *resp_str = json_dumps(resp, 0);
 		log_debug("-> " COLOR_CYAN "\"%s\"" COLOR_RESET, resp_str);
 		send(*client, resp_str, strlen(resp_str), 0);
+
 		free(r);
-		free(resp);
+		free(resp_str);
+		json_decref(resp);
 	}
 
 	/* clean up and return */
