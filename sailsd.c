@@ -236,54 +236,62 @@ json_t *make_resp(struct request_t *request)
 	if (request_attribute_contains(request->requested_attributes, REQUEST_VERSION)) {
 		value = json_string(SAILSD_VERSION);
 		json_object_set(response, "version", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_LATITUDE)) {
 		value = json_real(sailing_boat_get_latitude(world_state->boat));
 		json_object_set(response, "latitude", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_LONGITUDE)) {
 		value = json_real(sailing_boat_get_longitude(world_state->boat));
 		json_object_set(response, "longitude", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_SAIL_ANGLE)) {
 		value = json_real(sailing_boat_get_sail_angle(world_state->boat));
 		json_object_set(response, "sail-angle", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_HEADING)) {
 		value = json_real(sailing_boat_get_angle(world_state->boat));
 		json_object_set(response, "heading", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_RUDDER_ANGLE)) {
 		value = json_real(sailing_boat_get_rudder_angle(world_state->boat));
 		json_object_set(response, "rudder-angle", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_SPEED)) {
 		value = json_real(sailing_boat_get_velocity(world_state->boat));
 		json_object_set(response, "speed", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_SPEED)) {
 		value = json_real(sailing_wind_get_speed(world_state->wind));
 		json_object_set(response, "wind-speed", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_WIND_ANGLE)) {
 		value = json_real(sailing_wind_get_direction(world_state->wind));
 		json_object_set(response, "wind-angle", value);
+		json_decref(value);
 	}
 
 	if (request_attribute_contains(request->requested_attributes, REQUEST_SHEET_LENGTH)) {
 		value = json_real(sailing_boat_get_sheet_length(world_state->boat));
 		json_object_set(response, "sheet-length", value);
+		json_decref(value);
 	}
-
-	json_decref(value);
 
 	return response;
 }
