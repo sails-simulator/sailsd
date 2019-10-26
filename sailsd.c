@@ -43,7 +43,7 @@
 #define SAILSD_PORT 3333
 #define SAILSD_LISTEN_ADDRESS "127.0.0.1"
 #define SAILSD_MAX_MESSAGE_LENGTH 2048
-#define SAILSD_VERSION "1.0"
+#define SAILSD_VERSION "0.3.0"
 
 /* flag used by sigint signal handling. If set to 1, sailsd should quit */
 volatile sig_atomic_t quitting_flag = 0;
